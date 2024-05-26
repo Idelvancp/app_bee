@@ -1,4 +1,4 @@
 class AppRoutes {
   static const HOME = '/';
-  static const APIARY = '/apiares';
+  static const APIARY_DETAILS = '/apiares-details';
 }

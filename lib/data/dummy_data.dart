@@ -17,23 +17,22 @@ const DUMMY_APIARIES = [
   Apiary(id: 4, cityId: 3, biome: Biome.caatinga),
   Apiary(id: 5, cityId: 4, biome: Biome.caatinga)
 ];
-const DUMMY_TYPE_HIVES =[
+const DUMMY_TYPE_HIVES = [
   TypesHive(id: 1, name: 'Langstroth'),
   TypesHive(id: 2, name: 'Top Bar'),
   TypesHive(id: 3, name: 'Warre'),
   TypesHive(id: 4, name: 'Flow Hive'),
   TypesHive(id: 5, name: 'Layens'),
-]
+];
 
-const DUMMY_SPECIES =[
+const DUMMY_SPECIES = [
   Specie(id: 1, name: 'Jataí'),
   Specie(id: 2, name: 'Uruçu'),
   Specie(id: 3, name: 'Manduri'),
   Specie(id: 4, name: 'Bugia'),
   Specie(id: 5, name: 'Mirim'),
   Specie(id: 6, name: 'Abelha Africana'),
-  
-]
+];
 
 const DUMMY_HIVES = [
   Hive(id: 1, typeId: 1, apiaryId: 1, speciesId: 6),
@@ -46,7 +45,6 @@ const DUMMY_HIVES = [
   Hive(id: 2, typeId: 1, apiaryId: 2, speciesId: 6),
   Hive(id: 3, typeId: 1, apiaryId: 2, speciesId: 6),
   Hive(id: 4, typeId: 1, apiaryId: 2, speciesId: 6),
-  Hive(id: 5, typeId: 1, apiaryId: 2, speciesId: 6),
   Hive(id: 6, typeId: 1, apiaryId: 2, speciesId: 6),
   Hive(id: 1, typeId: 1, apiaryId: 3, speciesId: 6),
   Hive(id: 2, typeId: 1, apiaryId: 3, speciesId: 6),
@@ -54,4 +52,10 @@ const DUMMY_HIVES = [
   Hive(id: 4, typeId: 1, apiaryId: 3, speciesId: 6),
   Hive(id: 5, typeId: 1, apiaryId: 3, speciesId: 6),
   Hive(id: 6, typeId: 1, apiaryId: 3, speciesId: 6),
-]
+  Hive(id: 1, typeId: 1, apiaryId: 4, speciesId: 6),
+  Hive(id: 2, typeId: 1, apiaryId: 4, speciesId: 6),
+  Hive(id: 3, typeId: 1, apiaryId: 4, speciesId: 6),
+  Hive(id: 4, typeId: 1, apiaryId: 5, speciesId: 6),
+  Hive(id: 5, typeId: 1, apiaryId: 5, speciesId: 6),
+  Hive(id: 6, typeId: 1, apiaryId: 4, speciesId: 6),
+];
