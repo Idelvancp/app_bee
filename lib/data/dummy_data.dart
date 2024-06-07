@@ -10,12 +10,12 @@ const DUMMY_CITIES = [
   City(id: 3, name: 'Acauã'),
   City(id: 4, name: 'Jacobina'),
 ];
-const DUMMY_APIARIES = [
-  Apiary(id: 1, cityId: 2, biome: Biome.caatinga),
-  Apiary(id: 2, cityId: 2, biome: Biome.caatinga),
-  Apiary(id: 3, cityId: 1, biome: Biome.cerrado),
-  Apiary(id: 4, cityId: 3, biome: Biome.caatinga),
-  Apiary(id: 5, cityId: 4, biome: Biome.caatinga)
+final DUMMY_APIARIES = [
+  Apiary(id: 1, name: "Apiário Campestre", cityId: 2, biome: Biome.caatinga),
+  Apiary(id: 2, name: "Apiário Cocheirinha", cityId: 2, biome: Biome.caatinga),
+  Apiary(id: 3, name: "Apiário Angical", cityId: 1, biome: Biome.cerrado),
+  Apiary(id: 4, name: "Apiário Baraunas", cityId: 3, biome: Biome.caatinga),
+  Apiary(id: 5, name: "Apiário Recanto", cityId: 4, biome: Biome.caatinga)
 ];
 const DUMMY_TYPE_HIVES = [
   TypesHive(id: 1, name: 'Langstroth'),

@@ -1,91 +1,56 @@
+import 'package:app_bee/models/apiary.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../data/dummy_data.dart';
+import 'package:geolocator/geolocator.dart';
 
-class TransactionForm extends StatefulWidget {
-  final void Function(String, double, DateTime) onSubmit;
-
-  TransactionForm(this.onSubmit);
-
+class ApiaryForm extends StatefulWidget {
   @override
-  State<TransactionForm> createState() => _TransactionFormState();
+  State<ApiaryForm> createState() => _ApiaryFormState();
 }
 
-class _TransactionFormState extends State<TransactionForm> {
-  final titleController = TextEditingController();
-
+class _ApiaryFormState extends State<ApiaryForm> {
   final _dateController = TextEditingController();
-
-  final valueController = TextEditingController();
-
-  _submitForm() {
-    final title = titleController.text;
-    final value = double.tryParse(valueController.text) ?? 0.0;
-    final date = DateTime.parse(_dateController.text);
-    if (title.isEmpty || value <= 0) {
-      return;
-    }
-
-    widget.onSubmit(title, value, date);
-  }
-
+  final _locationController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: titleController,
-              onSubmitted: (_) => _submitForm(),
-              decoration: InputDecoration(
-                labelText: 'Nome do Apiário',
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Fomulário Apiário'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Form(
+            child: ListView(
+          children: [
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Nome'),
+              textInputAction: TextInputAction.next,
             ),
-            TextField(
-              controller: valueController,
-              onSubmitted: (_) => _submitForm(),
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Valor (R\$)',
-              ),
-            ),
-            TextField(
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Data de Instalação'),
+              textInputAction: TextInputAction.next,
               controller: _dateController,
-              decoration: InputDecoration(
-                labelText: 'Date',
-                filled: true,
-                prefixIcon: Icon(Icons.calendar_today),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                ),
-              ),
               readOnly: true,
               onTap: () {
                 _selectDate();
               },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                  ),
-                  child: Text(
-                    'Nova Transação',
-                    style: TextStyle(
-                      color: Colors.purple,
-                    ),
-                  ),
-                  onPressed: _submitForm,
-                )
-              ],
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Localização'),
+              textInputAction: TextInputAction.next,
+              controller: _locationController,
+              readOnly: true,
+              onTap: _getCurrentLocation,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, obtenha a localização.';
+                }
+                return null;
+              },
             ),
           ],
-        ),
+        )),
       ),
     );
   }
@@ -108,5 +73,47 @@ class _TransactionFormState extends State<TransactionForm> {
         _dateController.text = dateFormat.format(_picked);
       });
     }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Testa se o serviço de localização está habilitado.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _locationController.text = "Serviço de localização desativado.";
+      });
+      return;
+    }
+
+    // Verifica se temos permissão de localização.
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _locationController.text = "Permissão de localização negada.";
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _locationController.text =
+            "Permissão de localização negada permanentemente.";
+      });
+      return;
+    }
+
+    // Obtém a localização atual.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _locationController.text =
+          "Lat: ${position.latitude}, Long: ${position.longitude}";
+    });
   }
 }

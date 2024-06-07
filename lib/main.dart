@@ -20,6 +20,7 @@ class BeeApp extends StatelessWidget {
       ),
       routes: {
         AppRoutes.HOME: (ctx) => ApiariesScreen(),
+        AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
       },
     );
   }
