@@ -1,8 +1,11 @@
+import 'package:app_bee/models/floralResources.dart';
+
 import '../models/apiary.dart';
 import '../models/hive.dart';
 import '../models/cite.dart';
 import '../models/typesHive.dart';
 import '../models/specie.dart';
+import '../models/floralResources.dart';
 
 const DUMMY_CITIES = [
   City(id: 1, name: 'Francinópolis'),
@@ -16,6 +19,11 @@ final DUMMY_APIARIES = [
   Apiary(id: 3, name: "Apiário Angical", cityId: 1, biome: Biome.cerrado),
   Apiary(id: 4, name: "Apiário Baraunas", cityId: 3, biome: Biome.caatinga),
   Apiary(id: 5, name: "Apiário Recanto", cityId: 4, biome: Biome.caatinga)
+];
+const DUMMY_FLORAL_RESOURCES = [
+  FloralResources(id: 1, name: 'Angico'),
+  FloralResources(id: 2, name: 'Mameleiro'),
+  FloralResources(id: 3, name: 'Faveira'),
 ];
 const DUMMY_TYPE_HIVES = [
   TypesHive(id: 1, name: 'Langstroth'),

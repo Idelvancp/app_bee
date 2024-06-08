@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/dummy_data.dart';
 import 'package:geolocator/geolocator.dart';
+import 'apiaryForm2.dart';
 
-class ApiaryForm extends StatefulWidget {
+class ApiaryForm1 extends StatefulWidget {
   @override
-  State<ApiaryForm> createState() => _ApiaryFormState();
+  State<ApiaryForm1> createState() => _ApiaryForm1State();
 }
 
-class _ApiaryFormState extends State<ApiaryForm> {
+class _ApiaryForm1State extends State<ApiaryForm1> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
   @override
@@ -26,6 +29,7 @@ class _ApiaryFormState extends State<ApiaryForm> {
             TextFormField(
               decoration: InputDecoration(labelText: 'Nome'),
               textInputAction: TextInputAction.next,
+              controller: _nameController,
             ),
             TextFormField(
               decoration: InputDecoration(labelText: 'Data de Instalação'),
@@ -48,6 +52,24 @@ class _ApiaryFormState extends State<ApiaryForm> {
                 }
                 return null;
               },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                if (true) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ApiaryForm2(
+                        name: _nameController.text,
+                        date: _dateController.text,
+                        location: _locationController.text,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Text('Próximo'),
             ),
           ],
         )),

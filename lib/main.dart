@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'screens/ apiary/apiariesScreen.dart';
-import 'screens/ apiary/apiaryForm.dart';
+import 'screens/ apiary/apiaryForm1.dart';
 import 'routes/appRoute.dart';
 
 void main() => runApp(BeeApp());
@@ -20,7 +20,7 @@ class BeeApp extends StatelessWidget {
       ),
       routes: {
         AppRoutes.HOME: (ctx) => ApiariesScreen(),
-        AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
+        AppRoutes.APIARY_FORM: (ctx) => ApiaryForm1(),
       },
     );
   }
