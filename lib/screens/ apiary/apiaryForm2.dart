@@ -16,7 +16,7 @@ class ApiaryForm2 extends StatefulWidget {
 
 class _ApiaryForm2State extends State<ApiaryForm2> {
   List dropdownBiome = Biome.values.toList();
-  List dropdownFloralResources = DUMMY_FLORAL_RESOURCES.toList();
+  FloralResources? selectedResource;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +57,9 @@ class _ApiaryForm2State extends State<ApiaryForm2> {
                   );
                 }).toList(),
                 onChanged: (FloralResources? newValue) {
-                  setState(() {});
+                  setState(() {
+                    selectedResource = newValue;
+                  });
                 },
                 validator: (value) {
                   if (value == null) {
@@ -71,6 +73,5 @@ class _ApiaryForm2State extends State<ApiaryForm2> {
         ),
       ),
     );
-    print(context);
   }
 }
