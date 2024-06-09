@@ -1,9 +1,11 @@
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/floralResources.dart';
+import 'package:app_bee/data/cities.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/dummy_data.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class ApiaryForm extends StatefulWidget {
   @override
@@ -17,6 +19,10 @@ class _ApiaryFormState extends State<ApiaryForm> {
   final _nameController = TextEditingController();
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
+
+  String? estadoSelecionado;
+  List<String> municipiosDoEstado = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +100,31 @@ class _ApiaryFormState extends State<ApiaryForm> {
                 }
                 return null;
               },
+            ),
+            DropdownSearch<String>(
+              items: estados,
+              dropdownDecoratorProps: DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: "Selecione um Estado",
+                  hintText: "Select an Int",
+                  filled: true,
+                ),
+              ),
+              onChanged: (String? estado) {
+                setState(() {
+                  estadoSelecionado = estado;
+                  municipiosDoEstado = municipios[estado]!;
+                });
+              },
+              selectedItem: estadoSelecionado,
+            ),
+            SizedBox(height: 20),
+            DropdownSearch<String>(
+              items: municipiosDoEstado,
+              onChanged: print,
+              selectedItem:
+                  municipiosDoEstado.isNotEmpty ? municipiosDoEstado[0] : null,
+              enabled: estadoSelecionado != null,
             ),
           ],
         )),
