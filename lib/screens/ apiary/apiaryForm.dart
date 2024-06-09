@@ -1,17 +1,19 @@
 import 'package:app_bee/models/apiary.dart';
+import 'package:app_bee/models/floralResources.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/dummy_data.dart';
 import 'package:geolocator/geolocator.dart';
-import 'apiaryForm2.dart';
 
-class ApiaryForm1 extends StatefulWidget {
+class ApiaryForm extends StatefulWidget {
   @override
-  State<ApiaryForm1> createState() => _ApiaryForm1State();
+  State<ApiaryForm> createState() => _ApiaryFormState();
 }
 
-class _ApiaryForm1State extends State<ApiaryForm1> {
-  final _formKey = GlobalKey<FormState>();
+class _ApiaryFormState extends State<ApiaryForm> {
+  List dropdownBiome = Biome.values.toList();
+  FloralResources? selectedResource;
+
   final _nameController = TextEditingController();
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
@@ -53,23 +55,45 @@ class _ApiaryForm1State extends State<ApiaryForm1> {
                 return null;
               },
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                if (true) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ApiaryForm2(
-                        name: _nameController.text,
-                        date: _dateController.text,
-                        location: _locationController.text,
-                      ),
-                    ),
-                  );
-                }
+            DropdownButtonFormField<Biome>(
+              decoration: InputDecoration(labelText: 'Bioma'),
+              items: Biome.values.map((Biome biome) {
+                return DropdownMenuItem<Biome>(
+                  value: biome,
+                  child: Text(biome.name),
+                );
+              }).toList(),
+              onChanged: (Biome? newValue) {
+                setState(() {});
               },
-              child: Text('Próximo'),
+              validator: (value) {
+                if (value == null) {
+                  return 'Por favor, selecione um bioma.';
+                }
+                return null;
+              },
+            ),
+            DropdownButtonFormField<FloralResources>(
+              decoration: InputDecoration(labelText: 'Recursos Florais'),
+              items: DUMMY_FLORAL_RESOURCES
+                  .map<DropdownMenuItem<FloralResources>>(
+                      (FloralResources resource) {
+                return DropdownMenuItem<FloralResources>(
+                  value: resource,
+                  child: Text(resource.name),
+                );
+              }).toList(),
+              onChanged: (FloralResources? newValue) {
+                setState(() {
+                  selectedResource = newValue;
+                });
+              },
+              validator: (value) {
+                if (value == null) {
+                  return 'Por favor, selecione um bioma.';
+                }
+                return null;
+              },
             ),
           ],
         )),

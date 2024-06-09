@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'screens/ apiary/apiariesScreen.dart';
-import 'screens/ apiary/apiaryForm1.dart';
+import 'screens/ apiary/apiaryForm.dart';
 import 'routes/appRoute.dart';
 
 void main() => runApp(BeeApp());
@@ -17,13 +17,16 @@ class BeeApp extends StatelessWidget {
           secondary: Colors.deepOrange,
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.purple,
-        ),
+            backgroundColor: Colors.purple,
+            titleTextStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
         scaffoldBackgroundColor: Colors.grey[100],
       ),
       routes: {
         AppRoutes.HOME: (ctx) => MainScreen(),
-        AppRoutes.APIARY_FORM: (ctx) => ApiaryForm1(),
+        AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
       },
       debugShowCheckedModeBanner: false,
     );

@@ -44,6 +44,7 @@ class ApiaryItem extends StatelessWidget {
                   color: Colors.purple,
                 ),
               ),
+              SizedBox(height: 5),
               Text(
                 'Quantidade de Colmeias: 15',
                 style: TextStyle(
@@ -51,18 +52,12 @@ class ApiaryItem extends StatelessWidget {
                   color: Colors.purple,
                 ),
               ),
-              Text(
-                'Última vistas: 02/03/2024',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.purple,
-                ),
-              ),
+              SizedBox(height: 2),
               Text(
                 'Alertas: $alerts',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.red,
+                  color: alerts > 0 ? Colors.red : Colors.purple,
                 ),
               ),
             ],

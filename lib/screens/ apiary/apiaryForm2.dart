@@ -27,48 +27,7 @@ class _ApiaryForm2State extends State<ApiaryForm2> {
         padding: const EdgeInsets.all(15),
         child: Form(
           child: ListView(
-            children: [
-              DropdownButtonFormField<Biome>(
-                decoration: InputDecoration(labelText: 'Bioma'),
-                items: Biome.values.map((Biome biome) {
-                  return DropdownMenuItem<Biome>(
-                    value: biome,
-                    child: Text(biome.name),
-                  );
-                }).toList(),
-                onChanged: (Biome? newValue) {
-                  setState(() {});
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Por favor, selecione um bioma.';
-                  }
-                  return null;
-                },
-              ),
-              DropdownButtonFormField<FloralResources>(
-                decoration: InputDecoration(labelText: 'Recursos Florais'),
-                items: DUMMY_FLORAL_RESOURCES
-                    .map<DropdownMenuItem<FloralResources>>(
-                        (FloralResources resource) {
-                  return DropdownMenuItem<FloralResources>(
-                    value: resource,
-                    child: Text(resource.name),
-                  );
-                }).toList(),
-                onChanged: (FloralResources? newValue) {
-                  setState(() {
-                    selectedResource = newValue;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Por favor, selecione um bioma.';
-                  }
-                  return null;
-                },
-              ),
-            ],
+            children: [],
           ),
         ),
       ),

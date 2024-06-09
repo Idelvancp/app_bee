@@ -32,7 +32,7 @@ class ApiariesScreenState extends State<ApiariesScreen> {
         padding: const EdgeInsets.all(25),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          childAspectRatio: 6 / 2,
+          childAspectRatio: 5 / 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
@@ -41,12 +41,13 @@ class ApiariesScreenState extends State<ApiariesScreen> {
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        backgroundColor: Colors.purple, // Cor do botão
+        child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.APIARY_FORM);
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
