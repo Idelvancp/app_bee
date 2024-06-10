@@ -12,7 +12,7 @@ class ApiariesScreen extends StatefulWidget {
 }
 
 class ApiariesScreenState extends State<ApiariesScreen> {
-  _addApiary(String name, int cityId, Biome biome) {
+  /*_addApiary(String name, int cityId, Biome biome) {
     final newApiary = Apiary(
       id: Random().nextInt(1000).toInt(),
       name: name,
@@ -24,7 +24,7 @@ class ApiariesScreenState extends State<ApiariesScreen> {
       DUMMY_APIARIES.add(newApiary);
     });
   }
-
+  */
   Widget build(BuildContext context) {
     return Scaffold(
       body: GridView(

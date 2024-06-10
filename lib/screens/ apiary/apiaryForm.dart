@@ -6,49 +6,125 @@ import 'package:intl/intl.dart';
 import '../../data/dummy_data.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'dart:math';
 
 class ApiaryForm extends StatefulWidget {
+  const ApiaryForm({Key? key}) : super(key: key);
+
+//  final void Function(String, String, String, Biome, DateTime) onSubmit;
+
+  //ApiaryForm(this.onSubmit);
+
   @override
   State<ApiaryForm> createState() => _ApiaryFormState();
 }
 
 class _ApiaryFormState extends State<ApiaryForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _formData = <String, Object>{};
+
   List dropdownBiome = Biome.values.toList();
-  FloralResources? selectedResource;
 
   final _nameController = TextEditingController();
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
 
-  String? estadoSelecionado;
+  String estadoSelecionado = estados.first.toString();
   List<String> municipiosDoEstado = [];
+  String municipioSelecionado = "Não selecionado";
+  FloralResources? selectedResource;
+  Biome selectedBiome = Biome.amazonia;
+
+  _submitForm() {
+    _formKey.currentState?.save();
+    print(_formData.values);
+
+    final newApiary = Apiary(
+      id: "8",
+      name: _formData['name'].toString(),
+      state: _formData['state'].toString(),
+      city: _formData['city'].toString(),
+      // biome: _formData['biome'] as String,
+      //date: DateTime.parse(_formData['date'] as String),
+    );
+    DUMMY_APIARIES.add(newApiary);
+    print(DUMMY_APIARIES.last.city);
+    print(newApiary.id);
+    print(newApiary.name);
+    print(newApiary.state);
+    print(newApiary.city);
+    // print(newApiary.biome);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Fomulário Apiário'),
+        actions: [
+          IconButton(
+            onPressed: _submitForm,
+            icon: const Icon(Icons.save),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
+            key: _formKey,
             child: ListView(
-          children: [
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Nome'),
-              textInputAction: TextInputAction.next,
-              controller: _nameController,
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'Data de Instalação'),
-              textInputAction: TextInputAction.next,
-              controller: _dateController,
-              readOnly: true,
-              onTap: () {
-                _selectDate();
-              },
-            ),
-            TextFormField(
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Nome'),
+                  textInputAction: TextInputAction.next,
+                  controller: _nameController,
+                  onSaved: (name) => _formData['name'] = name ?? '',
+                ),
+                DropdownSearch<String>(
+                  items: estados,
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: "Selecione um Estado",
+                      filled: true,
+                    ),
+                  ),
+                  onChanged: (String? estado) {
+                    setState(() {
+                      estadoSelecionado = estado.toString();
+                      municipiosDoEstado = municipios[estado]!;
+                    });
+                  },
+                  selectedItem: estadoSelecionado,
+                  onSaved: (state) => _formData['state'] = state ?? '',
+                ),
+                SizedBox(height: 10),
+                DropdownSearch<String>(
+                  items: municipiosDoEstado,
+                  onChanged: print,
+                  selectedItem: municipiosDoEstado.isNotEmpty
+                      ? municipiosDoEstado[0]
+                      : null,
+                  enabled: estadoSelecionado != null,
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: "Selecione um Município",
+                      filled: true,
+                    ),
+                  ),
+                  onSaved: (city) => _formData['city'] = city ?? '',
+                ),
+                /*
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Data de Instalação'),
+                  textInputAction: TextInputAction.next,
+                  controller: _dateController,
+                  readOnly: true,
+                  onTap: () {
+                    _selectDate();
+                  },
+                  onSaved: (date) => _formData['date'] = date ?? '',
+                ),
+               TextFormField(
               decoration: InputDecoration(labelText: 'Localização'),
               textInputAction: TextInputAction.next,
               controller: _locationController,
@@ -61,73 +137,64 @@ class _ApiaryFormState extends State<ApiaryForm> {
                 return null;
               },
             ),
-            DropdownButtonFormField<Biome>(
-              decoration: InputDecoration(labelText: 'Bioma'),
-              items: Biome.values.map((Biome biome) {
-                return DropdownMenuItem<Biome>(
-                  value: biome,
-                  child: Text(biome.name),
-                );
-              }).toList(),
-              onChanged: (Biome? newValue) {
-                setState(() {});
-              },
-              validator: (value) {
-                if (value == null) {
-                  return 'Por favor, selecione um bioma.';
-                }
-                return null;
-              },
-            ),
-            DropdownButtonFormField<FloralResources>(
-              decoration: InputDecoration(labelText: 'Recursos Florais'),
-              items: DUMMY_FLORAL_RESOURCES
-                  .map<DropdownMenuItem<FloralResources>>(
-                      (FloralResources resource) {
-                return DropdownMenuItem<FloralResources>(
-                  value: resource,
-                  child: Text(resource.name),
-                );
-              }).toList(),
-              onChanged: (FloralResources? newValue) {
-                setState(() {
-                  selectedResource = newValue;
-                });
-              },
-              validator: (value) {
-                if (value == null) {
-                  return 'Por favor, selecione um bioma.';
-                }
-                return null;
-              },
-            ),
-            DropdownSearch<String>(
-              items: estados,
-              dropdownDecoratorProps: DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
-                  labelText: "Selecione um Estado",
-                  hintText: "Select an Int",
-                  filled: true,
+                DropdownButtonFormField<Biome>(
+                  decoration: InputDecoration(labelText: 'Bioma'),
+                  items:
+                      Biome.values.map<DropdownMenuItem<Biome>>((Biome biome) {
+                    return DropdownMenuItem<Biome>(
+                      value: biome,
+                      child: Text(biome.name),
+                    );
+                  }).toList(),
+                  onChanged: (Biome? newValue) {
+                    setState(() {
+                      selectedBiome = newValue!;
+                    });
+                  },
+                  onSaved: (biome) => _formData['biome'] = selectedBiome.name,
+                ),*/
+                /*DropdownButtonFormField<FloralResources>(
+                  decoration: InputDecoration(labelText: 'Recursos Florais'),
+                  items: DUMMY_FLORAL_RESOURCES
+                      .map<DropdownMenuItem<FloralResources>>(
+                          (FloralResources resource) {
+                    return DropdownMenuItem<FloralResources>(
+                      value: resource,
+                      child: Text(resource.name),
+                    );
+                  }).toList(),
+                  onChanged: (FloralResources? newValue) {
+                    setState(() {
+                      selectedResource = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Por favor, selecione um bioma.';
+                    }
+                    return null;
+                  },
+                ),*/
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
+                      child: Text(
+                        'Novo Apiário',
+                        style: TextStyle(
+                          color: Colors.purple,
+                        ),
+                      ),
+                      onPressed: _submitForm,
+                    )
+                  ],
                 ),
-              ),
-              onChanged: (String? estado) {
-                setState(() {
-                  estadoSelecionado = estado;
-                  municipiosDoEstado = municipios[estado]!;
-                });
-              },
-              selectedItem: estadoSelecionado,
-            ),
-            SizedBox(height: 20),
-            DropdownSearch<String>(
-              items: municipiosDoEstado,
-              onChanged: print,
-              selectedItem:
-                  municipiosDoEstado.isNotEmpty ? municipiosDoEstado[0] : null,
-              enabled: estadoSelecionado != null,
-            ),
-          ],
-        )),
+              ],
+            )),
       ),
     );
   }

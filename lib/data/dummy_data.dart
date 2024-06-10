@@ -14,11 +14,41 @@ const DUMMY_CITIES = [
   City(id: 4, name: 'Jacobina'),
 ];
 final DUMMY_APIARIES = [
-  Apiary(id: 1, name: "Apiário Campestre", cityId: 2, biome: Biome.caatinga),
-  Apiary(id: 2, name: "Apiário Cocheirinha", cityId: 2, biome: Biome.caatinga),
-  Apiary(id: 3, name: "Apiário Angical", cityId: 1, biome: Biome.cerrado),
-  Apiary(id: 4, name: "Apiário Baraunas", cityId: 3, biome: Biome.caatinga),
-  Apiary(id: 5, name: "Apiário Recanto", cityId: 4, biome: Biome.caatinga)
+  Apiary(
+    id: "1",
+    name: "Apiário Campestre",
+    state: "Piauí",
+    city: "Paulistana",
+    // biome: "caatinga",
+  ),
+  Apiary(
+    id: "2",
+    name: "Apiário Cocheirinha",
+    state: "Piauí",
+    city: "Paulistana",
+    // biome: "caatinga",
+  ),
+  Apiary(
+    id: "3",
+    name: "Apiário Angical",
+    state: "Piauí",
+    city: "Francinópolis",
+    // biome: "cerrado",
+  ),
+  Apiary(
+    id: "4",
+    name: "Apiário Baraunas",
+    state: "Piauí",
+    city: "Acauã",
+    //biome: "caatinga",
+  ),
+  Apiary(
+    id: "5",
+    name: "Apiário Recanto",
+    state: "Piauí",
+    city: "Jacobina",
+    // biome: "caatinga",
+  ),
 ];
 const DUMMY_FLORAL_RESOURCES = [
   FloralResources(id: 1, name: 'Angico'),

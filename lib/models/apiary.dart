@@ -8,15 +8,17 @@ enum Biome {
 }
 
 class Apiary {
-  final int id;
+  final String id;
   final String name;
-  final int cityId;
-  final Biome biome;
+  final String state;
+  final String city;
+  // final String biome;
 
   const Apiary({
     required this.id,
     required this.name,
-    required this.cityId,
-    required this.biome,
+    required this.state,
+    required this.city,
+    //required this.biome,
   });
 }
