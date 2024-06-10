@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'hive.dart';
 
 enum Biome {
   amazonia,
@@ -15,6 +16,7 @@ class Apiary with ChangeNotifier, DiagnosticableTreeMixin {
   final String name;
   final String state;
   final String city;
+  final HasMany<Hive>? hives;
   // final String biome;
 
   Apiary({

@@ -22,7 +22,12 @@ class ApiaryItem extends StatelessWidget {
       return hive.apiaryId == apiary.id;
     }).toList();
     return InkWell(
-      onTap: () => _selectApiary(context),
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          AppRoutes.APIARY_DETAILS,
+          arguments: apiary,
+        );
+      },
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: Card(
