@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 enum Biome {
   amazonia,
   caatinga,
@@ -7,14 +10,14 @@ enum Biome {
   pampa,
 }
 
-class Apiary {
-  final String id;
+class Apiary with ChangeNotifier, DiagnosticableTreeMixin {
+  final int id;
   final String name;
   final String state;
   final String city;
   // final String biome;
 
-  const Apiary({
+  Apiary({
     required this.id,
     required this.name,
     required this.state,

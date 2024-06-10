@@ -1,7 +1,9 @@
-import 'dart:math';
+import 'package:app_bee/models/apiary.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/ apiary/apiariesScreen.dart';
 import 'screens/ apiary/apiaryForm.dart';
+import 'models/apiaryList.dart';
 import 'routes/appRoute.dart';
 
 void main() => runApp(BeeApp());
@@ -9,26 +11,33 @@ void main() => runApp(BeeApp());
 class BeeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'App Bee',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Colors.purple,
-          secondary: Colors.deepOrange,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ApiaryList(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'App Bee',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: Colors.purple,
+            secondary: Colors.deepOrange,
+          ),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Colors.purple,
+              titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold)),
+          scaffoldBackgroundColor: Colors.grey[100],
         ),
-        appBarTheme: AppBarTheme(
-            backgroundColor: Colors.purple,
-            titleTextStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold)),
-        scaffoldBackgroundColor: Colors.grey[100],
+        routes: {
+          AppRoutes.HOME: (ctx) => MainScreen(),
+          AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
+        },
+        debugShowCheckedModeBanner: false,
       ),
-      routes: {
-        AppRoutes.HOME: (ctx) => MainScreen(),
-        AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
-      },
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -44,6 +53,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Map<String, dynamic>> _screens = [
     {'title': 'Apiários', 'screen': ApiariesScreen()},
     {'title': 'Lista de Categorias', 'screen': ApiariesScreen()},
+    {'title': 'Detalhes Aiários', 'screen': ApiaryDetail()},
   ];
 
   void _selectScreen(int index) {

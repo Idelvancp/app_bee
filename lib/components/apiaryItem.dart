@@ -37,7 +37,7 @@ class ApiaryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Apiário Campestre",
+                apiary.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

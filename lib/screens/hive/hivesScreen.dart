@@ -5,12 +5,12 @@ import 'package:app_bee/models/apiaryList.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import '../../components/apiaryItem.dart';
 
-class ApiariesScreen extends StatefulWidget {
+class HivesScreen extends StatefulWidget {
   @override
-  State<ApiariesScreen> createState() => ApiariesScreenState();
+  State<HivesScreen> createState() => HivesScreenState();
 }
 
-class ApiariesScreenState extends State<ApiariesScreen> {
+class HivesScreenState extends State<HivesScreen> {
   Widget build(BuildContext context) {
     final ApiaryList apiaries = Provider.of(context);
     final apiariesList = apiaries.apiary; // Obter a lista de apiários

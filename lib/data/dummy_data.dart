@@ -15,35 +15,35 @@ const DUMMY_CITIES = [
 ];
 final DUMMY_APIARIES = [
   Apiary(
-    id: "1",
+    id: 1,
     name: "Apiário Campestre",
     state: "Piauí",
     city: "Paulistana",
     // biome: "caatinga",
   ),
   Apiary(
-    id: "2",
+    id: 2,
     name: "Apiário Cocheirinha",
     state: "Piauí",
     city: "Paulistana",
     // biome: "caatinga",
   ),
   Apiary(
-    id: "3",
+    id: 3,
     name: "Apiário Angical",
     state: "Piauí",
     city: "Francinópolis",
     // biome: "cerrado",
   ),
   Apiary(
-    id: "4",
+    id: 4,
     name: "Apiário Baraunas",
     state: "Piauí",
     city: "Acauã",
     //biome: "caatinga",
   ),
   Apiary(
-    id: "5",
+    id: 5,
     name: "Apiário Recanto",
     state: "Piauí",
     city: "Jacobina",
