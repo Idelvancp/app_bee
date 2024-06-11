@@ -62,7 +62,7 @@ const DUMMY_TYPE_HIVES = [
   TypesHive(id: 4, name: 'Flow Hive'),
   TypesHive(id: 5, name: 'Layens'),
 ];
-
+/*
 const DUMMY_SPECIES = [
   Specie(id: 1, name: 'Jataí'),
   Specie(id: 2, name: 'Uruçu'),
@@ -71,7 +71,7 @@ const DUMMY_SPECIES = [
   Specie(id: 5, name: 'Mirim'),
   Specie(id: 6, name: 'Abelha Africana'),
 ];
-
+*/
 const DUMMY_HIVES = [
   Hive(id: 1, typeId: 1, apiaryId: 1, speciesId: 6),
   Hive(id: 2, typeId: 1, apiaryId: 1, speciesId: 6),

@@ -16,7 +16,6 @@ class Apiary with ChangeNotifier, DiagnosticableTreeMixin {
   final String name;
   final String state;
   final String city;
-  final HasMany<Hive>? hives;
   // final String biome;
 
   Apiary({
