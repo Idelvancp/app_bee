@@ -1,9 +1,11 @@
+import 'package:app_bee/components/appDrawer.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/ apiary/apiariesScreen.dart';
 import 'screens/ apiary/apiaryForm.dart';
 import 'screens/ apiary/apiaryDetailsScreen.dart';
+import 'screens/specie/speciesScreen.dart';
 import 'screens/specie/specieFormScreen.dart';
 import 'package:app_bee/providers/specieProvider.dart';
 import 'models/apiaryList.dart';
@@ -42,6 +44,7 @@ class BeeApp extends StatelessWidget {
           AppRoutes.HOME: (ctx) => MainScreen(),
           AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
           AppRoutes.SPECIE_FORM: (ctx) => SpecieFormScreen(),
+          AppRoutes.SPECIE_INDEX: (ctx) => SpeciesScreen(),
           AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
         debugShowCheckedModeBanner: false,
@@ -61,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Map<String, dynamic>> _screens = [
     {'title': 'Apiários', 'screen': ApiariesScreen()},
     {'title': 'Formulário Espécie', 'screen': SpecieFormScreen()},
+    {'title': 'Espécies', 'screen': SpeciesScreen()},
     {'title': 'Lista de Categorias', 'screen': ApiariesScreen()},
     {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];
@@ -96,6 +100,7 @@ class _MainScreenState extends State<MainScreen> {
         currentIndex: _selectedScreenIndex,
         onTap: _selectScreen,
       ),
+      drawer: const AppDrawer(),
     );
   }
 }

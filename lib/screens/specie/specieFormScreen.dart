@@ -1,8 +1,5 @@
 import 'package:app_bee/providers/specieProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:app_bee/database/databaseHelper.dart';
-import 'package:app_bee/models/specie.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SpecieFormScreen extends StatefulWidget {
@@ -57,7 +54,7 @@ class _SpecieFormState extends State<SpecieFormScreen> {
                             MaterialStateProperty.all<Color>(Colors.blue),
                       ),
                       child: Text(
-                        'Novo Apiário',
+                        'Nova Espécie',
                         style: TextStyle(
                           color: Colors.purple,
                         ),

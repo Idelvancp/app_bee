@@ -33,8 +33,8 @@ class DatabaseHelper {
 
   // Cria a tabela de species
   Future<void> _onCreate(Database db, int version) async {
+    print("Estou no DBBBBBBBBBBBBBBBBBBBBBBBBB");
     await db.execute(
-      //'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
       'CREATE TABLE species(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
     );
   }

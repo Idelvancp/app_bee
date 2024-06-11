@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:app_bee/data/dummy_data.dart';
-import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/specie.dart';
 import 'package:app_bee/database/databaseHelper.dart';
 
@@ -29,13 +27,12 @@ class SpecieProvider with ChangeNotifier {
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),
     );
-    print("kkkkkkkkkkkkkkkkkkkkk");
-    print(newSpecie);
     addSpecie(newSpecie);
   }
 
-  void addSpecie(Specie specie) {
+  Future<void> addSpecie(Specie specie) async {
     _species.add(specie);
+    await DatabaseHelper().insertSpecie(specie);
     notifyListeners();
   }
 }
