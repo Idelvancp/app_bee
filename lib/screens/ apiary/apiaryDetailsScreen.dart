@@ -1,7 +1,6 @@
 import 'package:app_bee/data/dummy_data.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:app_bee/models/apiaryList.dart';
 import 'package:app_bee/routes/appRoute.dart';
@@ -13,12 +12,10 @@ class ApiaryDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Apiary apiary = ModalRoute.of(context)!.settings.arguments as Apiary;
-    final hives = DUMMY_HIVES.where((item) {
+    /*final hives = DUMMY_HIVES.where((item) {
       return item.apiaryId == apiary.id;
-    });
-    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-
-    print(hives);
+    });*/
+    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk hiveDetails");
 
     final ApiaryList apiaries = Provider.of(context);
     final apiariesList = apiaries.apiary; // Obter a lista de apiários

@@ -5,7 +5,7 @@ import 'package:app_bee/data/dummy_data.dart';
 import 'package:app_bee/models/apiary.dart';
 
 class ApiaryList with ChangeNotifier {
-  final List<Apiary> _apiaries = DUMMY_APIARIES;
+  final List<Apiary> _apiaries = [];
   List<Apiary> get apiary => [..._apiaries];
 
   int get apiariesCount {

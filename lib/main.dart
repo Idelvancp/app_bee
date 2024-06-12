@@ -1,5 +1,11 @@
 import 'package:app_bee/components/appDrawer.dart';
 import 'package:app_bee/models/apiary.dart';
+import 'package:app_bee/providers/floralResourceProvider.dart';
+import 'package:app_bee/providers/typeHiveProvider.dart';
+import 'package:app_bee/screens/floralResource/floralResourceScreen.dart';
+import 'package:app_bee/screens/floralResource/floralResourceFormScreen.dart';
+import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
+import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/ apiary/apiariesScreen.dart';
@@ -24,6 +30,12 @@ class BeeApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => SpecieProvider()..loadSpecies(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => TypeHiveProvider()..loadTypesHives(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FloralResourceProvider()..loadFloralResources(),
+        ),
       ],
       child: MaterialApp(
         title: 'App Bee',
@@ -45,7 +57,12 @@ class BeeApp extends StatelessWidget {
           AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
           AppRoutes.SPECIE_FORM: (ctx) => SpecieFormScreen(),
           AppRoutes.SPECIE_INDEX: (ctx) => SpeciesScreen(),
-          AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
+          AppRoutes.TYPES_HIVES_INDEX: (ctx) => TypesHivesScreen(),
+          AppRoutes.TYPES_HIVES_FORM: (ctx) => TypeHiveFormScreen(),
+          AppRoutes.FLORAL_RESOURCES_INDEX: (ctx) => FloralResourcesScreen(),
+          AppRoutes.FLORAL_RESOURCES_FORM: (ctx) => FloralResourceFormScreen()
+
+          // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),
@@ -66,7 +83,11 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Formulário Espécie', 'screen': SpecieFormScreen()},
     {'title': 'Espécies', 'screen': SpeciesScreen()},
     {'title': 'Lista de Categorias', 'screen': ApiariesScreen()},
-    {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
+    {'title': 'Tipos de Colméias', 'screen': TypesHivesScreen()},
+    {'title': 'Recursos Florais', 'screen': ApiariesScreen()},
+    {'title': 'Fomulários Recursos Florais', 'screen': TypesHivesScreen()},
+
+    // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];
 
   void _selectScreen(int index) {
@@ -94,13 +115,15 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Another', // Example
+            label: 'Another',
           ),
         ],
         currentIndex: _selectedScreenIndex,
         onTap: _selectScreen,
       ),
-      drawer: const AppDrawer(),
+      drawer: AppDrawer(
+          //onSelectItem: _selectScreen,
+          ),
     );
   }
 }

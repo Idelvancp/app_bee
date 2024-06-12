@@ -1,6 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:app_bee/models/specie.dart';
+import 'package:app_bee/models/typeHive.dart';
+import 'package:app_bee/models/hive.dart';
+import 'package:app_bee/models/floralResource.dart';
 
 // Classe singleton para gerenciar o banco de dados
 class DatabaseHelper {
@@ -33,10 +36,24 @@ class DatabaseHelper {
 
   // Cria a tabela de species
   Future<void> _onCreate(Database db, int version) async {
-    print("Estou no DBBBBBBBBBBBBBBBBBBBBBBBBB");
     await db.execute(
       'CREATE TABLE species(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
     );
+    print("Estou no DBBBBBBBBBBBBBBBBBBBBBBBBB");
+    await db.execute(
+      'CREATE TABLE typesHives(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
+    );
+    await db.execute(
+      'CREATE TABLE floralResources(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
+    );
+    await db.execute(
+      'CREATE TABLE apiaries(id INTEGER PRIMARY KEY AUTOINCREMENT, floralResourcesId INTEGER REFERENCES floralResource(id), created_at TEXT, updated_at TEXT)',
+    );
+
+    await db.execute(
+      'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, typeHiveId INTEGER REFERENCES typesHives(id),specieId INTEGER REFERENCES species(id), apiaryId INTEGER REFERENCES apiaries(id), created_at TEXT, updated_at TEXT)',
+    );
+    print("Estou no DBBBBBBBBBBBBBBBBBBBBBBBBB");
   }
 
   // Insere um novo Specie no banco de dados
@@ -57,6 +74,69 @@ class DatabaseHelper {
 
     return List.generate(maps.length, (i) {
       return Specie.fromMap(maps[i]);
+    });
+  }
+
+  // Insere um novo TypeHive no banco de dados
+  Future<void> insertTypeHive(TypeHive typeHive) async {
+    final db = await database;
+    await db.insert(
+      'typesHives',
+      typeHive.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Recupera TypeHives do banco de dados
+
+  Future<List<TypeHive>> getTypesHives() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('typesHives');
+
+    return List.generate(maps.length, (i) {
+      return TypeHive.fromMap(maps[i]);
+    });
+  }
+
+  // Insere um novo Floral Resources no banco de dados
+  Future<void> insertFloralResource(FloralResource floralResource) async {
+    final db = await database;
+    await db.insert(
+      'floralResources',
+      floralResource.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Recupera Floral Resources do banco de dados
+
+  Future<List<FloralResource>> getFloralResources() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('floralResources');
+
+    return List.generate(maps.length, (i) {
+      return FloralResource.fromMap(maps[i]);
+    });
+  }
+
+  // Insere uma nova Hive no banco de dados
+  Future<void> insertHive(Hive hive) async {
+    final db = await database;
+    await db.insert(
+      'hives',
+      hive.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Recupera hives os hives do banco de dados
+
+  Future<List<Hive>> getHives() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('hives');
+
+    return List.generate(maps.length, (i) {
+      return Hive.fromMap(maps[i]);
     });
   }
 }

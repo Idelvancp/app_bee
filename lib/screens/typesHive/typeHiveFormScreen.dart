@@ -1,24 +1,24 @@
-import 'package:app_bee/providers/specieProvider.dart';
+import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SpecieFormScreen extends StatefulWidget {
-  const SpecieFormScreen({Key? key}) : super(key: key);
+class TypeHiveFormScreen extends StatefulWidget {
+  const TypeHiveFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<SpecieFormScreen> createState() => _SpecieFormState();
+  State<TypeHiveFormScreen> createState() => _TypeHiveFormState();
 }
 
-class _SpecieFormState extends State<SpecieFormScreen> {
+class _TypeHiveFormState extends State<TypeHiveFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
   _submitForm() {
     _formKey.currentState?.save();
-    Provider.of<SpecieProvider>(
+    Provider.of<TypeHiveProvider>(
       context,
       listen: false,
-    ).addSpecieFromData(_formData);
+    ).addTypeHiveFromData(_formData);
     Navigator.of(context).pop();
   }
 
@@ -26,7 +26,10 @@ class _SpecieFormState extends State<SpecieFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastrar Espécie'),
+        title: Text(
+          'Cadastrar Tipo de Colmeia',
+          style: TextStyle(fontSize: 20),
+        ),
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -57,7 +60,7 @@ class _SpecieFormState extends State<SpecieFormScreen> {
                             MaterialStateProperty.all<Color>(Colors.blue),
                       ),
                       child: Text(
-                        'Nova Espécie',
+                        'Novo Tipo de Colmeia',
                         style: TextStyle(
                           color: Colors.purple,
                         ),

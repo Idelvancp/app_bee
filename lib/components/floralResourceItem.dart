@@ -1,29 +1,28 @@
-import 'package:app_bee/providers/specieProvider.dart';
+import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:flutter/material.dart';
-import '../models/specie.dart';
+import 'package:app_bee/models/floralResource.dart';
 import '../routes/appRoute.dart';
 
-class SpecieItem extends StatelessWidget {
-  final Specie specie;
+class FloralResourceItem extends StatelessWidget {
+  final FloralResource floralResource;
 
-  const SpecieItem(this.specie);
-
-  void _selectSpecie(BuildContext context) {
+  const FloralResourceItem(this.floralResource);
+/*
+  void _selectFloralResource(BuildContext context) {
     Navigator.of(context).pushNamed(
       AppRoutes.APIARY_DETAILS,
       arguments: specie,
     );
   }
-
+*/
   @override
   Widget build(BuildContext context) {
-    final species = SpecieProvider().loadSpecies();
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(
+        /*Navigator.of(context).pushNamed(
           AppRoutes.APIARY_DETAILS,
-          arguments: specie,
-        );
+          arguments: floralResources,
+        );*/
       },
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
@@ -39,7 +38,7 @@ class SpecieItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                specie.name,
+                floralResource.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

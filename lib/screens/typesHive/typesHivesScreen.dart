@@ -1,22 +1,23 @@
-import 'package:app_bee/components/appDrawer.dart';
+import 'package:app_bee/components/typeHiveItem.dart';
+import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/providers/specieProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
-import 'package:app_bee/components/specieItem.dart';
+import 'package:app_bee/components/appDrawer.dart';
 
-class SpeciesScreen extends StatefulWidget {
+class TypesHivesScreen extends StatefulWidget {
   @override
-  State<SpeciesScreen> createState() => SpeciesScreenState();
+  State<TypesHivesScreen> createState() => TypesHivesScreenState();
 }
 
-class SpeciesScreenState extends State<SpeciesScreen> {
+class TypesHivesScreenState extends State<TypesHivesScreen> {
   Widget build(BuildContext context) {
-    final SpecieProvider species = Provider.of(context);
-    final speciesList = species.specie; // Obter a lista de apiários
+    final TypeHiveProvider typesHives = Provider.of(context);
+    final typesHivesList =
+        typesHives.typeHive; // Obter a lista de tipos de colmeias
     return Scaffold(
       appBar: AppBar(
-        title: Text("Especíes"),
+        title: Text("Tipos de Colmeias"),
         centerTitle: true,
       ),
       body: GridView(
@@ -27,15 +28,15 @@ class SpeciesScreenState extends State<SpeciesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: speciesList.map((api) {
-          return SpecieItem(api);
+        children: typesHivesList.map((api) {
+          return TypeHiveItem(api);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple, // Cor do botão
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.SPECIE_FORM);
+          Navigator.of(context).pushNamed(AppRoutes.TYPES_HIVES_FORM);
         },
       ),
       drawer: AppDrawer(),

@@ -1,6 +1,6 @@
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/apiaryList.dart';
-import 'package:app_bee/models/floralResources.dart';
+import 'package:app_bee/models/floralResource.dart';
 import 'package:app_bee/data/cities.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +34,7 @@ class _ApiaryFormState extends State<ApiaryForm> {
   String estadoSelecionado = estados.first.toString();
   List<String> municipiosDoEstado = [];
   String municipioSelecionado = "Não selecionado";
-  FloralResources? selectedResource;
+  FloralResource? selectedResource;
   DateTime? _selectedDateTime;
   Biome selectedBiome = Biome.amazonia;
 

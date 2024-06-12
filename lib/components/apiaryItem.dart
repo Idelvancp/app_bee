@@ -18,9 +18,12 @@ class ApiaryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int alerts = 3;
-    final apiaryHives = DUMMY_HIVES.where((hive) {
+    /* final apiaryHives = DUMMY_HIVES.where((hive) {
       return hive.apiaryId == apiary.id;
     }).toList();
+*/
+    // final hives = SpecieProvider().loadSpecies();
+
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
@@ -42,7 +45,7 @@ class ApiaryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                apiary.name,
+                "Teste",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

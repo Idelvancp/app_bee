@@ -1,22 +1,23 @@
 import 'package:app_bee/components/appDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/providers/specieProvider.dart';
+import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
-import 'package:app_bee/components/specieItem.dart';
+import 'package:app_bee/components/floralResourceItem.dart';
 
-class SpeciesScreen extends StatefulWidget {
+class FloralResourcesScreen extends StatefulWidget {
   @override
-  State<SpeciesScreen> createState() => SpeciesScreenState();
+  State<FloralResourcesScreen> createState() => FloralResourcesScreenState();
 }
 
-class SpeciesScreenState extends State<SpeciesScreen> {
+class FloralResourcesScreenState extends State<FloralResourcesScreen> {
   Widget build(BuildContext context) {
-    final SpecieProvider species = Provider.of(context);
-    final speciesList = species.specie; // Obter a lista de apiários
+    final FloralResourceProvider floralResources = Provider.of(context);
+    final speciesList =
+        floralResources.floralResource; // Obter a lista de apiários
     return Scaffold(
       appBar: AppBar(
-        title: Text("Especíes"),
+        title: Text("Recursos Florais"),
         centerTitle: true,
       ),
       body: GridView(
@@ -28,14 +29,14 @@ class SpeciesScreenState extends State<SpeciesScreen> {
           mainAxisSpacing: 10,
         ),
         children: speciesList.map((api) {
-          return SpecieItem(api);
+          return FloralResourceItem(api);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple, // Cor do botão
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.SPECIE_FORM);
+          Navigator.of(context).pushNamed(AppRoutes.FLORAL_RESOURCES_FORM);
         },
       ),
       drawer: AppDrawer(),

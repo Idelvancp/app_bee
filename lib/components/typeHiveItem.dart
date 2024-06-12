@@ -1,28 +1,26 @@
-import 'package:app_bee/providers/specieProvider.dart';
 import 'package:flutter/material.dart';
-import '../models/specie.dart';
+import 'package:app_bee/models/typeHive.dart';
 import '../routes/appRoute.dart';
 
-class SpecieItem extends StatelessWidget {
-  final Specie specie;
+class TypeHiveItem extends StatelessWidget {
+  final TypeHive typeHive;
 
-  const SpecieItem(this.specie);
+  const TypeHiveItem(this.typeHive);
 
-  void _selectSpecie(BuildContext context) {
+  void _selectTypeHive(BuildContext context) {
     Navigator.of(context).pushNamed(
       AppRoutes.APIARY_DETAILS,
-      arguments: specie,
+      arguments: typeHive,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final species = SpecieProvider().loadSpecies();
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
           AppRoutes.APIARY_DETAILS,
-          arguments: specie,
+          arguments: typeHive,
         );
       },
       splashColor: Theme.of(context).primaryColor,
@@ -39,7 +37,7 @@ class SpecieItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                specie.name,
+                typeHive.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
