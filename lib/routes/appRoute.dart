@@ -9,4 +9,6 @@ class AppRoutes {
   static const TYPES_HIVES_FORM = '/types-hives-form';
   static const FLORAL_RESOURCES_INDEX = '/floral-resources-index';
   static const FLORAL_RESOURCES_FORM = '/floral-resource-form';
+  static const HONEY_BOXES_INDEX = '/honey-boxes-index';
+  static const HONEY_BOX_FORM = '/honey-box-form';
 }

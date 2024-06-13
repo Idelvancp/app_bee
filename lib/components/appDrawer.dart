@@ -50,6 +50,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          Divider(),
+          ListTile(
+            title: Text('Caixas de Abelhas'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.HONEY_BOXES_INDEX,
+              );
+            },
+          ),
         ],
       ),
     );

@@ -4,7 +4,7 @@ import 'package:app_bee/models/specie.dart';
 import 'package:app_bee/models/typeHive.dart';
 import 'package:app_bee/models/hive.dart';
 import 'package:app_bee/models/apiary.dart';
-
+import 'package:app_bee/models/honeyBox.dart';
 import 'package:app_bee/models/floralResource.dart';
 
 // Classe singleton para gerenciar o banco de dados
@@ -53,11 +53,14 @@ class DatabaseHelper {
     await db.execute(
       'CREATE TABLE apiaries_floral_resources(apiary_id INTEGER, floral_resource_id INTEGER, FOREIGN KEY (apiary_id) REFERENCES apiaries (id), FOREIGN KEY (floral_resource_id) REFERENCES floral_resources (id), PRIMARY KEY (apiary_id, floral_resource_id))',
     );
+    await db.execute(
+      'CREATE TABLE honey_boxes(id INTEGER PRIMARY KEY AUTOINCREMENT, number_frames INTEGER, busy_frames INTEGER, type_hive_id INTEGER REFERENCES types_hives(id), created_at TEXT, updated_at TEXT)',
+    );
+
 /*
     await db.execute(
       'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, specie_id INTEGER, type_hive_id INTEGER, FOREIGN KEY (specie_id) REFERENCES species (id), FOREIGN KEY (type_hive_id) REFERENCES types_hives (id), specie_id, created_at TEXT, updated_at TEXT)',
     );
-    print("Estou no DBBBBBBBBBBBBBBBBBBBBBBBBB");
     */
   }
 
@@ -202,5 +205,38 @@ class DatabaseHelper {
     }
 
     return apiaries;
+  }
+
+  // Insere um novo Floral Resources no banco de dados
+  Future<void> insertHoneyBox(HoneyBox honeyBox) async {
+    final db = await database;
+    print("Estou na Table Honey BOx");
+    // Comando para listar todas as tabelas no banco de dados
+
+    List<Map<String, dynamic>> tables =
+        await db.rawQuery("SELECT * FROM sqlite_master WHERE type='table'");
+
+    // Imprime as tabelas existentes
+    print("Tabelas no banco de dados:");
+    tables.forEach((table) {
+      print(table['name']);
+    });
+
+    await db.insert(
+      'honey_boxes',
+      honeyBox.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Recupera Floral Resources do banco de dados
+
+  Future<List<HoneyBox>> getHoneyBoxes() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('honey_boxes');
+
+    return List.generate(maps.length, (i) {
+      return HoneyBox.fromMap(maps[i]);
+    });
   }
 }

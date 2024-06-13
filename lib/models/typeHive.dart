@@ -37,4 +37,7 @@ class TypeHive with ChangeNotifier {
           map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
     );
   }
+  String tipeHivesAsStringByName() {
+    return name;
+  }
 }

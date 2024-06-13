@@ -2,8 +2,12 @@ import 'package:app_bee/components/appDrawer.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
+import 'package:app_bee/providers/specieProvider.dart';
+import 'package:app_bee/providers/honeyBoxProvider.dart';
 import 'package:app_bee/screens/floralResource/floralResourceScreen.dart';
 import 'package:app_bee/screens/floralResource/floralResourceFormScreen.dart';
+import 'package:app_bee/screens/honeyBox/honeyBoxFormScreen.dart';
+import 'package:app_bee/screens/honeyBox/honeyBoxesScreen.dart';
 import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
 import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +17,6 @@ import 'screens/ apiary/apiaryForm.dart';
 import 'screens/ apiary/apiaryDetailsScreen.dart';
 import 'screens/specie/speciesScreen.dart';
 import 'screens/specie/specieFormScreen.dart';
-import 'package:app_bee/providers/specieProvider.dart';
 import 'models/apiaryList.dart';
 import 'routes/appRoute.dart';
 
@@ -35,6 +38,9 @@ class BeeApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => FloralResourceProvider()..loadFloralResources(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HoneyBoxProvider()..loadHoneyBoxes(),
         ),
       ],
       child: MaterialApp(
@@ -60,7 +66,9 @@ class BeeApp extends StatelessWidget {
           AppRoutes.TYPES_HIVES_INDEX: (ctx) => TypesHivesScreen(),
           AppRoutes.TYPES_HIVES_FORM: (ctx) => TypeHiveFormScreen(),
           AppRoutes.FLORAL_RESOURCES_INDEX: (ctx) => FloralResourcesScreen(),
-          AppRoutes.FLORAL_RESOURCES_FORM: (ctx) => FloralResourceFormScreen()
+          AppRoutes.FLORAL_RESOURCES_FORM: (ctx) => FloralResourceFormScreen(),
+          AppRoutes.HONEY_BOXES_INDEX: (ctx) => HoneyBoxesScreen(),
+          AppRoutes.HONEY_BOX_FORM: (ctx) => HoneyBoxFormScreen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
@@ -86,6 +94,8 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Tipos de Colméias', 'screen': TypesHivesScreen()},
     {'title': 'Recursos Florais', 'screen': ApiariesScreen()},
     {'title': 'Fomulários Recursos Florais', 'screen': TypesHivesScreen()},
+    {'title': 'Caixas de Abelhas', 'screen': HoneyBoxesScreen()},
+    {'title': 'Cadastrar Caixa de Abelha', 'screen': HoneyBoxFormScreen()},
 
     // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];
