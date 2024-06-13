@@ -11,9 +11,18 @@ class ApiariesScreen extends StatefulWidget {
 }
 
 class ApiariesScreenState extends State<ApiariesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ApiaryList>(context, listen: false).fetchAndPrintApiaries();
+    });
+  }
+
   Widget build(BuildContext context) {
     final ApiaryList apiaries = Provider.of(context);
-    final apiariesList = apiaries.apiary; // Obter a lista de apiários
+    final apiariesList = apiaries.apiary;
+
     return Scaffold(
       body: GridView(
         padding: const EdgeInsets.all(25),

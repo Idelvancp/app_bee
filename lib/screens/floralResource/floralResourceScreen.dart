@@ -13,8 +13,7 @@ class FloralResourcesScreen extends StatefulWidget {
 class FloralResourcesScreenState extends State<FloralResourcesScreen> {
   Widget build(BuildContext context) {
     final FloralResourceProvider floralResources = Provider.of(context);
-    final speciesList =
-        floralResources.floralResource; // Obter a lista de apiários
+    final floralResourcesList = floralResources.floralResource;
     return Scaffold(
       appBar: AppBar(
         title: Text("Recursos Florais"),
@@ -28,7 +27,7 @@ class FloralResourcesScreenState extends State<FloralResourcesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: speciesList.map((api) {
+        children: floralResourcesList.map((api) {
           return FloralResourceItem(api);
         }).toList(),
       ),

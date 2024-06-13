@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/apiary.dart';
 import '../routes/appRoute.dart';
-import '../data/dummy_data.dart';
+import 'package:app_bee/models/floralResource.dart';
 
 class ApiaryItem extends StatelessWidget {
   final Apiary apiary;
@@ -17,20 +17,15 @@ class ApiaryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int alerts = 3;
-    /* final apiaryHives = DUMMY_HIVES.where((hive) {
-      return hive.apiaryId == apiary.id;
-    }).toList();
-*/
-    // final hives = SpecieProvider().loadSpecies();
+    final int maxVisibleResources = 2; // Define o limite de recursos visíveis
+
+    List<FloralResource> visibleResources =
+        apiary.floralResources.take(maxVisibleResources).toList();
+    List<FloralResource> hiddenResources =
+        apiary.floralResources.skip(maxVisibleResources).toList();
 
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          AppRoutes.APIARY_DETAILS,
-          arguments: apiary,
-        );
-      },
+      onTap: () => _selectApiary(context),
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: Card(
@@ -45,32 +40,20 @@ class ApiaryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Teste",
+                apiary.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                   color: Colors.purple,
                 ),
               ),
+              SizedBox(height: 10),
               Text(
-                'Quantidade de Colmeias: 15',
+                'Floral Resources: ${visibleResources.map((resource) => resource.name).join(", ")}' +
+                    (hiddenResources.isNotEmpty ? ", ..." : ""),
                 style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.purple,
-                ),
-              ),
-              Text(
-                'Última vistas: 02/03/2024',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.purple,
-                ),
-              ),
-              Text(
-                'Alertas: $alerts',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.red,
+                  fontSize: 14,
+                  color: Colors.black54,
                 ),
               ),
             ],

@@ -1,11 +1,12 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:app_bee/data/dummy_data.dart';
 import 'package:app_bee/models/apiary.dart';
+import 'package:app_bee/models/floralResource.dart';
+import 'package:app_bee/database/databaseHelper.dart';
 
 class ApiaryList with ChangeNotifier {
-  final List<Apiary> _apiaries = [];
+  List<Apiary> _apiaries = [];
   List<Apiary> get apiary => [..._apiaries];
 
   int get apiariesCount {
@@ -13,19 +14,46 @@ class ApiaryList with ChangeNotifier {
   }
 
   void addApiaryFromData(Map<String, Object> data) {
+    // Recuperar a lista de FloralResource do formData
+    List<FloralResource> floralResources =
+        data['fResources'] as List<FloralResource>;
+    // Agora você pode usar floralResources como precisar
+//    for (var resource in floralResources) {
+    //    print('Selected Floral Resource: ${resource.name}');
+    // }
     final newApiary = Apiary(
       id: Random().nextInt(10000),
       name: data['name'].toString(),
-      state: data['state'].toString(),
-      city: data['city'].toString(),
-      // biome: _formData['biome'] as String,
-      //date: DateTime.parse(_formData['date'] as String),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
-    addApiary(newApiary);
+    addApiary(newApiary, floralResources);
   }
 
-  void addApiary(Apiary apiary) {
-    _apiaries.add(apiary);
+  Future<void> addApiary(Apiary newApiary, List fResouces) async {
+    _apiaries.add(newApiary);
+    await DatabaseHelper().insertApiary(newApiary, fResouces);
     notifyListeners();
+  }
+
+  Future<void> loadApiaries() async {
+    final List<Apiary> loadedApiaries = await DatabaseHelper().getApiaries();
+    _apiaries = loadedApiaries;
+    notifyListeners();
+  }
+
+// Novo método para buscar e imprimir apiários e seus recursos florais
+  Future<void> fetchAndPrintApiaries() async {
+    final apiariesFromDb = await DatabaseHelper().getApiaries();
+    _apiaries.clear();
+    _apiaries.addAll(apiariesFromDb);
+    notifyListeners();
+
+    for (var apiary in _apiaries) {
+      print('Apiary: ${apiary.name}');
+      for (var floralResource in apiary.floralResources) {
+        print('  Floral Resource: ${floralResource.name}');
+      }
+    }
   }
 }

@@ -35,4 +35,8 @@ class FloralResource with ChangeNotifier {
           map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
     );
   }
+
+  String floralResourceAsStringByName() {
+    return name;
+  }
 }

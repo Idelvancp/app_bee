@@ -1,11 +1,11 @@
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/apiaryList.dart';
 import 'package:app_bee/models/floralResource.dart';
+import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/data/cities.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../data/dummy_data.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'dart:math';
@@ -34,13 +34,26 @@ class _ApiaryFormState extends State<ApiaryForm> {
   String estadoSelecionado = estados.first.toString();
   List<String> municipiosDoEstado = [];
   String municipioSelecionado = "Não selecionado";
-  FloralResource? selectedResource;
+  List<int> selectedResourceIds = [];
+  List<FloralResource> selectedResource = [];
+
   DateTime? _selectedDateTime;
   Biome selectedBiome = Biome.amazonia;
 
+  @override
+  void initState() {
+    super.initState();
+    // Load the floral resources when the form is initialized
+    Provider.of<FloralResourceProvider>(context, listen: false)
+        .loadFloralResources();
+  }
+
   _submitForm() {
     _formKey.currentState?.save();
-    print(_formData.values);
+    //final floralResourcesID = [];
+    //floralResourcesID
+    //   .addAll(selectedResource.map((resource) => resource.id).toList());
+    _formData['fResources'] = selectedResource;
     Provider.of<ApiaryList>(
       context,
       listen: false,
@@ -73,6 +86,37 @@ class _ApiaryFormState extends State<ApiaryForm> {
                   textInputAction: TextInputAction.next,
                   controller: _nameController,
                   onSaved: (name) => _formData['name'] = name ?? '',
+                ),
+                Consumer<FloralResourceProvider>(
+                  builder: (ctx, floralResourceProvider, _) {
+                    final allFloralResources =
+                        floralResourceProvider.floralResource;
+                    return DropdownSearch<FloralResource>.multiSelection(
+                      items: allFloralResources,
+                      itemAsString: (FloralResource u) =>
+                          u.floralResourceAsStringByName(),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "Selecione Recursos Florais",
+                          filled: true,
+                        ),
+                      ),
+                      onChanged: (List<FloralResource> selectedRe) {
+                        selectedResource = selectedRe;
+                        print(selectedResource);
+                      }, /*
+                      popupProps: PopupPropsMultiSelection.menu(
+                        showSelectedItems: true,
+                        disabledItemFn: (String s) => s.startsWith('I'),
+                      ),
+                      onChanged: (List<String> selectedItems) {
+                        setState(() {
+                          selectedResources = selectedItems;
+                        });
+                      },
+                      selectedItems: selectedResources, */
+                    );
+                  },
                 ),
                 DropdownSearch<String>(
                   items: estados,

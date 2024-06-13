@@ -13,9 +13,9 @@ class FloralResourceProvider with ChangeNotifier {
   }
 
   void loadFloralResources() async {
-    final hives = await DatabaseHelper().getFloralResources();
+    final floralResources = await DatabaseHelper().getFloralResources();
     _floralResources.clear();
-    _floralResources.addAll(hives);
+    _floralResources.addAll(floralResources);
     notifyListeners();
   }
 
