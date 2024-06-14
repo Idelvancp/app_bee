@@ -11,9 +11,18 @@ class HoneyBoxesScreen extends StatefulWidget {
 }
 
 class HoneyBoxesScreenState extends State<HoneyBoxesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HoneyBoxProvider>(context, listen: false).loadHoneyBoxes();
+    });
+  }
+
   Widget build(BuildContext context) {
     final HoneyBoxProvider honeyBoxes = Provider.of(context);
-    final honeyBoxesList = honeyBoxes.honeyBox; // Obter a lista de apiários
+    final honeyBoxesList =
+        honeyBoxes.honeyBoxesWithTypeName; // Obter a lista de apiários
     return Scaffold(
       appBar: AppBar(
         title: Text("Caixas de Abelhas"),

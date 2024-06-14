@@ -6,6 +6,7 @@ import 'package:app_bee/models/hive.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/honeyBox.dart';
 import 'package:app_bee/models/floralResource.dart';
+import 'dart:developer';
 
 // Classe singleton para gerenciar o banco de dados
 class DatabaseHelper {
@@ -210,17 +211,6 @@ class DatabaseHelper {
   // Insere um novo Floral Resources no banco de dados
   Future<void> insertHoneyBox(HoneyBox honeyBox) async {
     final db = await database;
-    print("Estou na Table Honey BOx");
-    // Comando para listar todas as tabelas no banco de dados
-
-    List<Map<String, dynamic>> tables =
-        await db.rawQuery("SELECT * FROM sqlite_master WHERE type='table'");
-
-    // Imprime as tabelas existentes
-    print("Tabelas no banco de dados:");
-    tables.forEach((table) {
-      print(table['name']);
-    });
 
     await db.insert(
       'honey_boxes',
@@ -229,14 +219,52 @@ class DatabaseHelper {
     );
   }
 
-  // Recupera Floral Resources do banco de dados
+  Future<List<HoneyBoxWithTypeName>> getHoneyBoxesWithTypeNames() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
+    for (var map in maps) {
+      log('Map: $map');
+    }
 
+    //       final List<Map<String, dynamic>> maps = await db.rawQuery(
+    //     'SELECT hb. *, th. * FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
+    maps.forEach((table) {
+      print(
+          '${table['name']}, ${table['number_frames']}, ${table['busy_frames']}');
+    });
+    return List<HoneyBoxWithTypeName>.from(
+        maps.map((map) => HoneyBoxWithTypeName.fromMap(map)));
+  }
+
+/*
+  // Recupera Floral Resources do banco de dados
   Future<List<HoneyBox>> getHoneyBoxes() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('honey_boxes');
+
+    // Realiza a junção das tabelas honey_boxes e types_hives
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'SELECT hb. *, th. * FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
+
+    /*
+    print("111111111111111111111111111111111:");
+    maps.forEach((table) {
+      print(
+          '${table['name']}, ${table['number_frames']}, ${table['busy_frames']}');
+    });
 
     return List.generate(maps.length, (i) {
+      // Modifica a criação do HoneyBox para incluir o nome do TypeHive
+      return HoneyBox.fromMap(maps[i])
+          .copyWith(typeHiveName: maps[i]['type_hive_name']);
+    });
+   */
+    // Converte a lista de maps para uma lista de objetos HoneyBox
+    return List.generate(maps.length, (i) {
+      print("111111111111111111111111111111111:");
+
+      print(maps.first);
       return HoneyBox.fromMap(maps[i]);
     });
-  }
+  } */
 }

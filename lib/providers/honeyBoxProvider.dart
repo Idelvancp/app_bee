@@ -6,17 +6,23 @@ import 'package:app_bee/models/honeyBox.dart';
 import 'package:app_bee/database/databaseHelper.dart';
 
 class HoneyBoxProvider with ChangeNotifier {
-  final List<HoneyBox> _honeyBoxes = [];
-  List<HoneyBox> get honeyBox => [..._honeyBoxes];
+  List<HoneyBox> _honeyBoxes = [];
 
+  List<HoneyBox> get honeyBoxe => _honeyBoxes;
+  List<HoneyBoxWithTypeName> _honeyBoxesWithTypeName = [];
+  List<HoneyBoxWithTypeName> get honeyBoxesWithTypeName =>
+      _honeyBoxesWithTypeName;
   int get honeyBoxesCount {
     return _honeyBoxes.length;
   }
 
-  void loadHoneyBoxes() async {
-    final honeyBoxes = await DatabaseHelper().getHoneyBoxes();
-    _honeyBoxes.clear();
-    _honeyBoxes.addAll(honeyBoxes);
+  Future<void> loadHoneyBoxes() async {
+    _honeyBoxesWithTypeName =
+        await DatabaseHelper().getHoneyBoxesWithTypeNames();
+    honeyBoxesWithTypeName.forEach((item) {
+      print(
+          'IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII${item.honeyBox.busyFrames}');
+    });
     notifyListeners();
   }
 
@@ -30,12 +36,14 @@ class HoneyBoxProvider with ChangeNotifier {
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),
     );
-    print('___________________');
-    print(newHoneyBox);
     addHoneyBox(newHoneyBox);
   }
 
   Future<void> addHoneyBox(HoneyBox honeyBox) async {
+    /* final honeyBoxes = await DatabaseHelper().getHoneyBoxes();
+    honeyBoxes.forEach((item) {
+      print(item.busyFrames);
+    });*/
     _honeyBoxes.add(honeyBox);
     await DatabaseHelper().insertHoneyBox(honeyBox);
     notifyListeners();

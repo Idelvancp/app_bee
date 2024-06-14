@@ -1,4 +1,6 @@
 import 'package:app_bee/components/typeHiveItem.dart';
+import 'package:app_bee/models/honeyBox.dart';
+import 'package:app_bee/providers/honeyBoxProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +13,23 @@ class TypesHivesScreen extends StatefulWidget {
 }
 
 class TypesHivesScreenState extends State<TypesHivesScreen> {
+  /*
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HoneyBoxProvider>(context, listen: false).fetchHoneyBoxes();
+    });
+  }
+  */
+
   Widget build(BuildContext context) {
     final TypeHiveProvider typesHives = Provider.of(context);
     final typesHivesList =
         typesHives.typeHive; // Obter a lista de tipos de colmeias
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tipos de Colmeias"),
+        title: Text("Modelos de Colmeias"),
         centerTitle: true,
       ),
       body: GridView(

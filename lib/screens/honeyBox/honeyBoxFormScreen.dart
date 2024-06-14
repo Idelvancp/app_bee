@@ -30,11 +30,14 @@ class _HoneyBoxFormState extends State<HoneyBoxFormScreen> {
   @override
   Widget build(BuildContext context) {
     final HoneyBoxProvider honeyBoxes = Provider.of(context);
-    final honeyBoxesList = honeyBoxes.honeyBox;
+    final honeyBoxesList = honeyBoxes.honeyBoxe;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastrar Caixa de Abelha'),
+        title: Text(
+          'Cadastrar Caixa',
+        ),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -52,14 +55,14 @@ class _HoneyBoxFormState extends State<HoneyBoxFormScreen> {
             child: ListView(
               children: [
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'numerFrames'),
+                  decoration: InputDecoration(labelText: 'Número de Quadros'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   onSaved: (numberFrames) =>
                       _formData['numberFrames'] = int.parse(numberFrames!),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'busyFrames'),
+                  decoration: InputDecoration(labelText: 'Quadros em Uso'),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   onSaved: (busyFrames) =>
@@ -73,8 +76,7 @@ class _HoneyBoxFormState extends State<HoneyBoxFormScreen> {
                       itemAsString: (TypeHive u) => u.tipeHivesAsStringByName(),
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
-                          labelText: "Menu mode",
-                          hintText: "country in menu mode",
+                          labelText: "Selecione o Modelo da caixa",
                         ),
                       ),
                       onChanged: (TypeHive? selectedType) {
@@ -94,7 +96,7 @@ class _HoneyBoxFormState extends State<HoneyBoxFormScreen> {
                             MaterialStateProperty.all<Color>(Colors.blue),
                       ),
                       child: Text(
-                        'Novo Recurso Floral',
+                        'Nova Caixa',
                         style: TextStyle(
                           color: Colors.purple,
                         ),

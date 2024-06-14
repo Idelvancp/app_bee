@@ -4,7 +4,7 @@ import 'package:app_bee/models/honeyBox.dart';
 import '../routes/appRoute.dart';
 
 class HoneyBoxItem extends StatelessWidget {
-  final HoneyBox honeyBox;
+  final HoneyBoxWithTypeName honeyBox;
 
   const HoneyBoxItem(this.honeyBox);
 /*
@@ -38,7 +38,7 @@ class HoneyBoxItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'honeyBox.numberFrames',
+                "Tipo de Caixa: ${honeyBox.typeHiveName}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -46,14 +46,14 @@ class HoneyBoxItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Quantidade de Colmeias: 15',
+                'Número de Quadros: ${honeyBox.honeyBox.numberFrames}',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,
                 ),
               ),
               Text(
-                'Última vistas: 02/03/2024',
+                'Quadros Ocupados: ${honeyBox.honeyBox.busyFrames}',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

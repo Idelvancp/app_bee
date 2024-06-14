@@ -34,7 +34,7 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            title: Text('Tipos de Colmeias'),
+            title: Text('Modelos de Colmeias'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.TYPES_HIVES_INDEX,
