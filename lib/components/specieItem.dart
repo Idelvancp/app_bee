@@ -47,14 +47,7 @@ class SpecieItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Quantidade de Colmeias: 15',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.purple,
-                ),
-              ),
-              Text(
-                'Última vistas: 02/03/2024',
+                'Quantidade de Colmeias da Espécie: 5',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

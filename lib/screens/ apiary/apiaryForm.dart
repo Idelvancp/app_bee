@@ -31,9 +31,9 @@ class _ApiaryFormState extends State<ApiaryForm> {
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
 
-  String estadoSelecionado = estados.first.toString();
-  List<String> municipiosDoEstado = [];
-  String municipioSelecionado = "Não selecionado";
+  Map<String, dynamic> estadoSelecionado = estados.first;
+  List<Map<String, dynamic>> municipiosDoEstado = [];
+  Map<String, dynamic>? municipioSelecionado;
   List<int> selectedResourceIds = [];
   List<FloralResource> selectedResource = [];
 
@@ -54,6 +54,7 @@ class _ApiaryFormState extends State<ApiaryForm> {
     //floralResourcesID
     //   .addAll(selectedResource.map((resource) => resource.id).toList());
     _formData['fResources'] = selectedResource;
+    print(_formData.entries);
     Provider.of<ApiaryList>(
       context,
       listen: false,
@@ -67,7 +68,7 @@ class _ApiaryFormState extends State<ApiaryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fomulário Apiário'),
+        title: Text('Cadastrar Apiário'),
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -118,30 +119,37 @@ class _ApiaryFormState extends State<ApiaryForm> {
                     );
                   },
                 ),
-                DropdownSearch<String>(
+                DropdownSearch<Map<String, dynamic>>(
                   items: estados,
+                  itemAsString: (Map<String, dynamic> estado) =>
+                      estado['nome'] ?? '',
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
                       hintText: "Selecione um Estado",
                       filled: true,
                     ),
                   ),
-                  onChanged: (String? estado) {
+                  selectedItem: estadoSelecionado,
+                  onChanged: (Map<String, dynamic>? estado) {
                     setState(() {
-                      estadoSelecionado = estado.toString();
-                      municipiosDoEstado = municipios[estado]!;
+                      estadoSelecionado = estado as Map<String, dynamic>;
+                      municipiosDoEstado = municipios[estado['id'] as int]
+                          as List<Map<String, dynamic>>;
+                      print('iiiiiiiiiiiiiiiiiiiiiiiiii ${municipiosDoEstado}');
                     });
                   },
-                  selectedItem: estadoSelecionado,
                   onSaved: (state) => _formData['state'] = state ?? '',
                 ),
                 SizedBox(height: 10),
-                DropdownSearch<String>(
-                  items: municipiosDoEstado,
-                  onChanged: print,
-                  selectedItem: municipiosDoEstado.isNotEmpty
-                      ? municipiosDoEstado[0]
-                      : null,
+                DropdownSearch<Map<String, dynamic>>(
+                  items: municipiosDoEstado!,
+                  itemAsString: (Map<String, dynamic> municipiosDoEstado) =>
+                      municipiosDoEstado['nome'] ?? '',
+                  onChanged: (Map<String, dynamic>? municipio) {
+                    setState(() {
+                      municipioSelecionado = municipio as Map<String, dynamic>;
+                    });
+                  },
                   enabled: estadoSelecionado != null,
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(

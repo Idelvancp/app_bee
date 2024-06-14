@@ -29,7 +29,7 @@ class TypesHivesScreenState extends State<TypesHivesScreen> {
         typesHives.typeHive; // Obter a lista de tipos de colmeias
     return Scaffold(
       appBar: AppBar(
-        title: Text("Modelos de Colmeias"),
+        title: Text("Modelos de Caixas"),
         centerTitle: true,
       ),
       body: GridView(

@@ -51,13 +51,6 @@ class TypeHiveItem extends StatelessWidget {
                   color: Colors.purple,
                 ),
               ),
-              Text(
-                'Última vistas: 02/03/2024',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.purple,
-                ),
-              ),
             ],
           ),
         ),

@@ -12,7 +12,7 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: Text('Drawer'),
+            title: Text('Menu'),
           ),
           Divider(),
           ListTile(
@@ -25,19 +25,10 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            title: Text('Spécie'),
+            title: Text('Espécies'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.SPECIE_INDEX,
-              );
-            },
-          ),
-          Divider(),
-          ListTile(
-            title: Text('Modelos de Colmeias'),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed(
-                AppRoutes.TYPES_HIVES_INDEX,
               );
             },
           ),
@@ -47,6 +38,15 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.FLORAL_RESOURCES_INDEX,
+              );
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Modelos de Caixa'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.TYPES_HIVES_INDEX,
               );
             },
           ),

@@ -46,14 +46,14 @@ class FloralResourceItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Quantidade de Colmeias: 15',
+                'Tempo da Flora: Maio a Junho',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,
                 ),
               ),
               Text(
-                'Última vistas: 02/03/2024',
+                'Característica do Mel: Doce',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

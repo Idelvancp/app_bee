@@ -56,6 +56,20 @@ class ApiaryItem extends StatelessWidget {
                   color: Colors.black54,
                 ),
               ),
+              Text(
+                'Quantidade de Colméias: 13',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+              Text(
+                'Última vista: 12/03/2024',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
             ],
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:app_bee/screens/floralResource/floralResourceScreen.dart';
 import 'package:app_bee/screens/floralResource/floralResourceFormScreen.dart';
 import 'package:app_bee/screens/honeyBox/honeyBoxFormScreen.dart';
 import 'package:app_bee/screens/honeyBox/honeyBoxesScreen.dart';
+import 'package:app_bee/screens/reports/reportsScreen.dart';
 import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
 import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,7 @@ class BeeApp extends StatelessWidget {
         ),
         routes: {
           AppRoutes.HOME: (ctx) => MainScreen(),
+          AppRoutes.REPORT_SCREEN: (ctx) => ReportsScreen(),
           AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
           AppRoutes.SPECIE_FORM: (ctx) => SpecieFormScreen(),
           AppRoutes.SPECIE_INDEX: (ctx) => SpeciesScreen(),
@@ -88,6 +90,8 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Map<String, dynamic>> _screens = [
     {'title': 'Apiários', 'screen': ApiariesScreen()},
+    {'title': 'Relatórios', 'screen': ReportsScreen()},
+
     {'title': 'Formulário Espécie', 'screen': SpecieFormScreen()},
     {'title': 'Espécies', 'screen': SpeciesScreen()},
     {'title': 'Lista de Categorias', 'screen': ApiariesScreen()},
@@ -121,11 +125,11 @@ class _MainScreenState extends State<MainScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Apiaries',
+            label: 'Apiários',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Another',
+            label: 'Relatórios',
           ),
         ],
         currentIndex: _selectedScreenIndex,

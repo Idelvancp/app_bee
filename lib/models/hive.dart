@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class Hive with ChangeNotifier {
   final int id;
-  final int typeId;
   final int apiaryId;
   final int specieId;
   final DateTime createdAt;
@@ -10,7 +9,6 @@ class Hive with ChangeNotifier {
 
   Hive(
       {required this.id,
-      required this.typeId,
       required this.apiaryId,
       required this.specieId,
       required this.createdAt,
@@ -19,7 +17,6 @@ class Hive with ChangeNotifier {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'typeId': typeId,
       'apiayId': apiaryId,
       'specieId': specieId,
       'created_at':
@@ -33,7 +30,6 @@ class Hive with ChangeNotifier {
   factory Hive.fromMap(Map<String, dynamic> map) {
     return Hive(
       id: map['id'],
-      typeId: map['typeId'],
       apiaryId: map['apiaryId'],
       specieId: map['specieId'],
       createdAt:

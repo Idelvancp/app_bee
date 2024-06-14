@@ -26,7 +26,7 @@ class _FloralResourceFormState extends State<FloralResourceFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastrar Recruso Floral'),
+        title: Text('Cadastrar Recurso Floral'),
         actions: [
           IconButton(
             onPressed: _submitForm,
