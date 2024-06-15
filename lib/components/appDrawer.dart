@@ -59,6 +59,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          Divider(),
+          ListTile(
+            title: Text('Colmeias'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.HIVES_INDEX,
+              );
+            },
+          ),
         ],
       ),
     );

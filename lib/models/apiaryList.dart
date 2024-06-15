@@ -23,6 +23,8 @@ class ApiaryList with ChangeNotifier {
     // }
     final newApiary = Apiary(
       id: Random().nextInt(10000),
+      cityId: data['cityId'] as int,
+      stateId: data['stateId'] as int,
       name: data['name'].toString(),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),

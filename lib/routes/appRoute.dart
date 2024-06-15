@@ -12,4 +12,6 @@ class AppRoutes {
   static const FLORAL_RESOURCES_FORM = '/floral-resource-form';
   static const HONEY_BOXES_INDEX = '/honey-boxes-index';
   static const HONEY_BOX_FORM = '/honey-box-form';
+  static const HIVES_INDEX = '/hives-index';
+  static const HIVE_FORM = '/hive-form';
 }

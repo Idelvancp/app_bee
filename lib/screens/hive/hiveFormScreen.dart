@@ -1,44 +1,55 @@
 import 'package:app_bee/models/honeyBox.dart';
+import 'package:app_bee/models/specie.dart';
 import 'package:app_bee/models/typeHive.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/providers/honeyBoxProvider.dart';
+import 'package:app_bee/providers/hiveProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:app_bee/providers/honeyBoxProvider.dart';
+import 'package:app_bee/providers/specieProvider.dart';
+import 'package:app_bee/models/apiaryList.dart';
 
-class HoneyBoxFormScreen extends StatefulWidget {
-  const HoneyBoxFormScreen({Key? key}) : super(key: key);
+class HiveFormScreen extends StatefulWidget {
+  const HiveFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<HoneyBoxFormScreen> createState() => _HoneyBoxFormState();
+  State<HiveFormScreen> createState() => _HiveFormState();
 }
 
-class _HoneyBoxFormState extends State<HoneyBoxFormScreen> {
+class _HiveFormState extends State<HiveFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
   TypeHive? selectedTypeHive;
-  bool isBusy = false;
+  HoneyBox? selectedHoneyBox;
+  Specie? selectedSpecie;
 
   _submitForm() {
     _formKey.currentState?.save();
-    _formData['busy'] = isBusy;
-    print(_formData.entries);
-    Provider.of<HoneyBoxProvider>(
+    Provider.of<HiveProvider>(
       context,
       listen: false,
-    ).addHoneyBoxFromData(_formData);
+    ).addHiveFromData(_formData);
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final HiveProvider hives = Provider.of(context);
+    final hivesList = hives.hive;
+
     final HoneyBoxProvider honeyBoxes = Provider.of(context);
-    final honeyBoxesList = honeyBoxes.honeyBoxe;
+    final HoneyBoxList = honeyBoxes.honeyBoxe;
+    final SpecieProvider species = Provider.of(context);
+    final speciesList = species.specie;
+    print("Estou aqui");
+    final ApiaryList apiaries = Provider.of(context);
+    final apiaryList = apiaries.apiary;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Cadastrar Caixa',
+          'Cadastrar Colmeia',
         ),
         centerTitle: true,
         actions: [
@@ -57,30 +68,41 @@ class _HoneyBoxFormState extends State<HoneyBoxFormScreen> {
             key: _formKey,
             child: ListView(
               children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'TAG'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (tag) => _formData['tag'] = tag ?? '',
-                ),
-                CheckboxListTile(
-                  title: Text("A caixa está ocupada ?"),
-                  value: isBusy,
-                  onChanged: (newValue) {
-                    setState(() {
-                      isBusy = newValue!;
-                      print("000000000000000000000000000000");
-                      print(isBusy);
-                    });
+                Consumer<HoneyBoxProvider>(
+                  builder: (ctx, honeyBoxProvider, _) {
+                    final allHoneyBox = honeyBoxProvider.honeyBoxe;
+                    return DropdownSearch<HoneyBox>(
+                      items: allHoneyBox,
+                      itemAsString: (HoneyBox u) => u.tag,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "Selecione uma Caixa",
+                        ),
+                      ),
+                      onSaved: (selectedHoneyBox) => _formData['honey_box_id'] =
+                          selectedHoneyBox?.id ?? '',
+                    );
                   },
-                  controlAffinity:
-                      ListTileControlAffinity.leading, //  <-- leading Checkbox
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Número de Quadros'),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  onSaved: (numberFrames) =>
-                      _formData['numberFrames'] = int.parse(numberFrames!),
+                Consumer<SpecieProvider>(
+                  builder: (ctx, specieProvider, _) {
+                    final allSpecies = specieProvider.specie;
+                    return DropdownSearch<Specie>(
+                      items: allSpecies,
+                      itemAsString: (Specie u) => u.name,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "Selecione o uma Espécie",
+                        ),
+                      ),
+                      onChanged: (Specie? select) {
+                        selectedSpecie = select;
+                        print(selectedSpecie?.name);
+                      },
+                      onSaved: (selectedSpecie) =>
+                          _formData['specie_id'] = selectedSpecie?.id ?? '',
+                    );
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Quadros em Uso'),

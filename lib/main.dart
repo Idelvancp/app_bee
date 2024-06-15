@@ -4,6 +4,7 @@ import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:app_bee/providers/specieProvider.dart';
 import 'package:app_bee/providers/honeyBoxProvider.dart';
+import 'package:app_bee/providers/hiveProvider.dart';
 import 'package:app_bee/screens/floralResource/floralResourceScreen.dart';
 import 'package:app_bee/screens/floralResource/floralResourceFormScreen.dart';
 import 'package:app_bee/screens/honeyBox/honeyBoxFormScreen.dart';
@@ -11,6 +12,8 @@ import 'package:app_bee/screens/honeyBox/honeyBoxesScreen.dart';
 import 'package:app_bee/screens/reports/reportsScreen.dart';
 import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
 import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
+import 'package:app_bee/screens/hive/hivesScreen.dart';
+import 'package:app_bee/screens/hive/hiveFormScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/ apiary/apiariesScreen.dart';
@@ -43,6 +46,9 @@ class BeeApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => HoneyBoxProvider()..loadHoneyBoxes(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => HiveProvider()..loadHives(),
+        ),
       ],
       child: MaterialApp(
         title: 'App Bee',
@@ -71,6 +77,8 @@ class BeeApp extends StatelessWidget {
           AppRoutes.FLORAL_RESOURCES_FORM: (ctx) => FloralResourceFormScreen(),
           AppRoutes.HONEY_BOXES_INDEX: (ctx) => HoneyBoxesScreen(),
           AppRoutes.HONEY_BOX_FORM: (ctx) => HoneyBoxFormScreen(),
+          AppRoutes.HIVES_INDEX: (ctx) => HivesScreen(),
+          AppRoutes.HIVE_FORM: (ctx) => HiveFormScreen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
@@ -100,6 +108,8 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Fomulários Recursos Florais', 'screen': TypesHivesScreen()},
     {'title': 'Caixas de Abelhas', 'screen': HoneyBoxesScreen()},
     {'title': 'Cadastrar Caixa de Abelha', 'screen': HoneyBoxFormScreen()},
+    {'title': 'Colmeias', 'screen': HivesScreen()},
+    {'title': 'Cadastrar Colmeia', 'screen': HiveFormScreen()},
 
     // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];

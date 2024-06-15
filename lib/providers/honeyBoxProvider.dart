@@ -19,10 +19,7 @@ class HoneyBoxProvider with ChangeNotifier {
   Future<void> loadHoneyBoxes() async {
     _honeyBoxesWithTypeName =
         await DatabaseHelper().getHoneyBoxesWithTypeNames();
-    honeyBoxesWithTypeName.forEach((item) {
-      print(
-          'IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII${item.honeyBox.busyFrames}');
-    });
+    honeyBoxesWithTypeName.forEach((item) {});
     notifyListeners();
   }
 
@@ -30,12 +27,16 @@ class HoneyBoxProvider with ChangeNotifier {
     final now = DateTime.now();
     final newHoneyBox = HoneyBox(
       id: Random().nextInt(10000),
+      tag: data['tag'].toString(),
+      busy: data['busy'] == false ? 0 as int : 1 as int,
       numberFrames: data['numberFrames'] as int,
       busyFrames: data['busyFrames'] as int,
       typeHiveId: data['typeHiveId'] as int,
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),
     );
+
+    print(data['busy'] == false ? 0 as int : 1 as int);
     addHoneyBox(newHoneyBox);
   }
 

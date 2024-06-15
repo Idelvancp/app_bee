@@ -55,7 +55,10 @@ class DatabaseHelper {
       'CREATE TABLE apiaries_floral_resources(apiary_id INTEGER, floral_resource_id INTEGER, FOREIGN KEY (apiary_id) REFERENCES apiaries (id), FOREIGN KEY (floral_resource_id) REFERENCES floral_resources (id), PRIMARY KEY (apiary_id, floral_resource_id))',
     );
     await db.execute(
-      'CREATE TABLE honey_boxes(id INTEGER PRIMARY KEY AUTOINCREMENT, number_frames INTEGER, busy_frames INTEGER, type_hive_id INTEGER REFERENCES types_hives(id), created_at TEXT, updated_at TEXT)',
+      'CREATE TABLE honey_boxes(id INTEGER PRIMARY KEY AUTOINCREMENT, tag TEXT NOT NULL, busy INTEGER NOT NULL CHECK (busy IN (0, 1)), number_frames INTEGER, busy_frames INTEGER, type_hive_id INTEGER REFERENCES types_hives(id), created_at TEXT, updated_at TEXT)',
+    );
+    await db.execute(
+      'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, honey_box_id INTEGER REFERENCES honey_boxes(id), apiary_id INTEGER REFERENCES apiaries(id), specie_id INTEGER REFERENCES species(id), created_at TEXT, updated_at TEXT)',
     );
 
 /*
@@ -217,6 +220,11 @@ class DatabaseHelper {
       honeyBox.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
+    for (var map in maps) {
+      log('Map: $map');
+    }
   }
 
   Future<List<HoneyBoxWithTypeName>> getHoneyBoxesWithTypeNames() async {

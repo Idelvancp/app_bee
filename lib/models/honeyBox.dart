@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 class HoneyBox with ChangeNotifier {
   final int id;
+  final String tag;
+  final int busy;
   final int numberFrames;
   final int busyFrames;
   final int typeHiveId;
@@ -12,6 +14,8 @@ class HoneyBox with ChangeNotifier {
   final DateTime? updatedAt;
   HoneyBox({
     required this.id,
+    required this.tag,
+    required this.busy,
     required this.numberFrames,
     required this.busyFrames,
     required this.typeHiveId,
@@ -21,6 +25,8 @@ class HoneyBox with ChangeNotifier {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'tag': tag,
+      'busy': busy,
       'number_frames': numberFrames,
       'busy_frames': busyFrames,
       'type_hive_id': typeHiveId,
@@ -35,6 +41,8 @@ class HoneyBox with ChangeNotifier {
   factory HoneyBox.fromMap(Map<String, dynamic> map) {
     return HoneyBox(
       id: map['id'],
+      tag: map['tag'],
+      busy: map['busy'],
       numberFrames: map['number_frames'],
       busyFrames: map['busy_frames'],
       typeHiveId: map['type_hive_id'],
