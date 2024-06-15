@@ -138,7 +138,8 @@ class _ApiaryFormState extends State<ApiaryForm> {
                       print('iiiiiiiiiiiiiiiiiiiiiiiiii ${municipiosDoEstado}');
                     });
                   },
-                  onSaved: (state) => _formData['state'] = state ?? '',
+                  onSaved: (state) =>
+                      _formData['stateId'] = state?['id'] as int,
                 ),
                 SizedBox(height: 10),
                 DropdownSearch<Map<String, dynamic>>(
@@ -157,7 +158,7 @@ class _ApiaryFormState extends State<ApiaryForm> {
                       filled: true,
                     ),
                   ),
-                  onSaved: (city) => _formData['city'] = city ?? '',
+                  onSaved: (city) => _formData['cityId'] = city?['id'] as int,
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Data de Instalação'),

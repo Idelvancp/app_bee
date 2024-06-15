@@ -1,3 +1,4 @@
+import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/honeyBox.dart';
 import 'package:app_bee/models/specie.dart';
 import 'package:app_bee/models/typeHive.dart';
@@ -26,6 +27,7 @@ class _HiveFormState extends State<HiveFormScreen> {
 
   _submitForm() {
     _formKey.currentState?.save();
+    print(_formData.entries);
     Provider.of<HiveProvider>(
       context,
       listen: false,
@@ -36,13 +38,8 @@ class _HiveFormState extends State<HiveFormScreen> {
   @override
   Widget build(BuildContext context) {
     final HiveProvider hives = Provider.of(context);
-    final hivesList = hives.hive;
-
     final HoneyBoxProvider honeyBoxes = Provider.of(context);
-    final HoneyBoxList = honeyBoxes.honeyBoxe;
     final SpecieProvider species = Provider.of(context);
-    final speciesList = species.specie;
-    print("Estou aqui");
     final ApiaryList apiaries = Provider.of(context);
     final apiaryList = apiaries.apiary;
 
@@ -70,17 +67,17 @@ class _HiveFormState extends State<HiveFormScreen> {
               children: [
                 Consumer<HoneyBoxProvider>(
                   builder: (ctx, honeyBoxProvider, _) {
-                    final allHoneyBox = honeyBoxProvider.honeyBoxe;
+                    final HoneyBoxList = honeyBoxProvider.honeyBoxe;
                     return DropdownSearch<HoneyBox>(
-                      items: allHoneyBox,
+                      items: HoneyBoxList,
                       itemAsString: (HoneyBox u) => u.tag,
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           labelText: "Selecione uma Caixa",
                         ),
                       ),
-                      onSaved: (selectedHoneyBox) => _formData['honey_box_id'] =
-                          selectedHoneyBox?.id ?? '',
+                      onSaved: (selectedHoneyBox) =>
+                          _formData['honeyBoxId'] = selectedHoneyBox?.id ?? '',
                     );
                   },
                 ),
@@ -100,33 +97,24 @@ class _HiveFormState extends State<HiveFormScreen> {
                         print(selectedSpecie?.name);
                       },
                       onSaved: (selectedSpecie) =>
-                          _formData['specie_id'] = selectedSpecie?.id ?? '',
+                          _formData['specieId'] = selectedSpecie?.id ?? '',
                     );
                   },
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Quadros em Uso'),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  onSaved: (busyFrames) =>
-                      _formData['busyFrames'] = int.parse(busyFrames!),
-                ),
-                Consumer<TypeHiveProvider>(
-                  builder: (ctx, typeHiveProvider, _) {
-                    final allTypesHives = typeHiveProvider.typeHive;
-                    return DropdownSearch<TypeHive>(
-                      items: allTypesHives,
-                      itemAsString: (TypeHive u) => u.tipeHivesAsStringByName(),
+                Consumer<ApiaryList>(
+                  builder: (ctx, apiaryList, _) {
+                    final allApiaries = apiaryList.apiary;
+                    return DropdownSearch<Apiary>(
+                      items: allApiaries,
+                      itemAsString: (Apiary u) => u.name,
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
-                          labelText: "Selecione o Modelo da caixa",
+                          labelText: "Selecione um Apiário",
                         ),
                       ),
-                      onChanged: (TypeHive? selectedType) {
-                        selectedTypeHive = selectedType;
-                      },
-                      onSaved: (selectedType) =>
-                          _formData['typeHiveId'] = selectedType?.id ?? '',
+                      onChanged: print,
+                      onSaved: (apiarySelected) =>
+                          _formData['apiaryId'] = apiarySelected?.id ?? '',
                     );
                   },
                 ),

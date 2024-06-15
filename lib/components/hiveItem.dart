@@ -4,7 +4,7 @@ import '../models/hive.dart';
 import '../routes/appRoute.dart';
 
 class HiveItem extends StatelessWidget {
-  final Hive hive;
+  final Map<String, dynamic> hive;
 
   const HiveItem(this.hive);
 
@@ -39,7 +39,7 @@ class HiveItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "ashfhaksdhk",
+                hive['id'].toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -47,7 +47,14 @@ class HiveItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Quantidade de Colmeias da Espécie: 5',
+                hive['apiary_name'],
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.purple,
+                ),
+              ),
+              Text(
+                hive['specie_name'],
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

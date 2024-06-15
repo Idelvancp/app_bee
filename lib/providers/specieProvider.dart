@@ -13,9 +13,9 @@ class SpecieProvider with ChangeNotifier {
   }
 
   void loadSpecies() async {
-    final hives = await DatabaseHelper().getSpecies();
+    final species = await DatabaseHelper().getSpecies();
     _species.clear();
-    _species.addAll(hives);
+    _species.addAll(species);
     notifyListeners();
   }
 

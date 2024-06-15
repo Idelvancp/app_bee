@@ -7,6 +7,8 @@ import 'package:app_bee/database/databaseHelper.dart';
 class HiveProvider with ChangeNotifier {
   final List<Hive> _hives = [];
   List<Hive> get hive => [..._hives];
+  final List _hiveDetails = [];
+  List get hiveDetail => [..._hiveDetails];
 
   int get hivesCount {
     return _hives.length;
@@ -16,6 +18,13 @@ class HiveProvider with ChangeNotifier {
     final hives = await DatabaseHelper().getHives();
     _hives.clear();
     _hives.addAll(hives);
+    notifyListeners();
+  }
+
+  void loadHivesDetails() async {
+    final hivesAllData = await DatabaseHelper().getHiveDetails();
+    _hiveDetails.clear();
+    _hiveDetails.addAll(hivesAllData);
     notifyListeners();
   }
 

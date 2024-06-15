@@ -8,7 +8,7 @@ import 'package:app_bee/database/databaseHelper.dart';
 class HoneyBoxProvider with ChangeNotifier {
   List<HoneyBox> _honeyBoxes = [];
 
-  List<HoneyBox> get honeyBoxe => _honeyBoxes;
+  List<HoneyBox> get honeyBoxe => [..._honeyBoxes];
   List<HoneyBoxWithTypeName> _honeyBoxesWithTypeName = [];
   List<HoneyBoxWithTypeName> get honeyBoxesWithTypeName =>
       _honeyBoxesWithTypeName;
@@ -17,6 +17,12 @@ class HoneyBoxProvider with ChangeNotifier {
   }
 
   Future<void> loadHoneyBoxes() async {
+    final honeyBoxes = await DatabaseHelper().getHoneyBoxes();
+    _honeyBoxes = honeyBoxes;
+    notifyListeners();
+  }
+
+  Future<void> loadHoneyBoxestoForm() async {
     _honeyBoxesWithTypeName =
         await DatabaseHelper().getHoneyBoxesWithTypeNames();
     honeyBoxesWithTypeName.forEach((item) {});
@@ -35,8 +41,6 @@ class HoneyBoxProvider with ChangeNotifier {
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),
     );
-
-    print(data['busy'] == false ? 0 as int : 1 as int);
     addHoneyBox(newHoneyBox);
   }
 

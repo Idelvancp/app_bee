@@ -5,6 +5,7 @@ import 'package:app_bee/models/hive.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import '../../components/hiveItem.dart';
 import 'package:app_bee/providers/hiveProvider.dart';
+import 'package:app_bee/components/appDrawer.dart';
 
 class HivesScreen extends StatefulWidget {
   @override
@@ -12,9 +13,22 @@ class HivesScreen extends StatefulWidget {
 }
 
 class HivesScreenState extends State<HivesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HiveProvider>(context, listen: false).loadHivesDetails();
+    });
+  }
+
   Widget build(BuildContext context) {
     final HiveProvider hives = Provider.of(context);
     final hivesList = hives.hive;
+    final detail = hives.hiveDetail;
+    detail.forEach((table) {
+      print(
+          'Tagessssssssssssssssss ${table['tag']} ${table['apiary_name']} ${table['species_name']}');
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text("Colmeias"),
@@ -28,7 +42,7 @@ class HivesScreenState extends State<HivesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: hivesList.map((api) {
+        children: detail.map((api) {
           return HiveItem(api);
         }).toList(),
       ),
@@ -39,6 +53,7 @@ class HivesScreenState extends State<HivesScreen> {
           Navigator.of(context).pushNamed(AppRoutes.HIVE_FORM);
         },
       ),
+      drawer: AppDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
