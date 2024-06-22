@@ -1,28 +1,28 @@
-import 'package:app_bee/providers/hiveProvider.dart';
+import 'package:app_bee/providers/typeInspectionProvider.dart';
 import 'package:flutter/material.dart';
-import '../models/hive.dart';
+import '../models/typeInspection.dart';
 import '../routes/appRoute.dart';
 
-class HiveItem extends StatelessWidget {
-  final Map<String, dynamic> hive;
+class TypeInspectionItem extends StatelessWidget {
+  final TypeInspection typeInspection;
 
-  const HiveItem(this.hive);
+  const TypeInspectionItem(this.typeInspection);
 
-  void _selectHive(BuildContext context) {
+  void _selectTypeInspection(BuildContext context) {
     Navigator.of(context).pushNamed(
       AppRoutes.APIARY_DETAILS,
-      arguments: hive,
+      arguments: typeInspection,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final hives = HiveProvider().loadHives();
+    final typesInspections = TypeInspectionProvider().loadTypeInspections();
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(
           AppRoutes.APIARY_DETAILS,
-          arguments: hive,
+          arguments: typeInspection,
         );
       },
       splashColor: Theme.of(context).primaryColor,
@@ -39,7 +39,7 @@ class HiveItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Número: ${hive['id'].toString()}',
+                typeInspection.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -47,14 +47,7 @@ class HiveItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Apiário: ${hive['apiary_name']}',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.purple,
-                ),
-              ),
-              Text(
-                'Espécie: ${hive['specie_name']} ',
+                'Quantidade de Colmeias da Espécie: 5',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

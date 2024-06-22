@@ -2,6 +2,7 @@ import 'package:app_bee/components/appDrawer.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
+import 'package:app_bee/providers/typeInspectionProvider.dart';
 import 'package:app_bee/providers/specieProvider.dart';
 import 'package:app_bee/providers/honeyBoxProvider.dart';
 import 'package:app_bee/providers/hiveProvider.dart';
@@ -10,6 +11,8 @@ import 'package:app_bee/screens/floralResource/floralResourceFormScreen.dart';
 import 'package:app_bee/screens/honeyBox/honeyBoxFormScreen.dart';
 import 'package:app_bee/screens/honeyBox/honeyBoxesScreen.dart';
 import 'package:app_bee/screens/reports/reportsScreen.dart';
+import 'package:app_bee/screens/typeInspection/typeInspectionFormScreen.dart';
+import 'package:app_bee/screens/typeInspection/typeInspectionScreen.dart';
 import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
 import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
 import 'package:app_bee/screens/hive/hivesScreen.dart';
@@ -49,6 +52,9 @@ class BeeApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => HiveProvider()..loadHives(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => TypeInspectionProvider()..loadTypeInspections(),
+        ),
       ],
       child: MaterialApp(
         title: 'App Bee',
@@ -79,6 +85,8 @@ class BeeApp extends StatelessWidget {
           AppRoutes.HONEY_BOX_FORM: (ctx) => HoneyBoxFormScreen(),
           AppRoutes.HIVES_INDEX: (ctx) => HivesScreen(),
           AppRoutes.HIVE_FORM: (ctx) => HiveFormScreen(),
+          AppRoutes.TYPES_INSPECTIONS_INDEX: (ctx) => TypesInspectionsScreen(),
+          AppRoutes.TYPE_INSPECTION_FORM: (ctx) => TypeInspectionFormScreen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
@@ -110,6 +118,11 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Cadastrar Caixa de Abelha', 'screen': HoneyBoxFormScreen()},
     {'title': 'Colmeias', 'screen': HivesScreen()},
     {'title': 'Cadastrar Colmeia', 'screen': HiveFormScreen()},
+    {'title': 'Tipos de Inspeções', 'screen': TypesInspectionsScreen()},
+    {
+      'title': 'Cadastrar Tipo de Inspeção',
+      'screen': TypeInspectionFormScreen()
+    },
 
     // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];

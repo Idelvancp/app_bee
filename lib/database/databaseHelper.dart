@@ -43,6 +43,9 @@ class DatabaseHelper {
       'CREATE TABLE species(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
     );
     await db.execute(
+      'CREATE TABLE types_inspections(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
+    );
+    await db.execute(
       'CREATE TABLE types_hives(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
     );
     await db.execute(
@@ -59,6 +62,54 @@ class DatabaseHelper {
     );
     await db.execute(
       'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, honey_box_id INTEGER REFERENCES honey_boxes(id), apiary_id INTEGER REFERENCES apiaries(id), specie_id INTEGER REFERENCES species(id), created_at TEXT, updated_at TEXT)',
+    );
+    await db.execute(
+      '''CREATE TABLE
+      products(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        honey FLOAT,
+        propolis FLOAT,
+        wax  FLOAT,
+        royal_jelly FLOAT,
+        )''',
+    );
+    await db.execute(
+      '''CREATE TABLE
+      environment_data(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        internal_temperature FLOAT,
+        external_temperature FLOAT,
+        internal_humidity  FLOAT,
+        external_humidity FLOAT,
+        wind_speed FLOAT, 
+        cloud INT,
+      )''',
+    );
+    await db.execute(
+      '''CREATE TABLE
+      population_data(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        number_bees INT,
+        age_queen FLOAT,
+        spawning_queen  TEXT,
+        eggs TEXT,
+        larvae TEXT,
+        pupa TEXT,
+        )''',
+    );
+    await db.execute(
+      '''CREATE TABLE 
+      inspection(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date created_at TEXT,
+        name TEXT NOT NULL, 
+        hive_id INTEGER REFERENCES hives(id),
+        type_inspection_id INTEGER REFERENCES types_inspections(id),
+        population_data_id INTEGER REFERENCES population_data(id),
+        product_id INTEGER REFERENCES products(id),
+        environment_data_id INTEGER REFERENCES environment_data(id),
+        created_at TEXT,
+        updated_at TEXT)''',
     );
 
 /*
@@ -156,20 +207,31 @@ class DatabaseHelper {
   Future<List> getHiveDetails() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
-        hive.*,
-        honey_box.tag,
-        specie.name AS specie_name,
-        specie.created_at AS specie_created_at,
-        specie.updated_at AS specie_updated_at,
-        apiary.name AS apiary_name,
-        apiary.city_id AS apiary_city_id,
-        apiary.state_id AS apiary_state_id,
-        apiary.created_at AS apiary_created_at,
-        apiary.updated_at AS apiary_updated_at        
-        FROM hives hive  INNER JOIN honey_boxes honey_box INNER JOIN species specie INNER JOIN apiaries apiary WHERE hive.honey_box_id = honey_box.id;''');
+    hive.*,
+    honey_box.tag,
+    specie.name AS specie_name,
+    specie.created_at AS specie_created_at,
+    specie.updated_at AS specie_updated_at,
+    apiary.name AS apiary_name,
+    apiary.city_id AS apiary_city_id,
+    apiary.state_id AS apiary_state_id,
+    apiary.created_at AS apiary_created_at,
+    apiary.updated_at AS apiary_updated_at        
+  FROM 
+    hives hive  
+    INNER JOIN 
+    honey_boxes honey_box 
+    ON hive.honey_box_id = honey_box.id
+INNER JOIN 
+    species specie  
+    ON hive.specie_id = specie.id
+INNER JOIN 
+    apiaries apiary 
+    ON hive.apiary_id = apiary.id''');
+
     maps.forEach((table) {
       print(
-          'Tagessssssssssssssssss ${table['tag']} ${table['apiary_name']} ${table['specie_name']}');
+          'Tages ${table['tag']} ${table['apiary_name']} ${table['specie_name']}');
     });
     return maps;
   }
@@ -233,48 +295,6 @@ class DatabaseHelper {
     return apiaries;
   }
 
-  // Insere um novo Floral Resources no banco de dados
-  Future<void> insertHoneyBox(HoneyBox honeyBox) async {
-    final db = await database;
-
-    await db.insert(
-      'honey_boxes',
-      honeyBox.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
-    for (var map in maps) {
-      log('Map: $map');
-    }
-  }
-
-  Future<List<HoneyBoxWithTypeName>> getHoneyBoxesWithTypeNames() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
-    for (var map in maps) {
-      log('Map: $map');
-    }
-
-    //       final List<Map<String, dynamic>> maps = await db.rawQuery(
-    //     'SELECT hb. *, th. * FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
-    maps.forEach((table) {
-      print(
-          '${table['name']}, ${table['number_frames']}, ${table['busy_frames']}');
-    });
-    return List<HoneyBoxWithTypeName>.from(
-        maps.map((map) => HoneyBoxWithTypeName.fromMap(map)));
-  }
-
-  Future<List<HoneyBox>> getHoneyBoxes() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('honey_boxes');
-
-    return List.generate(maps.length, (i) {
-      return HoneyBox.fromMap(maps[i]);
-    });
-  }
 /*
   // Recupera Floral Resources do banco de dados
   Future<List<HoneyBox>> getHoneyBoxes() async {

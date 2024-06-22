@@ -1,34 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:app_bee/models/hive.dart';
-import 'package:app_bee/routes/appRoute.dart';
-import '../../components/hiveItem.dart';
-import 'package:app_bee/providers/hiveProvider.dart';
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:app_bee/providers/typeInspectionProvider.dart';
+import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/components/typeInspectionItem.dart';
 
-class HivesScreen extends StatefulWidget {
+class TypesInspectionsScreen extends StatefulWidget {
   @override
-  State<HivesScreen> createState() => HivesScreenState();
+  State<TypesInspectionsScreen> createState() => TypesInspectionsScreenState();
 }
 
-class HivesScreenState extends State<HivesScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HiveProvider>(context, listen: false).loadHivesDetails();
-    });
-  }
-
+class TypesInspectionsScreenState extends State<TypesInspectionsScreen> {
   Widget build(BuildContext context) {
-    final HiveProvider hives = Provider.of(context);
-    final hivesList = hives.hive;
-    final detail = hives.hiveDetail;
-
+    final TypeInspectionProvider typesInspections = Provider.of(context);
+    final typesInspectionsList =
+        typesInspections.typeInspection; // Obter a lista de apiários
     return Scaffold(
       appBar: AppBar(
-        title: Text("Colmeias"),
+        title: Text("Tipos de Inspeções"),
         centerTitle: true,
       ),
       body: GridView(
@@ -39,15 +28,15 @@ class HivesScreenState extends State<HivesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: detail.map((api) {
-          return HiveItem(api);
+        children: typesInspectionsList.map((api) {
+          return TypeInspectionItem(api);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple, // Cor do botão
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.HIVE_FORM);
+          Navigator.of(context).pushNamed(AppRoutes.TYPE_INSPECTION_FORM);
         },
       ),
       drawer: AppDrawer(),

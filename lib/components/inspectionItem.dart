@@ -1,29 +1,28 @@
-import 'package:app_bee/providers/hiveProvider.dart';
+import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:flutter/material.dart';
-import '../models/hive.dart';
+import 'package:app_bee/models/floralResource.dart';
 import '../routes/appRoute.dart';
 
-class HiveItem extends StatelessWidget {
-  final Map<String, dynamic> hive;
+class FloralResourceItem extends StatelessWidget {
+  final FloralResource floralResource;
 
-  const HiveItem(this.hive);
-
-  void _selectHive(BuildContext context) {
+  const FloralResourceItem(this.floralResource);
+/*
+  void _selectFloralResource(BuildContext context) {
     Navigator.of(context).pushNamed(
       AppRoutes.APIARY_DETAILS,
-      arguments: hive,
+      arguments: specie,
     );
   }
-
+*/
   @override
   Widget build(BuildContext context) {
-    final hives = HiveProvider().loadHives();
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(
+        /*Navigator.of(context).pushNamed(
           AppRoutes.APIARY_DETAILS,
-          arguments: hive,
-        );
+          arguments: floralResources,
+        );*/
       },
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
@@ -39,7 +38,7 @@ class HiveItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Número: ${hive['id'].toString()}',
+                floralResource.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -47,14 +46,14 @@ class HiveItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Apiário: ${hive['apiary_name']}',
+                'Tempo da Flora: Maio a Junho',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,
                 ),
               ),
               Text(
-                'Espécie: ${hive['specie_name']} ',
+                'Característica do Mel: Doce',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

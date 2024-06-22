@@ -3,7 +3,7 @@ import 'package:app_bee/models/typeHive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/honeyBox.dart';
-import 'package:app_bee/database/databaseHelper.dart';
+import 'package:app_bee/database/honeyBoxDataBase.dart';
 
 class HoneyBoxProvider with ChangeNotifier {
   List<HoneyBox> _honeyBoxes = [];
@@ -17,14 +17,14 @@ class HoneyBoxProvider with ChangeNotifier {
   }
 
   Future<void> loadHoneyBoxes() async {
-    final honeyBoxes = await DatabaseHelper().getHoneyBoxes();
+    final honeyBoxes = await honeyBoxDatabase().getHoneyBoxes();
     _honeyBoxes = honeyBoxes;
     notifyListeners();
   }
 
   Future<void> loadHoneyBoxestoForm() async {
     _honeyBoxesWithTypeName =
-        await DatabaseHelper().getHoneyBoxesWithTypeNames();
+        await honeyBoxDatabase().getHoneyBoxesWithTypeNames();
     honeyBoxesWithTypeName.forEach((item) {});
     notifyListeners();
   }
@@ -50,7 +50,7 @@ class HoneyBoxProvider with ChangeNotifier {
       print(item.busyFrames);
     });*/
     _honeyBoxes.add(honeyBox);
-    await DatabaseHelper().insertHoneyBox(honeyBox);
+    await honeyBoxDatabase().insertHoneyBox(honeyBox);
     notifyListeners();
   }
 }

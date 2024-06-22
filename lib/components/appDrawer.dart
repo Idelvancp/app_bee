@@ -68,6 +68,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          Divider(),
+          ListTile(
+            title: Text('Tipos de Inspeções'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.TYPES_INSPECTIONS_INDEX,
+              );
+            },
+          ),
         ],
       ),
     );
