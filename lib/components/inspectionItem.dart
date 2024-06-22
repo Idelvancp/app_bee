@@ -1,14 +1,14 @@
-import 'package:app_bee/providers/floralResourceProvider.dart';
+import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:app_bee/models/floralResource.dart';
+import 'package:app_bee/models/inspection.dart';
 import '../routes/appRoute.dart';
 
-class FloralResourceItem extends StatelessWidget {
-  final FloralResource floralResource;
+class InspectionItem extends StatelessWidget {
+  final Inspection inspection;
 
-  const FloralResourceItem(this.floralResource);
+  const InspectionItem(this.inspection);
 /*
-  void _selectFloralResource(BuildContext context) {
+  void _selectInspection(BuildContext context) {
     Navigator.of(context).pushNamed(
       AppRoutes.APIARY_DETAILS,
       arguments: specie,
@@ -21,7 +21,7 @@ class FloralResourceItem extends StatelessWidget {
       onTap: () {
         /*Navigator.of(context).pushNamed(
           AppRoutes.APIARY_DETAILS,
-          arguments: floralResources,
+          arguments: inspections,
         );*/
       },
       splashColor: Theme.of(context).primaryColor,
@@ -38,7 +38,7 @@ class FloralResourceItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                floralResource.name,
+                inspection.date as String,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

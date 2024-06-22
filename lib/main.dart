@@ -3,6 +3,7 @@ import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:app_bee/providers/typeInspectionProvider.dart';
+import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/providers/specieProvider.dart';
 import 'package:app_bee/providers/honeyBoxProvider.dart';
 import 'package:app_bee/providers/hiveProvider.dart';
@@ -17,6 +18,7 @@ import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
 import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
 import 'package:app_bee/screens/hive/hivesScreen.dart';
 import 'package:app_bee/screens/hive/hiveFormScreen.dart';
+import 'package:app_bee/screens/hive/hiveDetailsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/ apiary/apiariesScreen.dart';
@@ -24,6 +26,8 @@ import 'screens/ apiary/apiaryForm.dart';
 import 'screens/ apiary/apiaryDetailsScreen.dart';
 import 'screens/specie/speciesScreen.dart';
 import 'screens/specie/specieFormScreen.dart';
+import 'screens/inspection/inspectionsFormScreen.dart';
+import 'screens/inspection/inspectionsScreen.dart';
 import 'models/apiaryList.dart';
 import 'routes/appRoute.dart';
 
@@ -55,6 +59,9 @@ class BeeApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => TypeInspectionProvider()..loadTypeInspections(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => InspectionProvider()..loadInspections(),
+        ),
       ],
       child: MaterialApp(
         title: 'App Bee',
@@ -85,8 +92,11 @@ class BeeApp extends StatelessWidget {
           AppRoutes.HONEY_BOX_FORM: (ctx) => HoneyBoxFormScreen(),
           AppRoutes.HIVES_INDEX: (ctx) => HivesScreen(),
           AppRoutes.HIVE_FORM: (ctx) => HiveFormScreen(),
+          AppRoutes.HIVE_DETAILS: (ctx) => HiveDetailsScreen(),
           AppRoutes.TYPES_INSPECTIONS_INDEX: (ctx) => TypesInspectionsScreen(),
           AppRoutes.TYPE_INSPECTION_FORM: (ctx) => TypeInspectionFormScreen(),
+          AppRoutes.INSPECTIONS_INDEX: (ctx) => InspectionsScreen(),
+          AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
@@ -118,6 +128,7 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Cadastrar Caixa de Abelha', 'screen': HoneyBoxFormScreen()},
     {'title': 'Colmeias', 'screen': HivesScreen()},
     {'title': 'Cadastrar Colmeia', 'screen': HiveFormScreen()},
+    {'title': 'Detalhes Colmeia', 'screen': HiveDetailsScreen()},
     {'title': 'Tipos de Inspeções', 'screen': TypesInspectionsScreen()},
     {
       'title': 'Cadastrar Tipo de Inspeção',

@@ -14,6 +14,10 @@ class AppRoutes {
   static const HONEY_BOX_FORM = '/honey-box-form';
   static const HIVES_INDEX = '/hives-index';
   static const HIVE_FORM = '/hive-form';
+  static const HIVE_DETAILS = '/hives-details';
+
   static const TYPES_INSPECTIONS_INDEX = '/types-inspections-index';
   static const TYPE_INSPECTION_FORM = '/type-inspection-form';
+  static const INSPECTIONS_INDEX = '/inspections-index';
+  static const INSPECTION_FORM = '/inspection-form';
 }

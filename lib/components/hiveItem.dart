@@ -10,7 +10,7 @@ class HiveItem extends StatelessWidget {
 
   void _selectHive(BuildContext context) {
     Navigator.of(context).pushNamed(
-      AppRoutes.APIARY_DETAILS,
+      AppRoutes.HIVE_DETAILS,
       arguments: hive,
     );
   }
@@ -19,12 +19,7 @@ class HiveItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final hives = HiveProvider().loadHives();
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          AppRoutes.APIARY_DETAILS,
-          arguments: hive,
-        );
-      },
+      onTap: () => _selectHive(context),
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: Card(

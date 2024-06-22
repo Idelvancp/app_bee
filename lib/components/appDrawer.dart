@@ -77,6 +77,15 @@ class AppDrawer extends StatelessWidget {
               );
             },
           ),
+          Divider(),
+          ListTile(
+            title: Text('Inspeções'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.INSPECTIONS_INDEX,
+              );
+            },
+          ),
         ],
       ),
     );

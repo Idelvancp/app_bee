@@ -101,8 +101,7 @@ class DatabaseHelper {
       '''CREATE TABLE 
       inspection(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date created_at TEXT,
-        name TEXT NOT NULL, 
+        date  TEXT, 
         hive_id INTEGER REFERENCES hives(id),
         type_inspection_id INTEGER REFERENCES types_inspections(id),
         population_data_id INTEGER REFERENCES population_data(id),
