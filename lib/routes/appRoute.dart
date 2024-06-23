@@ -20,4 +20,6 @@ class AppRoutes {
   static const TYPE_INSPECTION_FORM = '/type-inspection-form';
   static const INSPECTIONS_INDEX = '/inspections-index';
   static const INSPECTION_FORM = '/inspection-form';
+  static const INSPECTION_FORM2 = '/inspection-form2';
+  static const INSPECTION_FORM3 = '/inspection-form3';
 }

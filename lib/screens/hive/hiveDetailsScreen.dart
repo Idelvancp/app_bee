@@ -10,25 +10,43 @@ class HiveDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List = ModalRoute.of(context)!.settings.arguments;
+    final Map<String, dynamic> hive =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    /*final hives = DUMMY_HIVES.where((item) {
-      return item.hiveId == hive.id;
-    });*/
-    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk ${List.toString()}");
+    void _selectHive(BuildContext context) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        AppRoutes.INSPECTION_FORM,
+        (Route<dynamic> route) => false, // Remove todas as telas anteriores
+        arguments: hive,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Detalhe Colmeia"),
         centerTitle: true,
       ),
-      body: GridView(
+      body: Padding(
         padding: const EdgeInsets.all(25),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 5 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Apiário: ${hive['apiary_name']}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text('Created At: ${hive['created_at']}',
+                style: TextStyle(fontSize: 16)),
+            SizedBox(height: 5),
+            Text('Updated At: ${hive['updated_at']}',
+                style: TextStyle(fontSize: 16)),
+            SizedBox(height: 10),
+            Text('Espécie: ${hive['specie_name']}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ElevatedButton(
+              onPressed: () => _selectHive(context),
+              child: Text('Adicionar Inspeção'),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
