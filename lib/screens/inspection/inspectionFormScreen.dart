@@ -20,7 +20,6 @@ class _InspectionFormState extends State<InspectionFormScreen> {
 
   void _toPagePopulationData(BuildContext context) {
     _formKey.currentState?.save();
-    print("--------------------${_formData}");
     Navigator.of(context).pushNamed(
       AppRoutes.INSPECTION_FORM2,
       arguments: _formData,
@@ -31,7 +30,6 @@ class _InspectionFormState extends State<InspectionFormScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> hiveId =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    print("-----------------------${hiveId}");
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Inspeção'),
@@ -64,8 +62,9 @@ class _InspectionFormState extends State<InspectionFormScreen> {
                           labelText: "Selecione um Tipo de Inspeção",
                         ),
                       ),
-                      onSaved: (selectedHoneyBox) =>
-                          _formData['honeyBoxId'] = selectedHoneyBox?.id ?? '',
+                      onSaved: (selectedTypeInspection) =>
+                          _formData['typeInspection_id'] =
+                              selectedTypeInspection?.name ?? '',
                     );
                   },
                 ),

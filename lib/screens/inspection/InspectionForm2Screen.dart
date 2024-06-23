@@ -12,9 +12,9 @@ class InspectionForm2Screen extends StatefulWidget {
 class _InspectionFormState extends State<InspectionForm2Screen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
+
   String? ageQueen;
   String? spawningQueen;
-  String? eggs;
   String? larvae;
   String? pupa;
 
@@ -27,11 +27,16 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
 
   _submitForm() {
     _formKey.currentState?.save();
-    Provider.of<InspectionProvider>(
+    _formData['spawningQueen'] = spawningQueen ?? '';
+    _formData['larvae'] = larvae ?? '';
+    _formData['pupa'] = pupa ?? '';
+
+    print("**********************${_formData}");
+    /*Provider.of<InspectionProvider>(
       context,
       listen: false,
     ).addInspectionFromData(_formData);
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(); */
   }
 
   _toPagePopulationData() {
@@ -42,6 +47,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> environmentData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
     print("GGGGGGGGGGGGGGGGGGGGGGGGGG${environmentData}");
     return Scaffold(
       appBar: AppBar(
@@ -83,70 +89,135 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                 RadioListTile<String>(
                   title: Text('Uniforme'),
                   value: 'Uniforme',
-                  groupValue: eggLayingStatus,
+                  groupValue: spawningQueen,
                   onChanged: (String? value) {
                     setState(() {
-                      eggLayingStatus = value;
+                      spawningQueen = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Irregular'),
                   value: 'Irregular',
-                  groupValue: eggLayingStatus,
+                  groupValue: spawningQueen,
                   onChanged: (String? value) {
                     setState(() {
-                      eggLayingStatus = value;
+                      spawningQueen = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Ausente'),
                   value: 'Ausente',
-                  groupValue: eggLayingStatus,
+                  groupValue: spawningQueen,
                   onChanged: (String? value) {
                     setState(() {
-                      eggLayingStatus = value;
+                      spawningQueen = value;
                     });
                   },
                 ),
-                Text('Estado das Pupas',
+                Text('Larvas Presença e Distribuição',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 5),
-                Text('Presença e Distribuição',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
                 RadioListTile<String>(
                   title: Text('Uniforme'),
                   value: 'Uniforme',
-                  groupValue: pupaeState,
+                  groupValue: larvae,
                   onChanged: (String? value) {
                     setState(() {
-                      pupaeState = value;
+                      larvae = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Irregular'),
                   value: 'Irregular',
-                  groupValue: pupaeState,
+                  groupValue: larvae,
                   onChanged: (String? value) {
                     setState(() {
-                      pupaeState = value;
+                      larvae = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Ausente'),
                   value: 'Ausente',
-                  groupValue: pupaeState,
+                  groupValue: larvae,
                   onChanged: (String? value) {
                     setState(() {
-                      pupaeState = value;
+                      larvae = value;
                     });
                   },
                 ),
                 SizedBox(height: 5),
-                Text('Saúde e Desenvolvimento',
+                Text('Larvas Saúde e Desenvolvimento',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                RadioListTile<String>(
+                  title: Text('Saudável'),
+                  value: 'Saudável',
+                  groupValue: healthStatus,
+                  onChanged: (String? value) {
+                    setState(() {
+                      healthStatus = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text('Doente'),
+                  value: 'Doente',
+                  groupValue: healthStatus,
+                  onChanged: (String? value) {
+                    setState(() {
+                      healthStatus = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text('Mortas'),
+                  value: 'Mortas',
+                  groupValue: healthStatus,
+                  onChanged: (String? value) {
+                    setState(() {
+                      healthStatus = value;
+                    });
+                  },
+                ),
+                Text('Pupas Presença e Distribuição',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 5),
+                RadioListTile<String>(
+                  title: Text('Uniforme'),
+                  value: 'Uniforme',
+                  groupValue: pupa,
+                  onChanged: (String? value) {
+                    setState(() {
+                      pupa = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text('Irregular'),
+                  value: 'Irregular',
+                  groupValue: pupa,
+                  onChanged: (String? value) {
+                    setState(() {
+                      pupa = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text('Ausente'),
+                  value: 'Ausente',
+                  groupValue: pupa,
+                  onChanged: (String? value) {
+                    setState(() {
+                      pupa = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 5),
+                Text('Pupas Saúde e Desenvolvimento',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 RadioListTile<String>(
