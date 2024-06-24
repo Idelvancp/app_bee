@@ -1,6 +1,7 @@
 import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_bee/routes/appRoute.dart';
 
 class InspectionForm2Screen extends StatefulWidget {
   const InspectionForm2Screen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class InspectionForm2Screen extends StatefulWidget {
 
 class _InspectionFormState extends State<InspectionForm2Screen> {
   final _formKey = GlobalKey<FormState>();
-  final _formData = <String, Object>{};
+  final _formData = <String, dynamic>{};
 
   String? ageQueen;
   String? spawningQueen;
@@ -25,37 +26,33 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
   String?
       healthStatus; // Nova variável para armazenar a seleção de saúde e desenvolvimento
 
-  _submitForm() {
+  void _toPageProductsData(BuildContext context) {
     _formKey.currentState?.save();
     _formData['spawningQueen'] = spawningQueen ?? '';
     _formData['larvae'] = larvae ?? '';
     _formData['pupa'] = pupa ?? '';
-
     print("**********************${_formData}");
-    /*Provider.of<InspectionProvider>(
-      context,
-      listen: false,
-    ).addInspectionFromData(_formData);
-    Navigator.of(context).pop(); */
-  }
-
-  _toPagePopulationData() {
-    _formKey.currentState?.save();
+    if (_formData['typeInspection_id'] == "Coleta") {
+      print("Coleta");
+      Navigator.of(context).pushNamed(
+        AppRoutes.INSPECTION_FORM3,
+        arguments: _formData,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> environmentData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    print("GGGGGGGGGGGGGGGGGGGGGGGGGG${environmentData}");
+    _formData.addAll(environmentData);
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Inspeção'),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: _submitForm,
+            onPressed: () => _toPageProductsData(context),
             icon: const Icon(
               Icons.save,
               color: Colors.white,
@@ -264,7 +261,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                           color: Colors.purple,
                         ),
                       ),
-                      onPressed: _submitForm,
+                      onPressed: () => _toPageProductsData(context),
                     )
                   ],
                 ),

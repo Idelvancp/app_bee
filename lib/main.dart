@@ -27,7 +27,8 @@ import 'screens/ apiary/apiaryDetailsScreen.dart';
 import 'screens/specie/speciesScreen.dart';
 import 'screens/specie/specieFormScreen.dart';
 import 'screens/inspection/inspectionFormScreen.dart';
-import 'package:app_bee/screens/inspection/InspectionForm2Screen.dart';
+import 'package:app_bee/screens/inspection/inspectionForm2Screen.dart';
+import 'package:app_bee/screens/inspection/inspectionForm3Screen.dart';
 import 'screens/inspection/inspectionsScreen.dart';
 import 'models/apiaryList.dart';
 import 'routes/appRoute.dart';
@@ -99,6 +100,7 @@ class BeeApp extends StatelessWidget {
           AppRoutes.INSPECTIONS_INDEX: (ctx) => InspectionsScreen(),
           AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
           AppRoutes.INSPECTION_FORM2: (ctx) => InspectionForm2Screen(),
+          AppRoutes.INSPECTION_FORM3: (ctx) => InspectionForm3Screen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
