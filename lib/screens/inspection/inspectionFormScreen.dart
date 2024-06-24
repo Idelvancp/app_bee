@@ -20,6 +20,7 @@ class _InspectionFormState extends State<InspectionFormScreen> {
 
   void _toPagePopulationData(BuildContext context) {
     _formKey.currentState?.save();
+    print("Estou no 1 indo para o 2 ${_formData}");
     Navigator.of(context).pushNamed(
       AppRoutes.INSPECTION_FORM2,
       arguments: _formData,
@@ -28,8 +29,11 @@ class _InspectionFormState extends State<InspectionFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final InspectionProvider inspections = Provider.of(context);
+    final inspectionList = inspections.inspection; // Obter a lista de apiários
     final Map<String, dynamic> hiveId =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    _formData['hiveId'] = hiveId['id'];
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Inspeção'),
@@ -63,47 +67,45 @@ class _InspectionFormState extends State<InspectionFormScreen> {
                         ),
                       ),
                       onSaved: (selectedTypeInspection) =>
-                          _formData['typeInspection_id'] =
+                          _formData['typeInspectionId'] =
                               selectedTypeInspection?.name ?? '',
                     );
                   },
                 ),
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Temperatura Interna'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (internalTemperature) =>
-                      _formData['internalTemperature'] =
-                          internalTemperature ?? '',
-                ),
+                    keyboardType: TextInputType.number,
+                    decoration:
+                        InputDecoration(labelText: 'Temperatura Interna'),
+                    textInputAction: TextInputAction.next,
+                    onSaved: (value) => _formData['internalTemperature'] =
+                        double.tryParse(value ?? '') ?? 0.0),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Temperatura Externa'),
                   textInputAction: TextInputAction.next,
-                  onSaved: (externalTemperature) =>
-                      _formData['externalTemperature'] =
-                          externalTemperature ?? '',
+                  onSaved: (value) => _formData['externalTemperature'] =
+                      double.tryParse(value ?? '') ?? 0.0,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Humidade Interna'),
                   textInputAction: TextInputAction.next,
-                  onSaved: (internalHumidity) =>
-                      _formData['internalHumidity'] = internalHumidity ?? '',
+                  onSaved: (value) => _formData['internalHumidity'] =
+                      int.tryParse(value ?? '') ?? 0,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Humidade Externa'),
                   textInputAction: TextInputAction.next,
-                  onSaved: (externalHumidity) =>
-                      _formData['externalHumidity'] = externalHumidity ?? '',
+                  onSaved: (value) => _formData['externalHumidity'] =
+                      int.tryParse(value ?? '') ?? 0,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(labelText: 'Velocidade do Vento'),
                   textInputAction: TextInputAction.next,
-                  onSaved: (windSpeed) =>
-                      _formData['windSpeed'] = windSpeed ?? '',
+                  onSaved: (value) =>
+                      _formData['windSpeed'] = int.tryParse(value ?? '') ?? 0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

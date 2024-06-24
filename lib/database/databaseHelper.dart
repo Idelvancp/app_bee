@@ -64,46 +64,31 @@ class DatabaseHelper {
       'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, honey_box_id INTEGER REFERENCES honey_boxes(id), apiary_id INTEGER REFERENCES apiaries(id), specie_id INTEGER REFERENCES species(id), created_at TEXT, updated_at TEXT)',
     );
     await db.execute(
-      '''CREATE TABLE
-      products(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        honey FLOAT,
-        propolis FLOAT,
-        wax  FLOAT,
-        royal_jelly FLOAT,
-        )''',
+      'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, honey REAL, propolis REAL, wax  REAL, royal_jelly REAL )',
     );
     await db.execute(
-      '''CREATE TABLE
-      environment_data(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        internal_temperature FLOAT,
-        external_temperature FLOAT,
-        internal_humidity  FLOAT,
-        external_humidity FLOAT,
-        wind_speed FLOAT, 
-        cloud INT,
-      )''',
+      'CREATE TABLE environment_data(id INTEGER PRIMARY KEY AUTOINCREMENT, internal_temperature REAL, external_temperature REAL, internal_humidity  REAL, external_humidity REAL, wind_speed REAL, cloud INT)',
     );
     await db.execute(
       '''CREATE TABLE
       population_data(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         number_bees INT,
-        age_queen FLOAT,
+        age_queen REAL,
         spawning_queen  TEXT,
-        eggs TEXT,
-        larvae TEXT,
-        pupa TEXT,
+        larvae_presence_distribution TEXT,
+        larvae_health_development TEXT,
+        pupa_presence_distribution TEXT,
+        pupa_health_development TEXT
         )''',
     );
     await db.execute(
       '''CREATE TABLE 
-      inspection(
+      inspections(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date  TEXT, 
         hive_id INTEGER REFERENCES hives(id),
-        type_inspection_id INTEGER REFERENCES types_inspections(id),
+        type_inspection_id TEXT,
         population_data_id INTEGER REFERENCES population_data(id),
         product_id INTEGER REFERENCES products(id),
         environment_data_id INTEGER REFERENCES environment_data(id),

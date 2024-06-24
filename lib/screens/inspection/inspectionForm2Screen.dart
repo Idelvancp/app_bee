@@ -15,9 +15,12 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
   final _formData = <String, dynamic>{};
 
   String? ageQueen;
+  String? numberBees;
   String? spawningQueen;
-  String? larvae;
-  String? pupa;
+  String? larvaePresenceDistribution;
+  String? larvaeHealthDevelopment;
+  String? pupaPresenceDistribution;
+  String? pupaHealthDevelopment;
 
   String?
       eggLayingStatus; // Nova variável para armazenar a seleção de postura de ovos
@@ -29,16 +32,24 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
   void _toPageProductsData(BuildContext context) {
     _formKey.currentState?.save();
     _formData['spawningQueen'] = spawningQueen ?? '';
-    _formData['larvae'] = larvae ?? '';
-    _formData['pupa'] = pupa ?? '';
+    _formData['larvaePresenceDistribution'] = larvaePresenceDistribution ?? '';
+    _formData['larvaeHealthDevelopment'] = larvaeHealthDevelopment ?? '';
+    _formData['pupaPresenceDistribution'] = pupaPresenceDistribution ?? '';
+    _formData['pupaHealthDevelopment'] = pupaHealthDevelopment ?? '';
+
     print("**********************${_formData}");
-    if (_formData['typeInspection_id'] == "Coleta") {
-      print("Coleta");
-      Navigator.of(context).pushNamed(
-        AppRoutes.INSPECTION_FORM3,
-        arguments: _formData,
-      );
-    }
+    print("Coleta");
+    Navigator.of(context).pushNamed(
+      AppRoutes.INSPECTION_FORM3,
+      arguments: _formData,
+    );
+    /*else {
+      Provider.of<InspectionProvider>(
+        context,
+        listen: false,
+      ).addInspectionFromData(_formData);
+      Navigator.of(context).pop();
+    }*/
   }
 
   @override
@@ -67,19 +78,30 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
             child: ListView(
               children: [
                 TextFormField(
+                  initialValue:
+                      numberBees, // Use initialValue to set the initial value of the field
                   decoration:
                       InputDecoration(labelText: 'Tamanho da População'),
                   textInputAction: TextInputAction.next,
-                  onSaved: (numberBees) =>
-                      _formData['numberBees'] = numberBees ?? '',
+                  onSaved: (value) {
+                    numberBees = value; // Update the state variable
+                    _formData['numberBees'] = int.tryParse(value ?? '') ??
+                        0; // Save the value in the form data
+                  },
                 ),
                 Text('Estado da Rainha',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 5),
                 TextFormField(
+                  initialValue:
+                      ageQueen, // Use initialValue to set the initial value of the field
                   decoration: InputDecoration(labelText: 'Idade da Rainha'),
                   textInputAction: TextInputAction.next,
-                  onSaved: (ageQueen) => _formData['ageQueen'] = ageQueen ?? '',
+                  onSaved: (value) {
+                    ageQueen = value; // Update the state variable
+                    _formData['ageQueen'] = double.tryParse(value ?? '') ??
+                        0.0; // Save the value in the form data
+                  },
                 ),
                 Text('Postura dos Ovos',
                     style: TextStyle(fontWeight: FontWeight.bold)),
@@ -119,30 +141,30 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                 RadioListTile<String>(
                   title: Text('Uniforme'),
                   value: 'Uniforme',
-                  groupValue: larvae,
+                  groupValue: larvaePresenceDistribution,
                   onChanged: (String? value) {
                     setState(() {
-                      larvae = value;
+                      larvaePresenceDistribution = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Irregular'),
                   value: 'Irregular',
-                  groupValue: larvae,
+                  groupValue: larvaePresenceDistribution,
                   onChanged: (String? value) {
                     setState(() {
-                      larvae = value;
+                      larvaePresenceDistribution = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Ausente'),
                   value: 'Ausente',
-                  groupValue: larvae,
+                  groupValue: larvaePresenceDistribution,
                   onChanged: (String? value) {
                     setState(() {
-                      larvae = value;
+                      larvaePresenceDistribution = value;
                     });
                   },
                 ),
@@ -153,30 +175,30 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                 RadioListTile<String>(
                   title: Text('Saudável'),
                   value: 'Saudável',
-                  groupValue: healthStatus,
+                  groupValue: larvaeHealthDevelopment,
                   onChanged: (String? value) {
                     setState(() {
-                      healthStatus = value;
+                      larvaeHealthDevelopment = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Doente'),
                   value: 'Doente',
-                  groupValue: healthStatus,
+                  groupValue: larvaeHealthDevelopment,
                   onChanged: (String? value) {
                     setState(() {
-                      healthStatus = value;
+                      larvaeHealthDevelopment = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Mortas'),
                   value: 'Mortas',
-                  groupValue: healthStatus,
+                  groupValue: larvaeHealthDevelopment,
                   onChanged: (String? value) {
                     setState(() {
-                      healthStatus = value;
+                      larvaeHealthDevelopment = value;
                     });
                   },
                 ),
@@ -186,30 +208,30 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                 RadioListTile<String>(
                   title: Text('Uniforme'),
                   value: 'Uniforme',
-                  groupValue: pupa,
+                  groupValue: pupaPresenceDistribution,
                   onChanged: (String? value) {
                     setState(() {
-                      pupa = value;
+                      pupaPresenceDistribution = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Irregular'),
                   value: 'Irregular',
-                  groupValue: pupa,
+                  groupValue: pupaPresenceDistribution,
                   onChanged: (String? value) {
                     setState(() {
-                      pupa = value;
+                      pupaPresenceDistribution = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Ausente'),
                   value: 'Ausente',
-                  groupValue: pupa,
+                  groupValue: pupaPresenceDistribution,
                   onChanged: (String? value) {
                     setState(() {
-                      pupa = value;
+                      pupaPresenceDistribution = value;
                     });
                   },
                 ),
@@ -220,49 +242,40 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                 RadioListTile<String>(
                   title: Text('Saudável'),
                   value: 'Saudável',
-                  groupValue: healthStatus,
+                  groupValue: pupaHealthDevelopment,
                   onChanged: (String? value) {
                     setState(() {
-                      healthStatus = value;
+                      pupaHealthDevelopment = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Doente'),
                   value: 'Doente',
-                  groupValue: healthStatus,
+                  groupValue: pupaHealthDevelopment,
                   onChanged: (String? value) {
                     setState(() {
-                      healthStatus = value;
+                      pupaHealthDevelopment = value;
                     });
                   },
                 ),
                 RadioListTile<String>(
                   title: Text('Mortas'),
                   value: 'Mortas',
-                  groupValue: healthStatus,
+                  groupValue: pupaHealthDevelopment,
                   onChanged: (String? value) {
                     setState(() {
-                      healthStatus = value;
+                      pupaHealthDevelopment = value;
                     });
                   },
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
-                      ),
-                      child: Text(
-                        'Nova Inspeção',
-                        style: TextStyle(
-                          color: Colors.purple,
-                        ),
-                      ),
+                    ElevatedButton(
                       onPressed: () => _toPageProductsData(context),
-                    )
+                      child: Text('Próximo'),
+                    ),
                   ],
                 ),
               ],
