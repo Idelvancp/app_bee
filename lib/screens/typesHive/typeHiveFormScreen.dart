@@ -13,7 +13,7 @@ class _TypeHiveFormState extends State<TypeHiveFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
-  _submitForm() {
+  void _submitForm() {
     _formKey.currentState?.save();
     Provider.of<TypeHiveProvider>(
       context,
@@ -30,6 +30,8 @@ class _TypeHiveFormState extends State<TypeHiveFormScreen> {
           'Cadastrar Tipo de Colmeia',
           style: TextStyle(fontSize: 20),
         ),
+        centerTitle: true,
+        backgroundColor: Colors.purple,
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -37,40 +39,75 @@ class _TypeHiveFormState extends State<TypeHiveFormScreen> {
               Icons.save,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Nome'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (name) => _formData['name'] = name ?? '',
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
+          key: _formKey,
+          child: ListView(
+            children: [
+              _buildSectionTitle('Informações do Tipo de Colmeia'),
+              _buildTextFormField(
+                label: 'Nome',
+                onSaved: (value) => _formData['name'] = value ?? '',
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        'Novo Tipo de Colmeia',
-                        style: TextStyle(
-                          color: Colors.purple,
-                        ),
-                      ),
-                      onPressed: _submitForm,
-                    )
-                  ],
-                ),
-              ],
-            )),
+                    ),
+                    child: Text('Salvar'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.purple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String label,
+    required void Function(String?) onSaved,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.purple),
+          ),
+        ),
+        textInputAction: TextInputAction.next,
+        onSaved: onSaved,
       ),
     );
   }

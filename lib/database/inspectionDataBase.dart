@@ -85,31 +85,29 @@ class InspectionDatabase {
   Future<List> getInspectionScreen() async {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
-    hive.*,
-    honey_box.tag,
-    specie.name AS specie_name,
-    specie.created_at AS specie_created_at,
-    specie.updated_at AS specie_updated_at,
-    apiary.name AS apiary_name,
-    apiary.city_id AS apiary_city_id,
-    apiary.state_id AS apiary_state_id,
-    apiary.created_at AS apiary_created_at,
-    apiary.updated_at AS apiary_updated_at        
+    inspection.type_inspection_id,
+    inspection.date,
+    hive.id AS hive_id,
+    population.*, 
+    honey_box.tag
   FROM 
-    hives hive  
+    inspections inspection  
+    INNER JOIN 
+    hives hive 
+    ON hive.id = inspection.hive_id
     INNER JOIN 
     honey_boxes honey_box 
     ON hive.honey_box_id = honey_box.id
-INNER JOIN 
-    species specie  
-    ON hive.specie_id = specie.id
-INNER JOIN 
-    apiaries apiary 
-    ON hive.apiary_id = apiary.id''');
+    INNER JOIN 
+    population_data population  
+    ON population.id = inspection.population_data_id
+    INNER JOIN 
+    environment_data environment 
+    ON environment.id = inspection.environment_data_id''');
 
     maps.forEach((table) {
       print(
-          'Tages ${table['tag']} ${table['apiary_name']} ${table['specie_name']}');
+          'Dados da Inspeção ${table['tag']}, ${table['larvae_health_development']}, ${table['number_bees']}');
     });
     return maps;
   }

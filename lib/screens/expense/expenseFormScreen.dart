@@ -1,24 +1,24 @@
-import 'package:app_bee/providers/floralResourceProvider.dart';
+import 'package:app_bee/providers/expenseProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FloralResourceFormScreen extends StatefulWidget {
-  const FloralResourceFormScreen({Key? key}) : super(key: key);
+class ExpenseFormScreen extends StatefulWidget {
+  const ExpenseFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<FloralResourceFormScreen> createState() => _FloralResourceFormState();
+  State<ExpenseFormScreen> createState() => _ExpenseFormState();
 }
 
-class _FloralResourceFormState extends State<FloralResourceFormScreen> {
+class _ExpenseFormState extends State<ExpenseFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
   void _submitForm() {
     _formKey.currentState?.save();
-    Provider.of<FloralResourceProvider>(
+    Provider.of<ExpenseProvider>(
       context,
       listen: false,
-    ).addFloralResourceFromData(_formData);
+    ).addExpenseFromData(_formData);
     Navigator.of(context).pop();
   }
 
@@ -26,7 +26,7 @@ class _FloralResourceFormState extends State<FloralResourceFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastrar Recurso Floral'),
+        title: Text('Cadastrar Despesa'),
         centerTitle: true,
         backgroundColor: Colors.purple,
         actions: [
@@ -45,10 +45,20 @@ class _FloralResourceFormState extends State<FloralResourceFormScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              _buildSectionTitle('Informações do Recurso Floral'),
+              _buildSectionTitle('Informações da Despesa'),
               _buildTextFormField(
-                label: 'Nome',
-                onSaved: (value) => _formData['name'] = value ?? '',
+                label: 'Custo',
+                onSaved: (value) =>
+                    _formData['cost'] = double.parse(value ?? '0'),
+              ),
+              _buildTextFormField(
+                label: 'Data',
+                onSaved: (value) => _formData['date'] = value ?? '',
+              ),
+              _buildTextFormField(
+                label: 'Tipo de Despesa ID',
+                onSaved: (value) =>
+                    _formData['type_expense_id'] = int.parse(value ?? '0'),
               ),
               SizedBox(height: 20),
               Row(
@@ -104,6 +114,9 @@ class _FloralResourceFormState extends State<FloralResourceFormScreen> {
           ),
         ),
         textInputAction: TextInputAction.next,
+        keyboardType: label == 'Custo'
+            ? TextInputType.numberWithOptions(decimal: true)
+            : TextInputType.text,
         onSaved: onSaved,
       ),
     );

@@ -37,7 +37,7 @@ class DatabaseHelper {
     );
   }
 
-  // Cria a tabela de species
+  // Cria as tabelas no banco de dados
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
       'CREATE TABLE species(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
@@ -64,14 +64,13 @@ class DatabaseHelper {
       'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, honey_box_id INTEGER REFERENCES honey_boxes(id), apiary_id INTEGER REFERENCES apiaries(id), specie_id INTEGER REFERENCES species(id), created_at TEXT, updated_at TEXT)',
     );
     await db.execute(
-      'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, honey REAL, propolis REAL, wax  REAL, royal_jelly REAL )',
+      'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, honey REAL, propolis REAL, wax  REAL, royal_jelly REAL, created_at TEXT, updated_at TEXT)',
     );
     await db.execute(
-      'CREATE TABLE environment_data(id INTEGER PRIMARY KEY AUTOINCREMENT, internal_temperature REAL, external_temperature REAL, internal_humidity  REAL, external_humidity REAL, wind_speed REAL, cloud INT)',
+      'CREATE TABLE environment_data(id INTEGER PRIMARY KEY AUTOINCREMENT, internal_temperature REAL, external_temperature REAL, internal_humidity  REAL, external_humidity REAL, wind_speed REAL, cloud INT, created_at TEXT, updated_at TEXT)',
     );
     await db.execute(
-      '''CREATE TABLE
-      population_data(
+      '''CREATE TABLE population_data(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         number_bees INT,
         age_queen REAL,
@@ -79,12 +78,12 @@ class DatabaseHelper {
         larvae_presence_distribution TEXT,
         larvae_health_development TEXT,
         pupa_presence_distribution TEXT,
-        pupa_health_development TEXT
-        )''',
+        pupa_health_development TEXT,
+        created_at TEXT,
+        updated_at TEXT)''',
     );
     await db.execute(
-      '''CREATE TABLE 
-      inspections(
+      '''CREATE TABLE inspections(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date  TEXT, 
         hive_id INTEGER REFERENCES hives(id),
@@ -96,11 +95,25 @@ class DatabaseHelper {
         updated_at TEXT)''',
     );
 
-/*
     await db.execute(
-      'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, specie_id INTEGER, type_hive_id INTEGER, FOREIGN KEY (specie_id) REFERENCES species (id), FOREIGN KEY (type_hive_id) REFERENCES types_hives (id), specie_id, created_at TEXT, updated_at TEXT)',
+      '''CREATE TABLE type_expenses(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        created_at TEXT,
+        updated_at TEXT)''',
     );
-    */
+
+    await db.execute(
+      '''CREATE TABLE expenses(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        cost REAL NOT NULL,
+        apiary_id INTEGER,
+        date TEXT NOT NULL,
+        type_expense_id INTEGER REFERENCES type_expenses(id),
+        created_at TEXT,
+        updated_at TEXT)''',
+    );
+
     print("BANCO DE DADOS CRIADOS !!!!!!!!!!!!!");
   }
 
@@ -114,8 +127,7 @@ class DatabaseHelper {
     );
   }
 
-  // Recupera species os species do banco de dados
-
+  // Recupera species do banco de dados
   Future<List<Specie>> getSpecies() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('species');
@@ -136,7 +148,6 @@ class DatabaseHelper {
   }
 
   // Recupera TypeHives do banco de dados
-
   Future<List<TypeHive>> getTypesHives() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('types_hives');
@@ -146,7 +157,7 @@ class DatabaseHelper {
     });
   }
 
-  // Insere um novo Floral Resources no banco de dados
+  // Insere um novo Floral Resource no banco de dados
   Future<void> insertFloralResource(FloralResource floralResource) async {
     final db = await database;
     await db.insert(
@@ -157,7 +168,6 @@ class DatabaseHelper {
   }
 
   // Recupera Floral Resources do banco de dados
-
   Future<List<FloralResource>> getFloralResources() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('floral_resources');
@@ -177,8 +187,7 @@ class DatabaseHelper {
     );
   }
 
-  // Recupera hives os hives do banco de dados
-
+  // Recupera hives do banco de dados
   Future<List<Hive>> getHives() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('hives');
@@ -220,7 +229,7 @@ INNER JOIN
     return maps;
   }
 
-// Insere um novo Apiary no banco de dados
+  // Insere um novo Apiary no banco de dados
   Future<void> insertApiary(Apiary apiary, List fResources) async {
     final db = await database;
     await db.transaction((txn) async {
@@ -242,7 +251,7 @@ INNER JOIN
     });
   }
 
-// Recupera os Apiaries do banco de dados
+  // Recupera Apiaries do banco de dados
   Future<List<Apiary>> getApiaries() async {
     final db = await database;
     final List<Map<String, dynamic>> apiaryMaps = await db.query('apiaries');
@@ -279,34 +288,39 @@ INNER JOIN
     return apiaries;
   }
 
-/*
-  // Recupera Floral Resources do banco de dados
-  Future<List<HoneyBox>> getHoneyBoxes() async {
+  // Insere um novo TypeExpense no banco de dados
+  Future<void> insertTypeExpense(Map<String, dynamic> typeExpense) async {
     final db = await database;
+    await db.insert(
+      'type_expenses',
+      typeExpense,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
-    // Realiza a junção das tabelas honey_boxes e types_hives
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT hb. *, th. * FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
+  // Recupera TypeExpenses do banco de dados
+  Future<List<Map<String, dynamic>>> getTypeExpenses() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('type_expenses');
 
-    /*
-    print("111111111111111111111111111111111:");
-    maps.forEach((table) {
-      print(
-          '${table['name']}, ${table['number_frames']}, ${table['busy_frames']}');
-    });
+    return maps;
+  }
 
-    return List.generate(maps.length, (i) {
-      // Modifica a criação do HoneyBox para incluir o nome do TypeHive
-      return HoneyBox.fromMap(maps[i])
-          .copyWith(typeHiveName: maps[i]['type_hive_name']);
-    });
-   */
-    // Converte a lista de maps para uma lista de objetos HoneyBox
-    return List.generate(maps.length, (i) {
-      print("111111111111111111111111111111111:");
+  // Insere uma nova Expense no banco de dados
+  Future<void> insertExpense(Map<String, dynamic> expense) async {
+    final db = await database;
+    await db.insert(
+      'expenses',
+      expense,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
-      print(maps.first);
-      return HoneyBox.fromMap(maps[i]);
-    });
-  } */
+  // Recupera Expenses do banco de dados
+  Future<List<Map<String, dynamic>>> getExpenses() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('expenses');
+
+    return maps;
+  }
 }

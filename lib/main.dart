@@ -7,6 +7,7 @@ import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/providers/specieProvider.dart';
 import 'package:app_bee/providers/honeyBoxProvider.dart';
 import 'package:app_bee/providers/hiveProvider.dart';
+import 'package:app_bee/providers/expenseProvider.dart';
 import 'package:app_bee/screens/floralResource/floralResourceScreen.dart';
 import 'package:app_bee/screens/floralResource/floralResourceFormScreen.dart';
 import 'package:app_bee/screens/honeyBox/honeyBoxFormScreen.dart';
@@ -30,6 +31,8 @@ import 'screens/inspection/inspectionFormScreen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm2Screen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm3Screen.dart';
 import 'screens/inspection/inspectionsScreen.dart';
+import 'package:app_bee/screens/expense/expensesScreen.dart';
+import 'package:app_bee/screens/expense/expenseFormScreen.dart';
 import 'models/apiaryList.dart';
 import 'routes/appRoute.dart';
 
@@ -63,6 +66,9 @@ class BeeApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => InspectionProvider()..loadInspections(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ExpenseProvider()..loadExpenses(),
         ),
       ],
       child: MaterialApp(
@@ -101,6 +107,8 @@ class BeeApp extends StatelessWidget {
           AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
           AppRoutes.INSPECTION_FORM2: (ctx) => InspectionForm2Screen(),
           AppRoutes.INSPECTION_FORM3: (ctx) => InspectionForm3Screen(),
+          AppRoutes.EXPENSES_INDEX: (ctx) => ExpensesScreen(),
+          AppRoutes.EXPENSE_FORM: (ctx) => ExpenseFormScreen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
@@ -134,11 +142,14 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Cadastrar Colmeia', 'screen': HiveFormScreen()},
     {'title': 'Detalhes Colmeia', 'screen': HiveDetailsScreen()},
     {'title': 'Tipos de Inspeções', 'screen': TypesInspectionsScreen()},
+    {'title': 'Despesas', 'screen': ExpensesScreen()},
+    {'title': 'Cadastrar Despesa', 'screen': ExpenseFormScreen()},
+
     {
       'title': 'Cadastrar Tipo de Inspeção',
       'screen': TypeInspectionFormScreen()
     },
-    {'title': 'Tipos de Inspeções', 'screen': InspectionsScreen()},
+    {'title': 'Inspeções', 'screen': InspectionsScreen()},
 
     // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];
@@ -165,6 +176,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Apiários',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.money),
+            label: 'Despesas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),

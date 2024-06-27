@@ -1,11 +1,6 @@
-import 'dart:ffi';
-
-import 'package:app_bee/models/typeInspection.dart';
-import 'package:app_bee/providers/typeInspectionProvider.dart';
-import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 
@@ -24,9 +19,9 @@ class _InspectionForm3State extends State<InspectionForm3Screen> {
   double? amountPropolis;
   double? amountRoyalJelly;
 
-  _submitForm() {
+  void _submitForm() {
     _formKey.currentState?.save();
-    print("Estou no 3 ${_formData}");
+    print("Form Data: $_formData");
     Provider.of<InspectionProvider>(
       context,
       listen: false,
@@ -56,50 +51,77 @@ class _InspectionForm3State extends State<InspectionForm3Screen> {
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Quantidade de Mel'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['amountHoney'] =
-                      double.tryParse(value ?? '') ?? 0.0,
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Quantidade de Mel',
+                  labelStyle: TextStyle(color: Colors.purple),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.purple),
+                  ),
                 ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Quantidade de Cera'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['amountWax'] =
-                      double.tryParse(value ?? '') ?? 0.0,
+                textInputAction: TextInputAction.next,
+                onSaved: (value) => _formData['amountHoney'] =
+                    double.tryParse(value ?? '') ?? 0.0,
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Quantidade de Cera',
+                  labelStyle: TextStyle(color: Colors.purple),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.purple),
+                  ),
                 ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration:
-                      InputDecoration(labelText: 'Quantidade de Própolis'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['amountPropolis'] =
-                      double.tryParse(value ?? '') ?? 0.0,
+                textInputAction: TextInputAction.next,
+                onSaved: (value) => _formData['amountWax'] =
+                    double.tryParse(value ?? '') ?? 0.0,
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Quantidade de Própolis',
+                  labelStyle: TextStyle(color: Colors.purple),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.purple),
+                  ),
                 ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration:
-                      InputDecoration(labelText: 'Quantidade de Geléia Real'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['amountRoyalJelly'] =
-                      double.tryParse(value ?? '') ?? 0.0,
+                textInputAction: TextInputAction.next,
+                onSaved: (value) => _formData['amountPropolis'] =
+                    double.tryParse(value ?? '') ?? 0.0,
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Quantidade de Geléia Real',
+                  labelStyle: TextStyle(color: Colors.purple),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.purple),
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      child: Text('Salvar'),
-                    ),
-                  ],
-                ),
-              ],
-            )),
+                textInputAction: TextInputAction.done,
+                onSaved: (value) => _formData['amountRoyalJelly'] =
+                    double.tryParse(value ?? '') ?? 0.0,
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: Text('Salvar'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
       drawer: AppDrawer(),
     );

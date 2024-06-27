@@ -1,33 +1,21 @@
 import 'package:app_bee/components/appDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/providers/inspectionProvider.dart';
+import 'package:app_bee/providers/expenseProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
-import 'package:app_bee/components/inspectionItem.dart';
 
-class InspectionsScreen extends StatefulWidget {
+class ExpensesScreen extends StatefulWidget {
   @override
-  State<InspectionsScreen> createState() => InspectionsScreenState();
+  State<ExpensesScreen> createState() => _ExpensesScreenState();
 }
 
-class InspectionsScreenState extends State<InspectionsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<InspectionProvider>(context, listen: false)
-          .loadInspectionsScreen();
-    });
-  }
-
+class _ExpensesScreenState extends State<ExpensesScreen> {
   Widget build(BuildContext context) {
-    final InspectionProvider inspections = Provider.of(context);
-    final inspectionsList = inspections.inspection; // Obter a lista de apiários
-    final inspectionsScreen = inspections.inspectionsScreen;
-
+    final ExpenseProvider expenses = Provider.of(context);
+    final expensesList = expenses.expenses; // Obter a lista de despesas
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inspeções"),
+        title: Text("Despesas"),
         centerTitle: true,
       ),
       body: GridView(
@@ -38,15 +26,20 @@ class InspectionsScreenState extends State<InspectionsScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: inspectionsScreen.map((api) {
-          return InspectionItem(api);
+        children: expensesList.map((expense) {
+          return ListTile(
+            title: Text(expense.date.toIso8601String() +
+                ' - \$' +
+                expense.cost.toString()),
+            subtitle: Text('Tipo: ' + expense.typeExpenseId.toString()),
+          );
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple, // Cor do botão
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.INSPECTION_FORM);
+          Navigator.of(context).pushNamed(AppRoutes.EXPENSE_FORM);
         },
       ),
       drawer: AppDrawer(),

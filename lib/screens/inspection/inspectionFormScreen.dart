@@ -1,9 +1,9 @@
-import 'package:app_bee/models/typeInspection.dart';
-import 'package:app_bee/providers/typeInspectionProvider.dart';
-import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:app_bee/models/typeInspection.dart';
+import 'package:app_bee/providers/typeInspectionProvider.dart';
+import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 
@@ -17,110 +17,176 @@ class InspectionFormScreen extends StatefulWidget {
 class _InspectionFormState extends State<InspectionFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
-  String? spawningQueen;
+
+  final TextEditingController _internalTempController = TextEditingController();
+  final TextEditingController _externalTempController = TextEditingController();
+  final TextEditingController _internalHumidityController =
+      TextEditingController();
+  final TextEditingController _externalHumidityController =
+      TextEditingController();
+  final TextEditingController _windSpeedController = TextEditingController();
+
+  @override
+  void dispose() {
+    _internalTempController.dispose();
+    _externalTempController.dispose();
+    _internalHumidityController.dispose();
+    _externalHumidityController.dispose();
+    _windSpeedController.dispose();
+    super.dispose();
+  }
 
   void _toPagePopulationData(BuildContext context) {
-    _formKey.currentState?.save();
-    print("Estou no 1 indo para o 2 ${_formData}");
-    Navigator.of(context).pushNamed(
-      AppRoutes.INSPECTION_FORM2,
-      arguments: _formData,
-    );
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      Navigator.of(context).pushNamed(
+        AppRoutes.INSPECTION_FORM2,
+        arguments: _formData,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final InspectionProvider inspections = Provider.of(context);
-    final inspectionList = inspections.inspection; // Obter a lista de apiários
     final Map<String, dynamic> hiveId =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _formData['hiveId'] = hiveId['id'];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Inspeção'),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => _toPagePopulationData,
+            onPressed: () => _toPagePopulationData(context),
             icon: const Icon(
               Icons.save,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                Consumer<TypeInspectionProvider>(
-                  builder: (ctx, typeInspectionProvider, _) {
-                    final TypeInspectionList =
-                        typeInspectionProvider.typeInspection;
-                    return DropdownSearch<TypeInspection>(
-                      items: TypeInspectionList,
-                      itemAsString: (TypeInspection u) => u.name,
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: "Selecione um Tipo de Inspeção",
+          key: _formKey,
+          child: ListView(
+            children: [
+              Consumer<TypeInspectionProvider>(
+                builder: (ctx, typeInspectionProvider, _) {
+                  final typeInspectionList =
+                      typeInspectionProvider.typeInspection;
+                  return DropdownSearch<TypeInspection>(
+                    items: typeInspectionList,
+                    itemAsString: (TypeInspection u) => u.name,
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Selecione um Tipo de Inspeção",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.purple),
                         ),
                       ),
-                      onSaved: (selectedTypeInspection) =>
-                          _formData['typeInspectionId'] =
-                              selectedTypeInspection?.name ?? '',
-                    );
-                  },
-                ),
-                TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration:
-                        InputDecoration(labelText: 'Temperatura Interna'),
-                    textInputAction: TextInputAction.next,
-                    onSaved: (value) => _formData['internalTemperature'] =
-                        double.tryParse(value ?? '') ?? 0.0),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Temperatura Externa'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['externalTemperature'] =
-                      double.tryParse(value ?? '') ?? 0.0,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Humidade Interna'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['internalHumidity'] =
-                      int.tryParse(value ?? '') ?? 0,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Humidade Externa'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) => _formData['externalHumidity'] =
-                      int.tryParse(value ?? '') ?? 0,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Velocidade do Vento'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) =>
-                      _formData['windSpeed'] = int.tryParse(value ?? '') ?? 0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () => _toPagePopulationData(context),
-                      child: Text('Próximo'),
                     ),
-                  ],
-                ),
-              ],
-            )),
+                    onSaved: (selectedTypeInspection) =>
+                        _formData['typeInspectionId'] =
+                            selectedTypeInspection?.name ?? '',
+                  );
+                },
+              ),
+              _buildSectionTitle('Medições Climáticas'),
+              _buildTextFormField(
+                label: 'Temperatura Interna',
+                controller: _internalTempController,
+                onSaved: (value) => _formData['internalTemperature'] =
+                    double.tryParse(value ?? '') ?? 0.0,
+              ),
+              _buildTextFormField(
+                label: 'Temperatura Externa',
+                controller: _externalTempController,
+                onSaved: (value) => _formData['externalTemperature'] =
+                    double.tryParse(value ?? '') ?? 0.0,
+              ),
+              _buildTextFormField(
+                label: 'Humidade Interna',
+                controller: _internalHumidityController,
+                onSaved: (value) => _formData['internalHumidity'] =
+                    int.tryParse(value ?? '') ?? 0,
+              ),
+              _buildTextFormField(
+                label: 'Humidade Externa',
+                controller: _externalHumidityController,
+                onSaved: (value) => _formData['externalHumidity'] =
+                    int.tryParse(value ?? '') ?? 0,
+              ),
+              _buildTextFormField(
+                label: 'Velocidade do Vento',
+                controller: _windSpeedController,
+                onSaved: (value) =>
+                    _formData['windSpeed'] = int.tryParse(value ?? '') ?? 0,
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () => _toPagePopulationData(context),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text('Próximo'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
       drawer: AppDrawer(),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.purple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String label,
+    required TextEditingController controller,
+    required void Function(String?) onSaved,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.purple),
+          ),
+        ),
+        textInputAction: TextInputAction.next,
+        onSaved: onSaved,
+      ),
     );
   }
 }

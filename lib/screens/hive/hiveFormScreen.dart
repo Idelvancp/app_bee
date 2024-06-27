@@ -25,9 +25,8 @@ class _HiveFormState extends State<HiveFormScreen> {
   HoneyBox? selectedHoneyBox;
   Specie? selectedSpecie;
 
-  _submitForm() {
+  void _submitForm() {
     _formKey.currentState?.save();
-    print(_formData.entries);
     Provider.of<HiveProvider>(
       context,
       listen: false,
@@ -37,18 +36,11 @@ class _HiveFormState extends State<HiveFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final HiveProvider hives = Provider.of(context);
-    final HoneyBoxProvider honeyBoxes = Provider.of(context);
-    final SpecieProvider species = Provider.of(context);
-    final ApiaryList apiaries = Provider.of(context);
-    final apiaryList = apiaries.apiary;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Cadastrar Colmeia',
-        ),
+        title: Text('Cadastrar Colmeia'),
         centerTitle: true,
+        backgroundColor: Colors.purple,
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -56,89 +48,139 @@ class _HiveFormState extends State<HiveFormScreen> {
               Icons.save,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                Consumer<HoneyBoxProvider>(
-                  builder: (ctx, honeyBoxProvider, _) {
-                    final HoneyBoxList = honeyBoxProvider.honeyBoxe;
-                    return DropdownSearch<HoneyBox>(
-                      items: HoneyBoxList,
-                      itemAsString: (HoneyBox u) => u.tag,
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: "Selecione uma Caixa",
-                        ),
+          key: _formKey,
+          child: ListView(
+            children: [
+              _buildSectionTitle('Informações da Colmeia'),
+              _buildDropdownHoneyBox(),
+              _buildDropdownSpecie(),
+              _buildDropdownApiary(),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      onSaved: (selectedHoneyBox) =>
-                          _formData['honeyBoxId'] = selectedHoneyBox?.id ?? '',
-                    );
-                  },
-                ),
-                Consumer<SpecieProvider>(
-                  builder: (ctx, specieProvider, _) {
-                    final allSpecies = specieProvider.specie;
-                    return DropdownSearch<Specie>(
-                      items: allSpecies,
-                      itemAsString: (Specie u) => u.name,
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: "Selecione o uma Espécie",
-                        ),
-                      ),
-                      onChanged: (Specie? select) {
-                        selectedSpecie = select;
-                        print(selectedSpecie?.name);
-                      },
-                      onSaved: (selectedSpecie) =>
-                          _formData['specieId'] = selectedSpecie?.id ?? '',
-                    );
-                  },
-                ),
-                Consumer<ApiaryList>(
-                  builder: (ctx, apiaryList, _) {
-                    final allApiaries = apiaryList.apiary;
-                    return DropdownSearch<Apiary>(
-                      items: allApiaries,
-                      itemAsString: (Apiary u) => u.name,
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: "Selecione um Apiário",
-                        ),
-                      ),
-                      onChanged: print,
-                      onSaved: (apiarySelected) =>
-                          _formData['apiaryId'] = apiarySelected?.id ?? '',
-                    );
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
-                      ),
-                      child: Text(
-                        'Nova Caixa',
-                        style: TextStyle(
-                          color: Colors.purple,
-                        ),
-                      ),
-                      onPressed: _submitForm,
-                    )
-                  ],
-                ),
-              ],
-            )),
+                    ),
+                    child: Text('Salvar'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.purple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownHoneyBox() {
+    return Consumer<HoneyBoxProvider>(
+      builder: (ctx, honeyBoxProvider, _) {
+        final honeyBoxList = honeyBoxProvider.honeyBoxe;
+        return DropdownSearch<HoneyBox>(
+          items: honeyBoxList,
+          itemAsString: (HoneyBox u) => u.tag,
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Selecione uma Caixa",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.purple),
+              ),
+            ),
+          ),
+          onChanged: (HoneyBox? selectedBox) {
+            selectedHoneyBox = selectedBox;
+          },
+          onSaved: (selectedHoneyBox) =>
+              _formData['honeyBoxId'] = selectedHoneyBox?.id ?? '',
+        );
+      },
+    );
+  }
+
+  Widget _buildDropdownSpecie() {
+    return Consumer<SpecieProvider>(
+      builder: (ctx, specieProvider, _) {
+        final allSpecies = specieProvider.specie;
+        return DropdownSearch<Specie>(
+          items: allSpecies,
+          itemAsString: (Specie u) => u.name,
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Selecione uma Espécie",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.purple),
+              ),
+            ),
+          ),
+          onChanged: (Specie? selectedSpec) {
+            selectedSpecie = selectedSpec;
+          },
+          onSaved: (selectedSpecie) =>
+              _formData['specieId'] = selectedSpecie?.id ?? '',
+        );
+      },
+    );
+  }
+
+  Widget _buildDropdownApiary() {
+    return Consumer<ApiaryList>(
+      builder: (ctx, apiaryList, _) {
+        final allApiaries = apiaryList.apiary;
+        return DropdownSearch<Apiary>(
+          items: allApiaries,
+          itemAsString: (Apiary u) => u.name,
+          dropdownDecoratorProps: DropDownDecoratorProps(
+            dropdownSearchDecoration: InputDecoration(
+              labelText: "Selecione um Apiário",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.purple),
+              ),
+            ),
+          ),
+          onChanged: (Apiary? selectedApiary) {
+            _formData['apiaryId'] = selectedApiary?.id ?? '';
+          },
+          onSaved: (selectedApiary) =>
+              _formData['apiaryId'] = selectedApiary?.id ?? '',
+        );
+      },
     );
   }
 }

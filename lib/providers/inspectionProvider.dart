@@ -12,6 +12,9 @@ class InspectionProvider with ChangeNotifier {
   final List<Inspection> _inspections = [];
   List<Inspection> get inspection => [..._inspections];
 
+  final List _inspectionsScreen = [];
+  List get inspectionsScreen => [..._inspectionsScreen];
+
   int get inspectionsCount {
     return _inspections.length;
   }
@@ -23,11 +26,18 @@ class InspectionProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void loadInspectionsScreen() async {
+    final inspectionsScreen = await InspectionDatabase().getInspectionScreen();
+    _inspectionsScreen.clear();
+    _inspectionsScreen.addAll(inspectionsScreen);
+    notifyListeners();
+  }
+
   void addInspectionFromData(Map<String, dynamic> data) {
     final now = DateTime.now();
     final newInspection = Inspection(
       id: Random().nextInt(10000),
-      date: now,
+      date: DateTime.parse(now.toString()),
       hiveId: data['hiveId'] as int,
       typeInspectionId: data['typeInspectionId'] as String,
       createdAt: DateTime.parse(now.toString()),

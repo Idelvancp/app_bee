@@ -1,6 +1,6 @@
-import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 
@@ -15,42 +15,43 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, dynamic>{};
 
-  String? ageQueen;
-  String? numberBees;
+  final TextEditingController _numberBeesController = TextEditingController();
+  final TextEditingController _ageQueenController = TextEditingController();
+
   String? spawningQueen;
   String? larvaePresenceDistribution;
   String? larvaeHealthDevelopment;
   String? pupaPresenceDistribution;
   String? pupaHealthDevelopment;
 
-  String?
-      eggLayingStatus; // Nova variável para armazenar a seleção de postura de ovos
-  String?
-      pupaeState; // Nova variável para armazenar a seleção do estado das pupas
-  String?
-      healthStatus; // Nova variável para armazenar a seleção de saúde e desenvolvimento
+  @override
+  void initState() {
+    super.initState();
+    _numberBeesController.text = '';
+    _ageQueenController.text = '';
+  }
+
+  @override
+  void dispose() {
+    _numberBeesController.dispose();
+    _ageQueenController.dispose();
+    super.dispose();
+  }
 
   void _toPageProductsData(BuildContext context) {
     _formKey.currentState?.save();
+    _formData['numberBees'] = int.tryParse(_numberBeesController.text) ?? 0;
+    _formData['ageQueen'] = double.tryParse(_ageQueenController.text) ?? 0.0;
     _formData['spawningQueen'] = spawningQueen ?? '';
     _formData['larvaePresenceDistribution'] = larvaePresenceDistribution ?? '';
     _formData['larvaeHealthDevelopment'] = larvaeHealthDevelopment ?? '';
     _formData['pupaPresenceDistribution'] = pupaPresenceDistribution ?? '';
     _formData['pupaHealthDevelopment'] = pupaHealthDevelopment ?? '';
 
-    print("**********************${_formData}");
-    print("Coleta");
     Navigator.of(context).pushNamed(
       AppRoutes.INSPECTION_FORM3,
       arguments: _formData,
     );
-    /*else {
-      Provider.of<InspectionProvider>(
-        context,
-        listen: false,
-      ).addInspectionFromData(_formData);
-      Navigator.of(context).pop();
-    }*/
   }
 
   @override
@@ -58,6 +59,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
     final Map<String, dynamic> environmentData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _formData.addAll(environmentData);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Inspeção'),
@@ -69,220 +71,144 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
               Icons.save,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  initialValue:
-                      numberBees, // Use initialValue to set the initial value of the field
-                  decoration:
-                      InputDecoration(labelText: 'Tamanho da População'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) {
-                    numberBees = value; // Update the state variable
-                    _formData['numberBees'] = int.tryParse(value ?? '') ??
-                        0; // Save the value in the form data
-                  },
-                ),
-                Text('Estado da Rainha',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
-                TextFormField(
-                  initialValue:
-                      ageQueen, // Use initialValue to set the initial value of the field
-                  decoration: InputDecoration(labelText: 'Idade da Rainha'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) {
-                    ageQueen = value; // Update the state variable
-                    _formData['ageQueen'] = double.tryParse(value ?? '') ??
-                        0.0; // Save the value in the form data
-                  },
-                ),
-                Text('Postura dos Ovos',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                RadioListTile<String>(
-                  title: Text('Uniforme'),
-                  value: 'Uniforme',
-                  groupValue: spawningQueen,
-                  onChanged: (String? value) {
-                    setState(() {
-                      spawningQueen = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Irregular'),
-                  value: 'Irregular',
-                  groupValue: spawningQueen,
-                  onChanged: (String? value) {
-                    setState(() {
-                      spawningQueen = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Ausente'),
-                  value: 'Ausente',
-                  groupValue: spawningQueen,
-                  onChanged: (String? value) {
-                    setState(() {
-                      spawningQueen = value;
-                    });
-                  },
-                ),
-                Text('Larvas Presença e Distribuição',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
-                RadioListTile<String>(
-                  title: Text('Uniforme'),
-                  value: 'Uniforme',
-                  groupValue: larvaePresenceDistribution,
-                  onChanged: (String? value) {
-                    setState(() {
-                      larvaePresenceDistribution = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Irregular'),
-                  value: 'Irregular',
-                  groupValue: larvaePresenceDistribution,
-                  onChanged: (String? value) {
-                    setState(() {
-                      larvaePresenceDistribution = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Ausente'),
-                  value: 'Ausente',
-                  groupValue: larvaePresenceDistribution,
-                  onChanged: (String? value) {
-                    setState(() {
-                      larvaePresenceDistribution = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 5),
-                Text('Larvas Saúde e Desenvolvimento',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                RadioListTile<String>(
-                  title: Text('Saudável'),
-                  value: 'Saudável',
-                  groupValue: larvaeHealthDevelopment,
-                  onChanged: (String? value) {
-                    setState(() {
-                      larvaeHealthDevelopment = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Doente'),
-                  value: 'Doente',
-                  groupValue: larvaeHealthDevelopment,
-                  onChanged: (String? value) {
-                    setState(() {
-                      larvaeHealthDevelopment = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Mortas'),
-                  value: 'Mortas',
-                  groupValue: larvaeHealthDevelopment,
-                  onChanged: (String? value) {
-                    setState(() {
-                      larvaeHealthDevelopment = value;
-                    });
-                  },
-                ),
-                Text('Pupas Presença e Distribuição',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
-                RadioListTile<String>(
-                  title: Text('Uniforme'),
-                  value: 'Uniforme',
-                  groupValue: pupaPresenceDistribution,
-                  onChanged: (String? value) {
-                    setState(() {
-                      pupaPresenceDistribution = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Irregular'),
-                  value: 'Irregular',
-                  groupValue: pupaPresenceDistribution,
-                  onChanged: (String? value) {
-                    setState(() {
-                      pupaPresenceDistribution = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Ausente'),
-                  value: 'Ausente',
-                  groupValue: pupaPresenceDistribution,
-                  onChanged: (String? value) {
-                    setState(() {
-                      pupaPresenceDistribution = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 5),
-                Text('Pupas Saúde e Desenvolvimento',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                RadioListTile<String>(
-                  title: Text('Saudável'),
-                  value: 'Saudável',
-                  groupValue: pupaHealthDevelopment,
-                  onChanged: (String? value) {
-                    setState(() {
-                      pupaHealthDevelopment = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Doente'),
-                  value: 'Doente',
-                  groupValue: pupaHealthDevelopment,
-                  onChanged: (String? value) {
-                    setState(() {
-                      pupaHealthDevelopment = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  title: Text('Mortas'),
-                  value: 'Mortas',
-                  groupValue: pupaHealthDevelopment,
-                  onChanged: (String? value) {
-                    setState(() {
-                      pupaHealthDevelopment = value;
-                    });
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () => _toPageProductsData(context),
-                      child: Text('Próximo'),
+          key: _formKey,
+          child: ListView(
+            children: [
+              _buildSectionTitle('Informações Gerais'),
+              _buildTextFormField(
+                label: 'Tamanho da População',
+                controller: _numberBeesController,
+                onSaved: (value) {
+                  _formData['numberBees'] = int.tryParse(value ?? '') ?? 0;
+                },
+              ),
+              _buildSectionTitle('Estado da Rainha'),
+              _buildTextFormField(
+                label: 'Idade da Rainha',
+                controller: _ageQueenController,
+                onSaved: (value) {
+                  _formData['ageQueen'] = double.tryParse(value ?? '') ?? 0.0;
+                },
+              ),
+              _buildSectionTitle('Postura dos Ovos'),
+              _buildRadioGroup(
+                options: ['Uniforme', 'Irregular', 'Ausente'],
+                groupValue: spawningQueen,
+                onChanged: (value) => setState(() => spawningQueen = value),
+              ),
+              _buildSectionTitle('Larvas Presença e Distribuição'),
+              _buildRadioGroup(
+                options: ['Uniforme', 'Irregular', 'Ausente'],
+                groupValue: larvaePresenceDistribution,
+                onChanged: (value) =>
+                    setState(() => larvaePresenceDistribution = value),
+              ),
+              _buildSectionTitle('Larvas Saúde e Desenvolvimento'),
+              _buildRadioGroup(
+                options: ['Saudável', 'Doente', 'Mortas'],
+                groupValue: larvaeHealthDevelopment,
+                onChanged: (value) =>
+                    setState(() => larvaeHealthDevelopment = value),
+              ),
+              _buildSectionTitle('Pupas Presença e Distribuição'),
+              _buildRadioGroup(
+                options: ['Uniforme', 'Irregular', 'Ausente'],
+                groupValue: pupaPresenceDistribution,
+                onChanged: (value) =>
+                    setState(() => pupaPresenceDistribution = value),
+              ),
+              _buildSectionTitle('Pupas Saúde e Desenvolvimento'),
+              _buildRadioGroup(
+                options: ['Saudável', 'Doente', 'Mortas'],
+                groupValue: pupaHealthDevelopment,
+                onChanged: (value) =>
+                    setState(() => pupaHealthDevelopment = value),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () => _toPageProductsData(context),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            )),
+                    child: Text('Próximo'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
       drawer: AppDrawer(),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.purple,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String label,
+    required TextEditingController controller,
+    required void Function(String?) onSaved,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.purple),
+          ),
+        ),
+        textInputAction: TextInputAction.next,
+        onSaved: onSaved,
+      ),
+    );
+  }
+
+  Widget _buildRadioGroup({
+    required List<String> options,
+    required String? groupValue,
+    required void Function(String?) onChanged,
+  }) {
+    return Column(
+      children: options
+          .map(
+            (option) => RadioListTile<String>(
+              title: Text(option),
+              value: option,
+              groupValue: groupValue,
+              onChanged: onChanged,
+              activeColor: Colors.purple,
+            ),
+          )
+          .toList(),
     );
   }
 }
