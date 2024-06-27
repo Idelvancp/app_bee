@@ -38,7 +38,7 @@ class InspectionItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                inspection.date as String,
+                inspection.id.toString(),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -46,7 +46,7 @@ class InspectionItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Tempo da Flora: Maio a Junho',
+                inspection.typeInspectionId.toString(),
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

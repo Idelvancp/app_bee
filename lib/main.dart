@@ -138,6 +138,7 @@ class _MainScreenState extends State<MainScreen> {
       'title': 'Cadastrar Tipo de Inspeção',
       'screen': TypeInspectionFormScreen()
     },
+    {'title': 'Tipos de Inspeções', 'screen': InspectionsScreen()},
 
     // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];

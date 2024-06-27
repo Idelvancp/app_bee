@@ -2,6 +2,7 @@ import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/components/appDrawer.dart';
 
 class InspectionForm2Screen extends StatefulWidget {
   const InspectionForm2Screen({Key? key}) : super(key: key);
@@ -281,6 +282,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
               ],
             )),
       ),
+      drawer: AppDrawer(),
     );
   }
 }

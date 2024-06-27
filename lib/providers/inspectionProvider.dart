@@ -24,7 +24,6 @@ class InspectionProvider with ChangeNotifier {
   }
 
   void addInspectionFromData(Map<String, dynamic> data) {
-    print("Etou no Provider kkkkkkkkkkkkkkkkkkk ${data['amountPropolis']}");
     final now = DateTime.now();
     final newInspection = Inspection(
       id: Random().nextInt(10000),
@@ -63,6 +62,10 @@ class InspectionProvider with ChangeNotifier {
       amountRoyalJelly: data['amountRoyalJelly'] as double,
     );
 
+    print("Adding inspection: $newInspection");
+    print("With population data: $newPopulationData");
+    print("With environment data: $newEnvironmentData");
+    print("With product: $newProduct");
     addInspection(
         newInspection, newPopulationData, newEnvironmentData, newProduct);
   }

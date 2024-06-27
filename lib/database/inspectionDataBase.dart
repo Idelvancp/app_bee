@@ -26,6 +26,8 @@ class InspectionDatabase {
       PopulationData populationData,
       EnvironmentData environmentData,
       Product product) async {
+    print("Insert Inspection Transaction");
+
     final db = await _databaseHelper.database;
 
     await db.transaction((txn) async {
@@ -61,6 +63,10 @@ class InspectionDatabase {
         inspection.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+
+      print("Inspection added: $inspection");
+    }).catchError((error) {
+      print("Error inserting inspection: $error");
     });
   }
 
@@ -74,5 +80,37 @@ class InspectionDatabase {
     return List.generate(maps.length, (i) {
       return Inspection.fromMap(maps[i]);
     });
+  }
+
+  Future<List> getInspectionScreen() async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
+    hive.*,
+    honey_box.tag,
+    specie.name AS specie_name,
+    specie.created_at AS specie_created_at,
+    specie.updated_at AS specie_updated_at,
+    apiary.name AS apiary_name,
+    apiary.city_id AS apiary_city_id,
+    apiary.state_id AS apiary_state_id,
+    apiary.created_at AS apiary_created_at,
+    apiary.updated_at AS apiary_updated_at        
+  FROM 
+    hives hive  
+    INNER JOIN 
+    honey_boxes honey_box 
+    ON hive.honey_box_id = honey_box.id
+INNER JOIN 
+    species specie  
+    ON hive.specie_id = specie.id
+INNER JOIN 
+    apiaries apiary 
+    ON hive.apiary_id = apiary.id''');
+
+    maps.forEach((table) {
+      print(
+          'Tages ${table['tag']} ${table['apiary_name']} ${table['specie_name']}');
+    });
+    return maps;
   }
 }

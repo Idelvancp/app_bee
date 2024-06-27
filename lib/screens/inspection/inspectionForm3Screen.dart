@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/components/appDrawer.dart';
 
 class InspectionForm3Screen extends StatefulWidget {
   const InspectionForm3Screen({Key? key}) : super(key: key);
@@ -38,8 +39,6 @@ class _InspectionForm3State extends State<InspectionForm3Screen> {
     final Map<String, dynamic> populationEnvironment =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _formData.addAll(populationEnvironment);
-
-    print("444444444444444444444444 ${_formData}");
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Inspeção'),
@@ -102,6 +101,7 @@ class _InspectionForm3State extends State<InspectionForm3Screen> {
               ],
             )),
       ),
+      drawer: AppDrawer(),
     );
   }
 }

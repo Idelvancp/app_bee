@@ -40,7 +40,7 @@ class Inspection {
   factory Inspection.fromMap(Map<String, dynamic> map) {
     return Inspection(
       id: map['id'],
-      date: map['date'],
+      date: DateTime.parse(map['date']),
       hiveId: map['hive_id'],
       typeInspectionId: map['type_inspection_id'],
       populationDataId: map['population_data_id'],

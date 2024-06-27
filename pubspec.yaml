@@ -31,5 +31,5 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/bee.db
+#    - assets/bee.db
   uses-material-design: true

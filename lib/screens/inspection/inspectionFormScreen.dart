@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/components/appDrawer.dart';
 
 class InspectionFormScreen extends StatefulWidget {
   const InspectionFormScreen({Key? key}) : super(key: key);
@@ -119,6 +120,7 @@ class _InspectionFormState extends State<InspectionFormScreen> {
               ],
             )),
       ),
+      drawer: AppDrawer(),
     );
   }
 }
