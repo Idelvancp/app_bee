@@ -26,4 +26,14 @@ class SpecieDatabase {
       return Specie.fromMap(maps[i]);
     });
   }
+
+  // Deleta uma specie do banco de dados
+  Future<void> deleteSpecie(int id) async {
+    final db = await _databaseHelper.database;
+    await db.delete(
+      'species',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 }

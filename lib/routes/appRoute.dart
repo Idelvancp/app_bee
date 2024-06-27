@@ -24,4 +24,6 @@ class AppRoutes {
   static const INSPECTION_FORM3 = '/inspection-form3';
   static const EXPENSES_INDEX = '/expenses-index';
   static const EXPENSE_FORM = '/expense-form';
+  static const TYPES_EXPENSES_INDEX = '/types-expenses-index';
+  static const TYPE_EXPENSE_FORM = '/type-expense-form';
 }

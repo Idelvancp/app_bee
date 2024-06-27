@@ -98,6 +98,17 @@ class AppDrawer extends StatelessWidget {
                 );
               },
             ),
+            Divider(color: Colors.purple),
+            ListTile(
+              leading: Icon(Icons.money, color: Colors.purple),
+              title: Text('Tipos de Despesas',
+                  style: TextStyle(color: Colors.purple)),
+              onTap: () {
+                Navigator.of(context).pushReplacementNamed(
+                  AppRoutes.TYPES_EXPENSES_INDEX,
+                );
+              },
+            ),
           ],
         ),
       ),

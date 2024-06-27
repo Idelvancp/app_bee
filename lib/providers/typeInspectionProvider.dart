@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/typeInspection.dart';
-import 'package:app_bee/database/typeInspectionDataBase.dart';
+import 'package:app_bee/database/typesInspectionsDatabaseHelper.dart';
 
 class TypeInspectionProvider with ChangeNotifier {
   final List<TypeInspection> _typesInspections = [];

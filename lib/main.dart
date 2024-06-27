@@ -1,6 +1,7 @@
 import 'package:app_bee/components/appDrawer.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
+import 'package:app_bee/providers/typeExpenseProvider.dart';
 import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:app_bee/providers/typeInspectionProvider.dart';
 import 'package:app_bee/providers/inspectionProvider.dart';
@@ -15,6 +16,7 @@ import 'package:app_bee/screens/honeyBox/honeyBoxesScreen.dart';
 import 'package:app_bee/screens/reports/reportsScreen.dart';
 import 'package:app_bee/screens/typeInspection/typeInspectionFormScreen.dart';
 import 'package:app_bee/screens/typeInspection/typeInspectionScreen.dart';
+import 'package:app_bee/screens/typesExpenses/typeExpenseFormScreen.dart';
 import 'package:app_bee/screens/typesHive/typesHivesScreen.dart';
 import 'package:app_bee/screens/typesHive/typeHiveFormScreen.dart';
 import 'package:app_bee/screens/hive/hivesScreen.dart';
@@ -31,9 +33,11 @@ import 'screens/inspection/inspectionFormScreen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm2Screen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm3Screen.dart';
 import 'screens/inspection/inspectionsScreen.dart';
+import 'package:app_bee/screens/typesExpenses/typesExpensesScreen.dart';
+import 'package:app_bee/screens/typesExpenses/typeExpenseFormScreen.dart';
 import 'package:app_bee/screens/expense/expensesScreen.dart';
 import 'package:app_bee/screens/expense/expenseFormScreen.dart';
-import 'models/apiaryList.dart';
+import 'package:app_bee/providers/apiaryProvider.dart';
 import 'routes/appRoute.dart';
 
 void main() => runApp(BeeApp());
@@ -44,7 +48,7 @@ class BeeApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ApiaryList(),
+          create: (_) => ApiaryProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => SpecieProvider()..loadSpecies(),
@@ -69,6 +73,9 @@ class BeeApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ExpenseProvider()..loadExpenses(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TypeExpenseProvider()..loadTypeExpenses(),
         ),
       ],
       child: MaterialApp(
@@ -107,6 +114,8 @@ class BeeApp extends StatelessWidget {
           AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
           AppRoutes.INSPECTION_FORM2: (ctx) => InspectionForm2Screen(),
           AppRoutes.INSPECTION_FORM3: (ctx) => InspectionForm3Screen(),
+          AppRoutes.TYPE_EXPENSE_FORM: (ctx) => TypeExpenseFormScreen(),
+          AppRoutes.TYPES_EXPENSES_INDEX: (ctx) => TypesExpensesScreen(),
           AppRoutes.EXPENSES_INDEX: (ctx) => ExpensesScreen(),
           AppRoutes.EXPENSE_FORM: (ctx) => ExpenseFormScreen(),
 
@@ -128,8 +137,8 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Map<String, dynamic>> _screens = [
     {'title': 'Apiários', 'screen': ApiariesScreen()},
+    {'title': 'Despesas', 'screen': ExpensesScreen()},
     {'title': 'Relatórios', 'screen': ReportsScreen()},
-
     {'title': 'Formulário Espécie', 'screen': SpecieFormScreen()},
     {'title': 'Espécies', 'screen': SpeciesScreen()},
     {'title': 'Lista de Categorias', 'screen': ApiariesScreen()},
@@ -142,16 +151,12 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Cadastrar Colmeia', 'screen': HiveFormScreen()},
     {'title': 'Detalhes Colmeia', 'screen': HiveDetailsScreen()},
     {'title': 'Tipos de Inspeções', 'screen': TypesInspectionsScreen()},
-    {'title': 'Despesas', 'screen': ExpensesScreen()},
     {'title': 'Cadastrar Despesa', 'screen': ExpenseFormScreen()},
-
     {
       'title': 'Cadastrar Tipo de Inspeção',
       'screen': TypeInspectionFormScreen()
     },
     {'title': 'Inspeções', 'screen': InspectionsScreen()},
-
-    // {'title': 'Detalhes Apiários', 'screen': ApiaryDetailsScreen()},
   ];
 
   void _selectScreen(int index) {

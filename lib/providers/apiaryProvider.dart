@@ -3,11 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/floralResource.dart';
-import 'package:app_bee/database/databaseHelper.dart';
+import 'package:app_bee/database/apiariesDatabaseHelper.dart';
 
-class ApiaryList with ChangeNotifier {
+class ApiaryProvider with ChangeNotifier {
   List<Apiary> _apiaries = [];
   List<Apiary> get apiary => [..._apiaries];
+  List<Apiary> _apiariesOnly = [];
+  List<Apiary> get apiaryOnly => [..._apiariesOnly];
 
   int get apiariesCount {
     return _apiaries.length;
@@ -34,19 +36,26 @@ class ApiaryList with ChangeNotifier {
 
   Future<void> addApiary(Apiary newApiary, List fResouces) async {
     _apiaries.add(newApiary);
-    await DatabaseHelper().insertApiary(newApiary, fResouces);
+    await ApiariesDatabase().insertApiary(newApiary, fResouces);
     notifyListeners();
   }
 
   Future<void> loadApiaries() async {
-    final List<Apiary> loadedApiaries = await DatabaseHelper().getApiaries();
+    final List<Apiary> loadedApiaries = await ApiariesDatabase().getApiaries();
     _apiaries = loadedApiaries;
+    notifyListeners();
+  }
+
+  Future<void> loadApiariesOnly() async {
+    final List<Apiary> loadedApiariesOnly =
+        await ApiariesDatabase().getApiariesOnly();
+    _apiariesOnly = loadedApiariesOnly;
     notifyListeners();
   }
 
 // Novo método para buscar e imprimir apiários e seus recursos florais
   Future<void> fetchAndPrintApiaries() async {
-    final apiariesFromDb = await DatabaseHelper().getApiaries();
+    final apiariesFromDb = await ApiariesDatabase().getApiaries();
     _apiaries.clear();
     _apiaries.addAll(apiariesFromDb);
     notifyListeners();

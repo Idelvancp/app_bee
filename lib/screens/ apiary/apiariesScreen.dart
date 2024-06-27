@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/models/apiaryList.dart';
 import 'package:app_bee/routes/appRoute.dart';
-import '../../components/apiaryItem.dart';
+import 'package:app_bee/providers/apiaryProvider.dart';
+import 'package:app_bee/components/apiaryItem.dart';
 
 class ApiariesScreen extends StatefulWidget {
   @override
@@ -15,12 +15,13 @@ class ApiariesScreenState extends State<ApiariesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ApiaryList>(context, listen: false).fetchAndPrintApiaries();
+      Provider.of<ApiaryProvider>(context, listen: false)
+          .fetchAndPrintApiaries();
     });
   }
 
   Widget build(BuildContext context) {
-    final ApiaryList apiaries = Provider.of(context);
+    final ApiaryProvider apiaries = Provider.of(context);
     final apiariesList = apiaries.apiary;
 
     return Scaffold(

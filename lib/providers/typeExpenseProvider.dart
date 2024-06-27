@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/typeExpense.dart';
-import 'package:app_bee/database/databaseHelper.dart';
+import 'package:app_bee/database/typesExpensesDatabaseHelper.dart';
 
 class TypeExpenseProvider with ChangeNotifier {
   final List<TypeExpense> _typeExpenses = [];
@@ -13,7 +13,7 @@ class TypeExpenseProvider with ChangeNotifier {
   }
 
   void loadTypeExpenses() async {
-    final typeExpenses = await DatabaseHelper().getTypeExpenses();
+    final typeExpenses = await TypesExpansesDatabase().getTypeExpenses();
     _typeExpenses.clear();
     _typeExpenses.addAll(typeExpenses.map((map) => TypeExpense.fromMap(map)));
     notifyListeners();
@@ -32,7 +32,13 @@ class TypeExpenseProvider with ChangeNotifier {
 
   Future<void> addTypeExpense(TypeExpense typeExpense) async {
     _typeExpenses.add(typeExpense);
-    await DatabaseHelper().insertTypeExpense(typeExpense.toMap());
+    await TypesExpansesDatabase().insertTypeExpense(typeExpense.toMap());
+    notifyListeners();
+  }
+
+  Future<void> deleteTypeExpense(TypeExpense typeExpense) async {
+    _typeExpenses.remove(typeExpense);
+    await TypesExpansesDatabase().deleteTypeExpense(typeExpense.id!);
     notifyListeners();
   }
 }

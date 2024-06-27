@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:app_bee/models/inspection.dart';
 import 'package:app_bee/models/environmentData.dart';
 import 'package:app_bee/models/products.dart';
-import 'package:app_bee/database/inspectionDataBase.dart';
+import 'package:app_bee/database/inspectionsDatabaseHelper.dart';
 
 class InspectionProvider with ChangeNotifier {
   final List<Inspection> _inspections = [];

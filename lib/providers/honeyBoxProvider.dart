@@ -3,7 +3,7 @@ import 'package:app_bee/models/typeHive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/honeyBox.dart';
-import 'package:app_bee/database/honeyBoxDataBase.dart';
+import 'package:app_bee/database/honeyBoxesDatabaseHelper.dart';
 
 class HoneyBoxProvider with ChangeNotifier {
   List<HoneyBox> _honeyBoxes = [];

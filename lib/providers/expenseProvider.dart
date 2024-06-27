@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/expense.dart';
+import 'package:app_bee/database/expensesDatabaseHelper.dart';
 import 'package:app_bee/database/databaseHelper.dart';
 
 class ExpenseProvider with ChangeNotifier {
@@ -13,9 +14,9 @@ class ExpenseProvider with ChangeNotifier {
   }
 
   void loadExpenses() async {
-    final expenses = await DatabaseHelper().getExpenses();
+    final expenses = await ExpenseDatabase().getExpenses();
     _expenses.clear();
-    _expenses.addAll(expenses.map((map) => Expense.fromMap(map)));
+    _expenses.addAll(expenses);
     notifyListeners();
   }
 
@@ -34,7 +35,7 @@ class ExpenseProvider with ChangeNotifier {
 
   Future<void> addExpense(Expense expense) async {
     _expenses.add(expense);
-    await DatabaseHelper().insertExpense(expense.toMap());
+    await ExpenseDatabase().insertExpense(expense);
     notifyListeners();
   }
 }

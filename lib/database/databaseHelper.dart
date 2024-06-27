@@ -96,7 +96,7 @@ class DatabaseHelper {
     );
 
     await db.execute(
-      '''CREATE TABLE type_expenses(
+      '''CREATE TABLE types_expenses(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         created_at TEXT,
@@ -115,26 +115,6 @@ class DatabaseHelper {
     );
 
     print("BANCO DE DADOS CRIADOS !!!!!!!!!!!!!");
-  }
-
-  // Insere um novo Specie no banco de dados
-  Future<void> insertSpecie(Specie specie) async {
-    final db = await database;
-    await db.insert(
-      'species',
-      specie.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  // Recupera species do banco de dados
-  Future<List<Specie>> getSpecies() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('species');
-
-    return List.generate(maps.length, (i) {
-      return Specie.fromMap(maps[i]);
-    });
   }
 
   // Insere um novo TypeHive no banco de dados
@@ -230,97 +210,4 @@ INNER JOIN
   }
 
   // Insere um novo Apiary no banco de dados
-  Future<void> insertApiary(Apiary apiary, List fResources) async {
-    final db = await database;
-    await db.transaction((txn) async {
-      int apiaryId = await txn.insert(
-        'apiaries',
-        apiary.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      for (var fResource in fResources) {
-        await txn.insert(
-          'apiaries_floral_resources',
-          {
-            'apiary_id': apiaryId,
-            'floral_resource_id': fResource.id,
-          },
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-      }
-    });
-  }
-
-  // Recupera Apiaries do banco de dados
-  Future<List<Apiary>> getApiaries() async {
-    final db = await database;
-    final List<Map<String, dynamic>> apiaryMaps = await db.query('apiaries');
-
-    List<Apiary> apiaries = [];
-    for (var apiaryMap in apiaryMaps) {
-      int apiaryId = apiaryMap['id'];
-
-      final List<Map<String, dynamic>> floralResourceMaps = await db.query(
-        'apiaries_floral_resources',
-        where: 'apiary_id = ?',
-        whereArgs: [apiaryId],
-      );
-
-      List<FloralResource> floralResources = [];
-      for (var floralResourceMap in floralResourceMaps) {
-        int floralResourceId = floralResourceMap['floral_resource_id'];
-
-        final List<Map<String, dynamic>> resourceMap = await db.query(
-          'floral_resources',
-          where: 'id = ?',
-          whereArgs: [floralResourceId],
-        );
-
-        if (resourceMap.isNotEmpty) {
-          floralResources.add(FloralResource.fromMap(resourceMap.first));
-        }
-      }
-
-      apiaries.add(
-          Apiary.fromMap(apiaryMap).copyWith(floralResources: floralResources));
-    }
-
-    return apiaries;
-  }
-
-  // Insere um novo TypeExpense no banco de dados
-  Future<void> insertTypeExpense(Map<String, dynamic> typeExpense) async {
-    final db = await database;
-    await db.insert(
-      'type_expenses',
-      typeExpense,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  // Recupera TypeExpenses do banco de dados
-  Future<List<Map<String, dynamic>>> getTypeExpenses() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('type_expenses');
-
-    return maps;
-  }
-
-  // Insere uma nova Expense no banco de dados
-  Future<void> insertExpense(Map<String, dynamic> expense) async {
-    final db = await database;
-    await db.insert(
-      'expenses',
-      expense,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  // Recupera Expenses do banco de dados
-  Future<List<Map<String, dynamic>>> getExpenses() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('expenses');
-
-    return maps;
-  }
 }

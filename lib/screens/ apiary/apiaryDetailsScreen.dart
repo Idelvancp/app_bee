@@ -2,7 +2,7 @@ import 'package:app_bee/data/dummy_data.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/models/apiaryList.dart';
+import 'package:app_bee/providers/apiaryProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import '../../components/apiaryItem.dart';
 
@@ -17,7 +17,7 @@ class ApiaryDetailsScreen extends StatelessWidget {
     });*/
     print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk hiveDetails");
 
-    final ApiaryList apiaries = Provider.of(context);
+    final ApiaryProvider apiaries = Provider.of(context);
     final apiariesList = apiaries.apiary; // Obter a lista de apiários
     return Scaffold(
       body: GridView(

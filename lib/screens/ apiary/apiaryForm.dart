@@ -1,5 +1,5 @@
 import 'package:app_bee/models/apiary.dart';
-import 'package:app_bee/models/apiaryList.dart';
+import 'package:app_bee/providers/apiaryProvider.dart';
 import 'package:app_bee/models/floralResource.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/data/cities.dart';
@@ -44,7 +44,7 @@ class _ApiaryFormState extends State<ApiaryForm> {
   void _submitForm() {
     _formKey.currentState?.save();
     _formData['fResources'] = selectedResource;
-    Provider.of<ApiaryList>(context, listen: false)
+    Provider.of<ApiaryProvider>(context, listen: false)
         .addApiaryFromData(_formData);
     Navigator.of(context).pop();
   }

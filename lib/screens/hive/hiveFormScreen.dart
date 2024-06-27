@@ -9,7 +9,7 @@ import 'package:app_bee/providers/typeHiveProvider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:app_bee/providers/honeyBoxProvider.dart';
 import 'package:app_bee/providers/specieProvider.dart';
-import 'package:app_bee/models/apiaryList.dart';
+import 'package:app_bee/providers/apiaryProvider.dart';
 
 class HiveFormScreen extends StatefulWidget {
   const HiveFormScreen({Key? key}) : super(key: key);
@@ -156,9 +156,9 @@ class _HiveFormState extends State<HiveFormScreen> {
   }
 
   Widget _buildDropdownApiary() {
-    return Consumer<ApiaryList>(
-      builder: (ctx, apiaryList, _) {
-        final allApiaries = apiaryList.apiary;
+    return Consumer<ApiaryProvider>(
+      builder: (ctx, apiaryProvider, _) {
+        final allApiaries = apiaryProvider.apiary;
         return DropdownSearch<Apiary>(
           items: allApiaries,
           itemAsString: (Apiary u) => u.name,
