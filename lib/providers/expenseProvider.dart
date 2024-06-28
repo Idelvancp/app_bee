@@ -6,14 +6,15 @@ import 'package:app_bee/database/expensesDatabaseHelper.dart';
 import 'package:app_bee/database/databaseHelper.dart';
 
 class ExpenseProvider with ChangeNotifier {
-  final List<Expense> _expenses = [];
-  List<Expense> get expenses => [..._expenses];
+  final List _expenses = [];
+  List get expenses => [..._expenses];
 
   int get expensesCount {
     return _expenses.length;
   }
 
   void loadExpenses() async {
+    print("Estou aquiiiiiiiiiiii");
     final expenses = await ExpenseDatabase().getExpenses();
     _expenses.clear();
     _expenses.addAll(expenses);
@@ -24,9 +25,10 @@ class ExpenseProvider with ChangeNotifier {
     final now = DateTime.now();
     final newExpense = Expense(
       id: Random().nextInt(10000),
+      typeExpenseId: data['type_expense_id'] as int,
+      apiaryId: data['apiary_id'] as int,
       cost: data['cost'] as double,
       date: DateTime.parse(data['date'].toString()),
-      typeExpenseId: data['type_expense_id'] as int,
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),
     );

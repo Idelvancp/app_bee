@@ -1,9 +1,11 @@
+import 'package:app_bee/models/apiary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Expense with ChangeNotifier {
   final int? id;
   final double cost;
+  final int apiaryId;
   final DateTime date;
   final int typeExpenseId;
   final DateTime createdAt;
@@ -13,6 +15,7 @@ class Expense with ChangeNotifier {
     this.id,
     required this.cost,
     required this.date,
+    required this.apiaryId,
     required this.typeExpenseId,
     required this.createdAt,
     this.updatedAt,
@@ -23,6 +26,7 @@ class Expense with ChangeNotifier {
     return {
       'id': id,
       'cost': cost,
+      'apiary_id': apiaryId,
       'date': date.toIso8601String(), // Convertendo para string ISO 8601
       'type_expense_id': typeExpenseId,
       'created_at':
@@ -37,6 +41,7 @@ class Expense with ChangeNotifier {
     return Expense(
       id: map['id'],
       cost: map['cost'],
+      apiaryId: map['apriary_id'],
       date: DateTime.parse(map['date']), // Convertendo de string ISO 8601
       typeExpenseId: map['type_expense_id'],
       createdAt:

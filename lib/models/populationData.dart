@@ -29,6 +29,7 @@ class PopulationData {
     return {
       'id': id,
       'number_bees': numberBees,
+      'age_queen': ageQueen,
       'spawning_queen': spawningQueen,
       'larvae_presence_distribution': larvaePresenceDistribution,
       'larvae_health_development': larvaeHealthDevelopment,
@@ -42,7 +43,7 @@ class PopulationData {
     return PopulationData(
       id: map['id'],
       numberBees: map['number_bees'],
-      ageQueen: map['ageQueen'],
+      ageQueen: map['age_queen'],
       spawningQueen: map['spawning_queen'],
       larvaePresenceDistribution: map['larvaePresenceDistribution'],
       larvaeHealthDevelopment: map['larvae_health_development'],

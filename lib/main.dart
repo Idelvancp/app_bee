@@ -30,10 +30,11 @@ import 'screens/ apiary/apiaryDetailsScreen.dart';
 import 'screens/specie/speciesScreen.dart';
 import 'screens/specie/specieFormScreen.dart';
 import 'screens/inspection/inspectionFormScreen.dart';
+import 'screens/inspection/inspectionsScreen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm2Screen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm3Screen.dart';
-import 'screens/inspection/inspectionsScreen.dart';
 import 'package:app_bee/screens/typesExpenses/typesExpensesScreen.dart';
+import 'screens/inspection/inspectionDetailsScreen.dart';
 import 'package:app_bee/screens/typesExpenses/typeExpenseFormScreen.dart';
 import 'package:app_bee/screens/expense/expensesScreen.dart';
 import 'package:app_bee/screens/expense/expenseFormScreen.dart';
@@ -97,6 +98,7 @@ class BeeApp extends StatelessWidget {
           AppRoutes.HOME: (ctx) => MainScreen(),
           AppRoutes.REPORT_SCREEN: (ctx) => ReportsScreen(),
           AppRoutes.APIARY_FORM: (ctx) => ApiaryForm(),
+          AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
           AppRoutes.SPECIE_FORM: (ctx) => SpecieFormScreen(),
           AppRoutes.SPECIE_INDEX: (ctx) => SpeciesScreen(),
           AppRoutes.TYPES_HIVES_INDEX: (ctx) => TypesHivesScreen(),
@@ -110,6 +112,7 @@ class BeeApp extends StatelessWidget {
           AppRoutes.HIVE_DETAILS: (ctx) => HiveDetailsScreen(),
           AppRoutes.TYPES_INSPECTIONS_INDEX: (ctx) => TypesInspectionsScreen(),
           AppRoutes.TYPE_INSPECTION_FORM: (ctx) => TypeInspectionFormScreen(),
+          AppRoutes.INSPECTIONS_DETAILS: (ctx) => InspectionDetailsScreen(),
           AppRoutes.INSPECTIONS_INDEX: (ctx) => InspectionsScreen(),
           AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
           AppRoutes.INSPECTION_FORM2: (ctx) => InspectionForm2Screen(),

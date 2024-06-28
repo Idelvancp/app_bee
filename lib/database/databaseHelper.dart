@@ -1,120 +1,346 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:app_bee/models/specie.dart';
 import 'package:app_bee/models/typeHive.dart';
 import 'package:app_bee/models/hive.dart';
-import 'package:app_bee/models/apiary.dart';
-import 'package:app_bee/models/honeyBox.dart';
 import 'package:app_bee/models/floralResource.dart';
 import 'dart:developer';
 
 // Classe singleton para gerenciar o banco de dados
 class DatabaseHelper {
-  // Instância única da classe
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;
   static Database? _database;
 
-  // Construtor interno
   DatabaseHelper._internal();
 
-  // Getter para o banco de dados
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  // Inicializa o banco de dados
   Future<Database> _initDatabase() async {
-    // Obtém o caminho do banco de dados no dispositivo
     String path = join(await getDatabasesPath(), 'bee.db');
-    // Abre o banco de dados e chama _onCreate se o banco de dados ainda não existir
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
-  // Cria as tabelas no banco de dados
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute(
-      'CREATE TABLE species(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE types_inspections(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE types_hives(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE floral_resources(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE apiaries(id INTEGER PRIMARY KEY AUTOINCREMENT, city_id INTERGET,state_id INTEGER NOT NULL, name TEXT NOT NULL, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE apiaries_floral_resources(apiary_id INTEGER NOT NULL, floral_resource_id INTEGER, FOREIGN KEY (apiary_id) REFERENCES apiaries (id), FOREIGN KEY (floral_resource_id) REFERENCES floral_resources (id), PRIMARY KEY (apiary_id, floral_resource_id))',
-    );
-    await db.execute(
-      'CREATE TABLE honey_boxes(id INTEGER PRIMARY KEY AUTOINCREMENT, tag TEXT NOT NULL, busy INTEGER NOT NULL CHECK (busy IN (0, 1)), number_frames INTEGER, busy_frames INTEGER, type_hive_id INTEGER REFERENCES types_hives(id), created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE hives(id INTEGER PRIMARY KEY AUTOINCREMENT, honey_box_id INTEGER REFERENCES honey_boxes(id), apiary_id INTEGER REFERENCES apiaries(id), specie_id INTEGER REFERENCES species(id), created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, honey REAL, propolis REAL, wax  REAL, royal_jelly REAL, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      'CREATE TABLE environment_data(id INTEGER PRIMARY KEY AUTOINCREMENT, internal_temperature REAL, external_temperature REAL, internal_humidity  REAL, external_humidity REAL, wind_speed REAL, cloud INT, created_at TEXT, updated_at TEXT)',
-    );
-    await db.execute(
-      '''CREATE TABLE population_data(
+    await _createTableSpecies(db);
+    await _createTableTypesInspections(db);
+    await _createTableTypesHives(db);
+    await _createTableFloralResources(db);
+    await _createTableApiaries(db);
+    await _createTableApiariesFloralResources(db);
+    await _createTableHoneyBoxes(db);
+    await _createTableHives(db);
+    await _createTableProducts(db);
+    await _createTableEnvironmentData(db);
+    await _createTablePopulationData(db);
+    await _createTableInspections(db);
+    await _createTableTypesExpenses(db);
+    await _createTableExpenses(db);
+    print("Database tables created successfully!");
+    await _insertInitialData(db);
+    print("Database initialized with initial data!");
+  }
+
+  Future<void> _createTableSpecies(Database db) async {
+    await db.execute('''
+      CREATE TABLE species (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableTypesInspections(Database db) async {
+    await db.execute('''
+      CREATE TABLE types_inspections (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableTypesHives(Database db) async {
+    await db.execute('''
+      CREATE TABLE types_hives (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableFloralResources(Database db) async {
+    await db.execute('''
+      CREATE TABLE floral_resources (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableApiaries(Database db) async {
+    await db.execute('''
+      CREATE TABLE apiaries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        city_id INTEGER,
+        state_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableApiariesFloralResources(Database db) async {
+    await db.execute('''
+      CREATE TABLE apiaries_floral_resources (
+        apiary_id INTEGER NOT NULL,
+        floral_resource_id INTEGER,
+        FOREIGN KEY (apiary_id) REFERENCES apiaries (id),
+        FOREIGN KEY (floral_resource_id) REFERENCES floral_resources (id),
+        PRIMARY KEY (apiary_id, floral_resource_id)
+      )
+    ''');
+  }
+
+  Future<void> _createTableHoneyBoxes(Database db) async {
+    await db.execute('''
+      CREATE TABLE honey_boxes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tag TEXT NOT NULL,
+        busy INTEGER NOT NULL CHECK (busy IN (0, 1)),
+        number_frames INTEGER,
+        busy_frames INTEGER,
+        type_hive_id INTEGER REFERENCES types_hives(id),
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableHives(Database db) async {
+    await db.execute('''
+      CREATE TABLE hives (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        honey_box_id INTEGER REFERENCES honey_boxes(id),
+        apiary_id INTEGER REFERENCES apiaries(id),
+        specie_id INTEGER REFERENCES species(id),
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableProducts(Database db) async {
+    await db.execute('''
+      CREATE TABLE products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        honey REAL,
+        propolis REAL,
+        wax REAL,
+        royal_jelly REAL,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableEnvironmentData(Database db) async {
+    await db.execute('''
+      CREATE TABLE environment_data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        internal_temperature REAL,
+        external_temperature REAL,
+        internal_humidity REAL,
+        external_humidity REAL,
+        wind_speed REAL,
+        cloud INT,
+        created_at TEXT,
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTablePopulationData(Database db) async {
+    await db.execute('''
+      CREATE TABLE population_data (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         number_bees INT,
         age_queen REAL,
-        spawning_queen  TEXT,
+        spawning_queen TEXT,
         larvae_presence_distribution TEXT,
         larvae_health_development TEXT,
         pupa_presence_distribution TEXT,
         pupa_health_development TEXT,
         created_at TEXT,
-        updated_at TEXT)''',
-    );
-    await db.execute(
-      '''CREATE TABLE inspections(
+        updated_at TEXT
+      )
+    ''');
+  }
+
+  Future<void> _createTableInspections(Database db) async {
+    await db.execute('''
+      CREATE TABLE inspections (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date  TEXT, 
+        date TEXT,
         hive_id INTEGER REFERENCES hives(id),
         type_inspection_id TEXT,
         population_data_id INTEGER REFERENCES population_data(id),
         product_id INTEGER REFERENCES products(id),
         environment_data_id INTEGER REFERENCES environment_data(id),
         created_at TEXT,
-        updated_at TEXT)''',
-    );
+        updated_at TEXT
+      )
+    ''');
+  }
 
-    await db.execute(
-      '''CREATE TABLE types_expenses(
+  Future<void> _createTableTypesExpenses(Database db) async {
+    await db.execute('''
+      CREATE TABLE types_expenses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         created_at TEXT,
-        updated_at TEXT)''',
-    );
+        updated_at TEXT
+      )
+    ''');
+  }
 
-    await db.execute(
-      '''CREATE TABLE expenses(
+  Future<void> _createTableExpenses(Database db) async {
+    await db.execute('''
+      CREATE TABLE expenses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         cost REAL NOT NULL,
         apiary_id INTEGER,
         date TEXT NOT NULL,
-        type_expense_id INTEGER REFERENCES type_expenses(id),
+        type_expense_id INTEGER REFERENCES types_expenses(id),
         created_at TEXT,
-        updated_at TEXT)''',
-    );
+        updated_at TEXT
+      )
+    ''');
+  }
 
-    print("BANCO DE DADOS CRIADOS !!!!!!!!!!!!!");
+  Future<void> _insertInitialData(Database db) async {
+    await _insertInitialSpecies(db);
+    await _insertInitialTypesHives(db);
+    await _insertInitialTypesInspections(db);
+    await _insertInitialFloralResources(db);
+    await _insertInitialTypesExpenses(db);
+  }
+
+  Future<void> _insertInitialSpecies(Database db) async {
+    const initialSpecies = [
+      {
+        'name': 'Apis mellifera',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Apis cerana',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      // Mais espécies aqui...
+    ];
+    for (var species in initialSpecies) {
+      await db.insert('species', species);
+    }
+  }
+
+  Future<void> _insertInitialTypesHives(Database db) async {
+    const initialTypesHives = [
+      {
+        'name': 'Langstroth',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Top-bar',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {'name': 'Pnn', 'created_at': '2023-06-28', 'updated_at': '2023-06-28'},
+      // Mais tipos de colmeias aqui...
+    ];
+    for (var typeHive in initialTypesHives) {
+      await db.insert('types_hives', typeHive);
+    }
+  }
+
+  Future<void> _insertInitialTypesInspections(Database db) async {
+    const initialTypesInspections = [
+      {
+        'name': 'Rotina',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Coleta',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      // Mais tipos de inspeções aqui...
+    ];
+    for (var typeInspection in initialTypesInspections) {
+      await db.insert('types_inspections', typeInspection);
+    }
+  }
+
+  Future<void> _insertInitialFloralResources(Database db) async {
+    const initialFloralResources = [
+      {
+        'name': 'Aroeira',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Mameleiro',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Angico',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Bamburrar',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      // Mais recursos florais aqui...
+    ];
+    for (var floralResource in initialFloralResources) {
+      await db.insert('floral_resources', floralResource);
+    }
+  }
+
+  Future<void> _insertInitialTypesExpenses(Database db) async {
+    const initialTypesExpenses = [
+      {
+        'name': 'Food Supplies',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Veterinary Services',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      // Mais tipos de despesas aqui...
+    ];
+    for (var typeExpense in initialTypesExpenses) {
+      await db.insert('types_expenses', typeExpense);
+    }
   }
 
   // Insere um novo TypeHive no banco de dados

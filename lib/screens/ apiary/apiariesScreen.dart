@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/providers/apiaryProvider.dart';
 import 'package:app_bee/components/apiaryItem.dart';
+import 'package:app_bee/providers/expenseProvider.dart';
 
 class ApiariesScreen extends StatefulWidget {
   @override

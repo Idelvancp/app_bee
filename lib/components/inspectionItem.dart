@@ -7,6 +7,13 @@ class InspectionItem extends StatelessWidget {
 
   const InspectionItem(this.inspection);
 
+  void _selectInspection(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      AppRoutes.INSPECTIONS_DETAILS,
+      arguments: inspection,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final dateString = inspection['date'] as String;
@@ -14,9 +21,7 @@ class InspectionItem extends StatelessWidget {
     final dateFormated = DateFormat('dd-MM-yyyy').format(date);
 
     return InkWell(
-      onTap: () {
-        // Código para navegação quando o item é clicado
-      },
+      onTap: () => _selectInspection(context),
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: Card(

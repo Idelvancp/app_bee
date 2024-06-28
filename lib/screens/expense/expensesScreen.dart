@@ -1,4 +1,5 @@
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:app_bee/components/expenseItem.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_bee/providers/expenseProvider.dart';
@@ -10,6 +11,14 @@ class ExpensesScreen extends StatefulWidget {
 }
 
 class _ExpensesScreenState extends State<ExpensesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ExpenseProvider>(context, listen: false).loadExpenses();
+    });
+  }
+
   Widget build(BuildContext context) {
     final ExpenseProvider expenses = Provider.of(context);
     final expensesList = expenses.expenses; // Obter a lista de despesas
@@ -22,13 +31,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: expensesList.map((expense) {
-          return ListTile(
-            title: Text(expense.date.toIso8601String() +
-                ' - \$' +
-                expense.cost.toString()),
-            subtitle: Text('Tipo: ' + expense.typeExpenseId.toString()),
-          );
+        children: expensesList.map((api) {
+          return ExpenseItem(api);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
@@ -38,7 +42,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           Navigator.of(context).pushNamed(AppRoutes.EXPENSE_FORM);
         },
       ),
-      drawer: AppDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

@@ -26,8 +26,6 @@ class InspectionDatabase {
       PopulationData populationData,
       EnvironmentData environmentData,
       Product product) async {
-    print("Insert Inspection Transaction");
-
     final db = await _databaseHelper.database;
 
     await db.transaction((txn) async {
@@ -87,8 +85,10 @@ class InspectionDatabase {
     final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
     inspection.type_inspection_id,
     inspection.date,
-    hive.id AS hive_id,
+    hive.*,
     population.*, 
+    environment.*,
+    product.*,
     honey_box.tag
   FROM 
     inspections inspection  
@@ -103,11 +103,15 @@ class InspectionDatabase {
     ON population.id = inspection.population_data_id
     INNER JOIN 
     environment_data environment 
-    ON environment.id = inspection.environment_data_id''');
+    ON environment.id = inspection.environment_data_id
+    INNER JOIN 
+    products product 
+    ON product.id = inspection.product_id
+    ''');
 
     maps.forEach((table) {
       print(
-          'Dados da Inspeção ${table['tag']}, ${table['larvae_health_development']}, ${table['number_bees']}');
+          'Dados da Inspeção ${table['tag']}, ${table['age_queen']}, ${table['number_bees']}');
     });
     return maps;
   }

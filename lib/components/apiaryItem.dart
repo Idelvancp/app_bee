@@ -49,7 +49,7 @@ class ApiaryItem extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                'Floral Resources: ${visibleResources.map((resource) => resource.name).join(", ")}' +
+                'Recursos Florais: ${visibleResources.map((resource) => resource.name).join(", ")}' +
                     (hiddenResources.isNotEmpty ? ", ..." : ""),
                 style: TextStyle(
                   fontSize: 14,
@@ -57,7 +57,7 @@ class ApiaryItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Quantidade de Colméias: 13',
+                'Quantidade de Colméias: ${apiary.hives.length}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black54,

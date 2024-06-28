@@ -30,6 +30,11 @@ class InspectionProvider with ChangeNotifier {
     final inspectionsScreen = await InspectionDatabase().getInspectionScreen();
     _inspectionsScreen.clear();
     _inspectionsScreen.addAll(inspectionsScreen);
+
+    inspectionsScreen.forEach((table) {
+      print(
+          'Dados da Inspeçãofsdgsdfgsdf ${table['tag']}, ${table['age_queen']}, ${table['number_bees']}');
+    });
     notifyListeners();
   }
 
@@ -71,7 +76,6 @@ class InspectionProvider with ChangeNotifier {
       amountWax: data['amountWax'] as double,
       amountRoyalJelly: data['amountRoyalJelly'] as double,
     );
-
     print("Adding inspection: $newInspection");
     print("With population data: $newPopulationData");
     print("With environment data: $newEnvironmentData");

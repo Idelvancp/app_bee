@@ -65,6 +65,9 @@ class ApiaryProvider with ChangeNotifier {
       for (var floralResource in apiary.floralResources) {
         print('  Floral Resource: ${floralResource.name}');
       }
+      for (var hive in apiary.hives) {
+        print('Hive ${hive.id}');
+      }
     }
   }
 }

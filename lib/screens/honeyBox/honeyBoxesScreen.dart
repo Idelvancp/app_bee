@@ -15,7 +15,8 @@ class HoneyBoxesScreenState extends State<HoneyBoxesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HoneyBoxProvider>(context, listen: false).loadHoneyBoxes();
+      Provider.of<HoneyBoxProvider>(context, listen: false)
+          .loadHoneyBoxestoForm();
     });
   }
 

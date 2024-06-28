@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:app_bee/models/apiary.dart';
+import 'package:app_bee/models/hive.dart';
 import 'package:app_bee/models/floralResource.dart';
 import 'package:app_bee/database/databaseHelper.dart';
 
@@ -46,6 +47,21 @@ class ApiariesDatabase {
     for (var apiaryMap in apiaryMaps) {
       int apiaryId = apiaryMap['id'];
 
+      final List<Map<String, dynamic>> hivesMaps = await db.query(
+        'hives',
+        where: 'apiary_id = ?',
+        whereArgs: [apiaryId],
+      );
+      List<Hive> hives = [];
+      for (var hiveMap in hivesMaps) {
+        int hiveId = hiveMap['id'];
+        final List<Map<String, dynamic>> hivesMap =
+            await db.query('hives', where: 'id = ?', whereArgs: [hiveId]);
+        if (hivesMap.isNotEmpty) {
+          hives.add(Hive.fromMap(hivesMap.first));
+        }
+      }
+
       final List<Map<String, dynamic>> floralResourceMaps = await db.query(
         'apiaries_floral_resources',
         where: 'apiary_id = ?',
@@ -67,8 +83,8 @@ class ApiariesDatabase {
         }
       }
 
-      apiaries.add(
-          Apiary.fromMap(apiaryMap).copyWith(floralResources: floralResources));
+      apiaries.add(Apiary.fromMap(apiaryMap)
+          .copyWith(floralResources: floralResources, hives: hives));
     }
 
     return apiaries;
