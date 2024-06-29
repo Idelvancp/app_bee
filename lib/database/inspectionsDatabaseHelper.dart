@@ -68,6 +68,43 @@ class InspectionDatabase {
     });
   }
 
+  Future<List<Map<String, dynamic>>> hivesInspections(int apiaryId) async {
+    print("Estou ${apiaryId}");
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      '''
+    SELECT 
+      inspection.*,
+      hive.*,
+      population.*,
+      environment.*,
+      product.*
+    FROM 
+      inspections inspection
+    INNER JOIN 
+      hives hive 
+      ON inspection.hive_id = hive.id
+    INNER JOIN
+      population_data population
+      ON inspection.population_data_id = population.id
+    INNER JOIN
+      environment_data environment
+      ON inspection.environment_data_id = environment.id
+    INNER JOIN
+      products product
+      ON inspection.product_id = product.id
+    WHERE 
+      hive.apiary_id = ?
+  ''',
+      [apiaryId],
+    );
+
+    maps.forEach((table) {
+      print('');
+    });
+    return maps;
+  }
+
   // Recupera inspections do banco de dados
   Future<List<Inspection>> getInspections() async {
     final db = await _databaseHelper.database;

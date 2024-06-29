@@ -11,10 +11,11 @@ import 'package:app_bee/database/inspectionsDatabaseHelper.dart';
 class InspectionProvider with ChangeNotifier {
   final List<Inspection> _inspections = [];
   List<Inspection> get inspection => [..._inspections];
+  final List _apiaryInspections = [];
 
   final List _inspectionsScreen = [];
   List get inspectionsScreen => [..._inspectionsScreen];
-
+  List get apiaryInspections => [..._apiaryInspections];
   int get inspectionsCount {
     return _inspections.length;
   }
@@ -35,6 +36,16 @@ class InspectionProvider with ChangeNotifier {
       print(
           'Dados da Inspeçãofsdgsdfgsdf ${table['tag']}, ${table['age_queen']}, ${table['number_bees']}');
     });
+    notifyListeners();
+  }
+
+  // Carregar inspeções de um apiário específico
+  Future<void> loadInspectionsForApiary(int apiaryId) async {
+    final apiaryInspections =
+        await InspectionDatabase().hivesInspections(apiaryId);
+    print("Loaded inspections: $apiaryInspections");
+    _apiaryInspections.clear();
+    _apiaryInspections.addAll(apiaryInspections);
     notifyListeners();
   }
 
@@ -90,5 +101,25 @@ class InspectionProvider with ChangeNotifier {
     await InspectionDatabase()
         .insertInspection(inspection, population, environment, product);
     notifyListeners();
+  }
+
+  double getTotalHoney() {
+    return _apiaryInspections.fold(
+        0.0, (sum, item) => sum + (item['honey'] as double));
+  }
+
+  double getTotalPropolis() {
+    return _apiaryInspections.fold(
+        0.0, (sum, item) => sum + (item['propolis'] as double));
+  }
+
+  double getTotalWax() {
+    return _apiaryInspections.fold(
+        0.0, (sum, item) => sum + (item['wax'] as double));
+  }
+
+  double getTotalRoyalJelly() {
+    return _apiaryInspections.fold(
+        0.0, (sum, item) => sum + (item['royal_jelly'] as double));
   }
 }
