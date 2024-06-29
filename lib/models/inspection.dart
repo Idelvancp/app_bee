@@ -1,21 +1,19 @@
 class Inspection {
-  final int id;
+  final int? id;
   final DateTime date;
   final int hiveId;
   final String typeInspectionId;
   int? populationDataId;
-  int? productId;
   int? environmentDataId;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   Inspection({
-    required this.id,
+    this.id,
     required this.date,
     required this.hiveId,
     required this.typeInspectionId,
     this.populationDataId,
-    this.productId,
     this.environmentDataId,
     required this.createdAt,
     this.updatedAt,
@@ -27,7 +25,6 @@ class Inspection {
       'hive_id': hiveId,
       'type_inspection_id': typeInspectionId,
       'population_data_id': populationDataId,
-      'product_id': productId,
       'environment_data_id': environmentDataId,
       'created_at':
           createdAt.toIso8601String(), // Convertendo para string ISO 8601
@@ -44,7 +41,6 @@ class Inspection {
       hiveId: map['hive_id'],
       typeInspectionId: map['type_inspection_id'],
       populationDataId: map['population_data_id'],
-      productId: map['product_id'],
       environmentDataId: map['environment_data_id'],
       createdAt:
           DateTime.parse(map['created_at']), // Convertendo de string ISO 8601

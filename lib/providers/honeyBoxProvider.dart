@@ -32,7 +32,6 @@ class HoneyBoxProvider with ChangeNotifier {
   void addHoneyBoxFromData(Map<String, Object> data) {
     final now = DateTime.now();
     final newHoneyBox = HoneyBox(
-      id: Random().nextInt(10000),
       tag: data['tag'].toString(),
       busy: data['busy'] == false ? 0 as int : 1 as int,
       numberFrames: data['numberFrames'] as int,

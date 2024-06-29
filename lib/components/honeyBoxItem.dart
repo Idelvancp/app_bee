@@ -38,7 +38,7 @@ class HoneyBoxItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Tipo de Caixa: ${honeyBox.typeHiveName}",
+                "TAG: ${honeyBox.honeyBox.tag}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -46,17 +46,19 @@ class HoneyBoxItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Número de Quadros: ${honeyBox.honeyBox.numberFrames}',
+                "Tipo de Caixa: ${honeyBox.typeHiveName}",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,
                 ),
               ),
               Text(
-                'Quadros Ocupados: ${honeyBox.honeyBox.busyFrames}',
+                '${honeyBox.honeyBox.busy == 1 ? 'Ocupada' : 'Desocupada'}',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.purple,
+                  color: (honeyBox.honeyBox.busy == 1
+                      ? Colors.purple
+                      : Colors.green),
                 ),
               ),
             ],

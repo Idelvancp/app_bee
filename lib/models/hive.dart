@@ -3,7 +3,7 @@ import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/models/specie.dart';
 
 class Hive with ChangeNotifier {
-  final int id;
+  final int? id;
   final int honeyBoxId;
   final int specieId;
   final int apiaryId;
@@ -11,7 +11,7 @@ class Hive with ChangeNotifier {
   final DateTime? updatedAt;
 
   Hive(
-      {required this.id,
+      {this.id,
       required this.honeyBoxId,
       required this.specieId,
       required this.apiaryId,

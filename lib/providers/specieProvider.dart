@@ -22,7 +22,6 @@ class SpecieProvider with ChangeNotifier {
   void addSpecieFromData(Map<String, Object> data) {
     final now = DateTime.now();
     final newSpecie = Specie(
-      id: Random().nextInt(10000),
       name: data['name'].toString(),
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),

@@ -4,6 +4,7 @@ import 'package:app_bee/models/typeHive.dart';
 import 'package:app_bee/models/hive.dart';
 import 'package:app_bee/models/floralResource.dart';
 import 'dart:developer';
+import 'dart:math';
 
 // Classe singleton para gerenciar o banco de dados
 class DatabaseHelper {
@@ -143,12 +144,15 @@ class DatabaseHelper {
 
   Future<void> _createTableProducts(Database db) async {
     await db.execute('''
-      CREATE TABLE products (
+      CREATE TABLE collects (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT,
         honey REAL,
         propolis REAL,
         wax REAL,
         royal_jelly REAL,
+        hive_id INTEGER REFERENCES hives(id),
+        apiary_id INTEGER REFERENCES apiaries(id),
         created_at TEXT,
         updated_at TEXT
       )
@@ -196,7 +200,6 @@ class DatabaseHelper {
         hive_id INTEGER REFERENCES hives(id),
         type_inspection_id TEXT,
         population_data_id INTEGER REFERENCES population_data(id),
-        product_id INTEGER REFERENCES products(id),
         environment_data_id INTEGER REFERENCES environment_data(id),
         created_at TEXT,
         updated_at TEXT
@@ -235,6 +238,7 @@ class DatabaseHelper {
     await _insertInitialTypesInspections(db);
     await _insertInitialFloralResources(db);
     await _insertInitialTypesExpenses(db);
+    await _insertInitialHoneyBoxes(db);
   }
 
   Future<void> _insertInitialSpecies(Database db) async {
@@ -343,6 +347,35 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> _insertInitialHoneyBoxes(Database db) async {
+    final Random random = Random();
+
+    List<Map<String, dynamic>> honeyBoxes = [];
+
+    for (int i = 1; i <= 10; i++) {
+      String tag = 'LANG${i.toString().padLeft(2, '0')}';
+      int busy = 1;
+      int numberFrames = random.nextInt(5) + 4; // Valores aleatórios de 4 a 8
+      int busyFrames =
+          random.nextInt(numberFrames + 1); // Menor ou igual a numberFrames
+      int typeHiveId = random.nextInt(3) + 1; // Random number 1, 2, or 3
+
+      honeyBoxes.add({
+        'tag': tag,
+        'busy': busy,
+        'number_frames': numberFrames,
+        'busy_frames': busyFrames,
+        'type_hive_id': typeHiveId,
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      });
+    }
+
+    honeyBoxes.forEach((honeyBox) async {
+      await db.insert('honey_boxes', honeyBox);
+    });
+  }
+
   // Insere um novo TypeHive no banco de dados
   Future<void> insertTypeHive(TypeHive typeHive) async {
     final db = await database;
@@ -403,6 +436,34 @@ class DatabaseHelper {
     });
   }
 
+  Future<List> getHivesScreen() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
+    hive.*,
+    honey_box.tag,
+    specie.name AS specie_name,
+    apiary.name AS apiary_name,
+    apiary.city_id AS apiary_city_id,
+    apiary.state_id AS apiary_state_id,
+  FROM 
+    hives hive  
+    INNER JOIN 
+    honey_boxes honey_box 
+    ON hive.honey_box_id = honey_box.id
+INNER JOIN 
+    species specie  
+    ON hive.specie_id = specie.id
+INNER JOIN 
+    apiaries apiary 
+    ON hive.apiary_id = apiary.id''');
+
+    maps.forEach((table) {
+      print(
+          'Tages ${table['type_inspection_id']} ${table['apiary_name']} ${table['specie_name']}');
+    });
+    return maps;
+  }
+
   Future<List> getHiveDetails() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
@@ -425,12 +486,15 @@ INNER JOIN
     species specie  
     ON hive.specie_id = specie.id
 INNER JOIN 
+    inspections inspection  
+    ON hive.id = inspection.hive_id
+INNER JOIN 
     apiaries apiary 
     ON hive.apiary_id = apiary.id''');
 
     maps.forEach((table) {
       print(
-          'Tages ${table['tag']} ${table['apiary_name']} ${table['specie_name']}');
+          'Tages ${table['type_inspection_id']} ${table['apiary_name']} ${table['specie_name']}');
     });
     return maps;
   }

@@ -19,6 +19,9 @@ class TypesExpansesDatabase {
   Future<List<Map<String, dynamic>>> getTypeExpenses() async {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query('types_expenses');
+    maps.forEach((table) {
+      print('44444444 ${table['id']}');
+    });
 
     return maps;
   }

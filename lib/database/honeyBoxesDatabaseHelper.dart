@@ -23,13 +23,12 @@ class honeyBoxDatabase {
   Future<List<HoneyBoxWithTypeName>> getHoneyBoxesWithTypeNames() async {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
+        'SELECT hb.*, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
 
     //       final List<Map<String, dynamic>> maps = await db.rawQuery(
     //     'SELECT hb. *, th. * FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
     maps.forEach((table) {
-      print(
-          '${table['name']}, ${table['number_frames']}, ${table['busy_frames']}');
+      print('${table['name']}, ${table['tag']}, ${table['busy_frames']}');
     });
     return List<HoneyBoxWithTypeName>.from(
         maps.map((map) => HoneyBoxWithTypeName.fromMap(map)));

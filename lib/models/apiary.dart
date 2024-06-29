@@ -13,7 +13,7 @@ enum Biome {
 }
 
 class Apiary with ChangeNotifier, DiagnosticableTreeMixin {
-  final int id;
+  final int? id;
   final String name;
   final int cityId;
   final int stateId;
@@ -25,7 +25,7 @@ class Apiary with ChangeNotifier, DiagnosticableTreeMixin {
   // final String biome;
 
   Apiary({
-    required this.id,
+    this.id,
     required this.name,
     required this.cityId,
     required this.stateId,

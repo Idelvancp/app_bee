@@ -52,19 +52,13 @@ class SpecieItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment
               .spaceBetween, // Alinha os elementos nas extremidades da linha
           children: [
-            // Nome da Espécie e Quantidade de Colmeias alinhados à esquerda
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  specie.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.purple,
-                  ),
-                ),
-              ],
+            Text(
+              specie.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.purple,
+              ),
             ),
             // Container para os ícones de ações, alinhados à direita
             Row(

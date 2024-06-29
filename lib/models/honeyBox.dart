@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 //enum State { goodCondition, poorCondition }
 
 class HoneyBox with ChangeNotifier {
-  final int id;
+  final int? id;
   final String tag;
   final int busy;
   final int numberFrames;
@@ -13,7 +13,7 @@ class HoneyBox with ChangeNotifier {
   final DateTime createdAt;
   final DateTime? updatedAt;
   HoneyBox({
-    required this.id,
+    this.id,
     required this.tag,
     required this.busy,
     required this.numberFrames,

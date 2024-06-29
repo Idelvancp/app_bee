@@ -6,6 +6,7 @@ import 'package:app_bee/providers/typeInspectionProvider.dart';
 import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:intl/intl.dart'; // Importe para formatação de data
 
 class InspectionFormScreen extends StatefulWidget {
   const InspectionFormScreen({Key? key}) : super(key: key);
@@ -25,6 +26,9 @@ class _InspectionFormState extends State<InspectionFormScreen> {
   final TextEditingController _externalHumidityController =
       TextEditingController();
   final TextEditingController _windSpeedController = TextEditingController();
+  final TextEditingController _dateController =
+      TextEditingController(); // Controller para o campo de data
+  DateTime? _selectedDateTime; // Variável para armazenar a data selecionada
 
   @override
   void dispose() {
@@ -33,6 +37,7 @@ class _InspectionFormState extends State<InspectionFormScreen> {
     _internalHumidityController.dispose();
     _externalHumidityController.dispose();
     _windSpeedController.dispose();
+    _dateController.dispose(); // Dispose do controller de data
     super.dispose();
   }
 
@@ -43,6 +48,24 @@ class _InspectionFormState extends State<InspectionFormScreen> {
         AppRoutes.INSPECTION_FORM2,
         arguments: _formData,
       );
+    }
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDateTime = pickedDate;
+        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+        _dateController.text = dateFormat.format(pickedDate);
+        _formData['date'] = pickedDate.toIso8601String();
+      });
     }
   }
 
@@ -128,6 +151,7 @@ class _InspectionFormState extends State<InspectionFormScreen> {
                 onSaved: (value) =>
                     _formData['windSpeed'] = int.tryParse(value ?? '') ?? 0,
               ),
+              _buildDateField(), // Adiciona o campo de data
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -186,6 +210,28 @@ class _InspectionFormState extends State<InspectionFormScreen> {
         ),
         textInputAction: TextInputAction.next,
         onSaved: onSaved,
+      ),
+    );
+  }
+
+  Widget _buildDateField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: TextFormField(
+        controller: _dateController,
+        decoration: InputDecoration(
+          labelText: 'Data',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.purple),
+          ),
+        ),
+        readOnly: true,
+        onTap: _selectDate,
+        onSaved: (value) => _formData['date'] = value ?? '',
       ),
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TypeHive with ChangeNotifier {
-  final int id;
+  final int? id;
   final String name;
   final createdAt;
   final updatedAt;
 
   TypeHive({
-    required this.id,
+    this.id,
     required this.name,
     required this.createdAt,
     this.updatedAt,

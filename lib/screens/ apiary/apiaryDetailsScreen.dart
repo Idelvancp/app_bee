@@ -20,7 +20,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
         final Apiary apiary =
             ModalRoute.of(context)!.settings.arguments as Apiary;
         Provider.of<InspectionProvider>(context, listen: false)
-            .loadInspectionsForApiary(apiary.id);
+            .loadInspectionsForApiary(apiary.id!);
       }
     });
   }
@@ -37,6 +37,10 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
       ),
       body: Consumer<InspectionProvider>(
         builder: (context, provider, child) {
+          var honeyTotals = provider.getTotalHoneyByYear();
+          var propolisTotals = provider.getTotalPropolisByYear();
+          var waxTotals = provider.getTotalWaxByYear();
+          var royalJellyTotals = provider.getTotalRoyalJellyByYear();
           return ListView(
             children: [
               ListTile(
@@ -60,28 +64,44 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
                 leading: Icon(Icons.home_work),
               ),
               ListTile(
-                title: Text("Total de Mel"),
-                subtitle:
-                    Text("${provider.getTotalHoney().toStringAsFixed(2)} kg"),
-                leading: Icon(Icons.local_drink),
+                title: Text("Produção de Mel por Ano"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: honeyTotals.entries
+                      .map((entry) => Text(
+                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
+                      .toList(),
+                ),
               ),
               ListTile(
-                title: Text("Total de Própolis"),
-                subtitle: Text(
-                    "${provider.getTotalPropolis().toStringAsFixed(2)} kg"),
-                leading: Icon(Icons.local_florist),
+                title: Text("Produção de Própolis por Ano"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: propolisTotals.entries
+                      .map((entry) => Text(
+                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
+                      .toList(),
+                ),
               ),
               ListTile(
-                title: Text("Total de Cera"),
-                subtitle:
-                    Text("${provider.getTotalWax().toStringAsFixed(2)} kg"),
-                leading: Icon(Icons.texture),
+                title: Text("Produção de Cera por Ano"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: waxTotals.entries
+                      .map((entry) => Text(
+                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
+                      .toList(),
+                ),
               ),
               ListTile(
-                title: Text("Total de Geleia Real"),
-                subtitle: Text(
-                    "${provider.getTotalRoyalJelly().toStringAsFixed(2)} kg"),
-                leading: Icon(Icons.eco),
+                title: Text("Produção de Geleia Real por Ano"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: royalJellyTotals.entries
+                      .map((entry) => Text(
+                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
+                      .toList(),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

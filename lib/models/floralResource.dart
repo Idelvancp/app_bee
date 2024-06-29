@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class FloralResource with ChangeNotifier {
-  final int id;
+  final int? id;
   final String name;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
   FloralResource({
-    required this.id,
+    this.id,
     required this.name,
     required this.createdAt,
     this.updatedAt,

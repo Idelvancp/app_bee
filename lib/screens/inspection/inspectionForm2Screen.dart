@@ -38,7 +38,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
     super.dispose();
   }
 
-  void _toPageProductsData(BuildContext context) {
+  void _submitForm(BuildContext context) {
     _formKey.currentState?.save();
     _formData['numberBees'] = int.tryParse(_numberBeesController.text) ?? 0;
     _formData['ageQueen'] = double.tryParse(_ageQueenController.text) ?? 0.0;
@@ -48,10 +48,11 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
     _formData['pupaPresenceDistribution'] = pupaPresenceDistribution ?? '';
     _formData['pupaHealthDevelopment'] = pupaHealthDevelopment ?? '';
 
-    Navigator.of(context).pushNamed(
-      AppRoutes.INSPECTION_FORM3,
-      arguments: _formData,
-    );
+    Provider.of<InspectionProvider>(
+      context,
+      listen: false,
+    ).addInspectionFromData(_formData);
+    Navigator.of(context).pushNamed('/hives-index');
   }
 
   @override
@@ -66,7 +67,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => _toPageProductsData(context),
+            onPressed: () => _submitForm(context),
             icon: const Icon(
               Icons.save,
               color: Colors.white,
@@ -135,7 +136,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () => _toPageProductsData(context),
+                    onPressed: () => _submitForm(context),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

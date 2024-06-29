@@ -22,7 +22,6 @@ class TypeHiveProvider with ChangeNotifier {
   void addTypeHiveFromData(Map<String, Object> data) {
     final now = DateTime.now();
     final newTypeHive = TypeHive(
-      id: Random().nextInt(10000),
       name: data['name'].toString(),
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),

@@ -6,6 +6,7 @@ import 'package:app_bee/routes/appRoute.dart';
 import '../../components/hiveItem.dart';
 import 'package:app_bee/providers/hiveProvider.dart';
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:app_bee/providers/inspectionProvider.dart';
 
 class HivesScreen extends StatefulWidget {
   @override
@@ -18,6 +19,8 @@ class HivesScreenState extends State<HivesScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HiveProvider>(context, listen: false).loadHivesDetails();
+      Provider.of<InspectionProvider>(context, listen: false)
+          .loadLastInspectionsHives();
     });
   }
 
@@ -25,6 +28,9 @@ class HivesScreenState extends State<HivesScreen> {
     final HiveProvider hives = Provider.of(context);
     final hivesList = hives.hive;
     final detail = hives.hiveDetail;
+    final inspectionProvider = Provider.of<InspectionProvider>(context);
+    final List<dynamic> lastInspectionsHives =
+        inspectionProvider.lastInspectionsHives;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +45,7 @@ class HivesScreenState extends State<HivesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: detail.map((api) {
+        children: lastInspectionsHives.map((api) {
           return HiveItem(api);
         }).toList(),
       ),

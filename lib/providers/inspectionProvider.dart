@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/inspection.dart';
 import 'package:app_bee/models/environmentData.dart';
-import 'package:app_bee/models/products.dart';
+import 'package:app_bee/models/collect.dart';
 import 'package:app_bee/database/inspectionsDatabaseHelper.dart';
 
 class InspectionProvider with ChangeNotifier {
@@ -19,6 +19,9 @@ class InspectionProvider with ChangeNotifier {
   int get inspectionsCount {
     return _inspections.length;
   }
+
+  final List _lastInspectionsHives = [];
+  List get lastInspectionsHives => [..._lastInspectionsHives];
 
   void loadInspections() async {
     final inspections = await InspectionDatabase().getInspections();
@@ -52,8 +55,7 @@ class InspectionProvider with ChangeNotifier {
   void addInspectionFromData(Map<String, dynamic> data) {
     final now = DateTime.now();
     final newInspection = Inspection(
-      id: Random().nextInt(10000),
-      date: DateTime.parse(now.toString()),
+      date: DateTime.parse(data['date'].toString()),
       hiveId: data['hiveId'] as int,
       typeInspectionId: data['typeInspectionId'] as String,
       createdAt: DateTime.parse(now.toString()),
@@ -61,7 +63,6 @@ class InspectionProvider with ChangeNotifier {
     );
 
     final newPopulationData = PopulationData(
-      id: Random().nextInt(10000),
       numberBees: data['numberBees'] as int,
       ageQueen: data['ageQueen'] as double,
       spawningQueen: data['spawningQueen'] as String,
@@ -72,7 +73,6 @@ class InspectionProvider with ChangeNotifier {
     );
 
     final newEnvironmentData = EnvironmentData(
-      id: Random().nextInt(10000),
       internalTemperature: data['internalTemperature'] as double,
       externalTemperature: data['externalTemperature'] as double,
       internalHumidity: data['internalHumidity'] as int,
@@ -80,46 +80,69 @@ class InspectionProvider with ChangeNotifier {
       windSpeed: data['windSpeed'] as int,
     );
 
-    final newProduct = Product(
-      id: Random().nextInt(10000),
-      amountHoney: data['amountHoney'] as double,
-      amountPropolis: data['amountPropolis'] as double,
-      amountWax: data['amountWax'] as double,
-      amountRoyalJelly: data['amountRoyalJelly'] as double,
-    );
     print("Adding inspection: $newInspection");
     print("With population data: $newPopulationData");
     print("With environment data: $newEnvironmentData");
-    print("With product: $newProduct");
-    addInspection(
-        newInspection, newPopulationData, newEnvironmentData, newProduct);
+    addInspection(newInspection, newPopulationData, newEnvironmentData);
   }
 
   Future<void> addInspection(Inspection inspection, PopulationData population,
-      EnvironmentData environment, Product product) async {
+      EnvironmentData environment) async {
     _inspections.add(inspection);
     await InspectionDatabase()
-        .insertInspection(inspection, population, environment, product);
+        .insertInspection(inspection, population, environment);
     notifyListeners();
   }
 
-  double getTotalHoney() {
-    return _apiaryInspections.fold(
-        0.0, (sum, item) => sum + (item['honey'] as double));
+  Map<int, double> getTotalHoneyByYear() {
+    Map<int, double> totals = {};
+    for (var inspection in _apiaryInspections) {
+      int year = DateTime.parse(inspection['date']).year;
+      totals[year] = (totals[year] ?? 0) + (inspection['honey'] as double);
+    }
+    return totals;
   }
 
-  double getTotalPropolis() {
-    return _apiaryInspections.fold(
-        0.0, (sum, item) => sum + (item['propolis'] as double));
+  Map<int, double> getTotalPropolisByYear() {
+    Map<int, double> totals = {};
+    for (var inspection in _apiaryInspections) {
+      int year = DateTime.parse(inspection['date']).year;
+      totals[year] = (totals[year] ?? 0) + (inspection['propolis'] as double);
+    }
+    return totals;
   }
 
-  double getTotalWax() {
-    return _apiaryInspections.fold(
-        0.0, (sum, item) => sum + (item['wax'] as double));
+  Map<int, double> getTotalWaxByYear() {
+    Map<int, double> totals = {};
+    for (var inspection in _apiaryInspections) {
+      int year = DateTime.parse(inspection['date']).year;
+      totals[year] = (totals[year] ?? 0) + (inspection['wax'] as double);
+    }
+    return totals;
   }
 
-  double getTotalRoyalJelly() {
-    return _apiaryInspections.fold(
-        0.0, (sum, item) => sum + (item['royal_jelly'] as double));
+  Map<int, double> getTotalRoyalJellyByYear() {
+    Map<int, double> totals = {};
+    for (var inspection in _apiaryInspections) {
+      int year = DateTime.parse(inspection['date']).year;
+      totals[year] =
+          (totals[year] ?? 0) + (inspection['royal_jelly'] as double);
+    }
+    return totals;
+  }
+
+  void loadLastInspectionsHives() async {
+    final inspections =
+        await InspectionDatabase().getHivesWithLatestInspection();
+    _lastInspectionsHives.clear();
+    _lastInspectionsHives.addAll(inspections);
+    /* inspections.forEach((table) {
+      print('Hive ID: ${table['id']}');
+      print('Last Inspection Date: ${table['date']}');
+      // Aqui você pode acessar os dados da população através de 'p.*'
+      print(
+          'Population Data ID: ${table['spawning_queen']}'); // Exemplo de como acessar o ID da população
+    });*/
+    notifyListeners();
   }
 }

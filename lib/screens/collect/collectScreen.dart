@@ -1,27 +1,30 @@
 import 'package:app_bee/components/appDrawer.dart';
-import 'package:app_bee/components/expenseItem.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/providers/expenseProvider.dart';
+import 'package:app_bee/providers/collectProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/components/collectItem.dart';
 
-class ExpensesScreen extends StatefulWidget {
+class CollectsScreen extends StatefulWidget {
   @override
-  State<ExpensesScreen> createState() => _ExpensesScreenState();
+  State<CollectsScreen> createState() => CollectsScreenState();
 }
 
-class _ExpensesScreenState extends State<ExpensesScreen> {
+class CollectsScreenState extends State<CollectsScreen> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ExpenseProvider>(context, listen: false).loadExpenses();
+      Provider.of<CollectProvider>(context, listen: false).getCollectsScreen();
     });
   }
 
   Widget build(BuildContext context) {
-    final ExpenseProvider expenses = Provider.of(context);
-    final List expensesList = expenses.expenses; // Obter a lista de despesas
+    //final CollectProvider collects = Provider.of(context);
+    // final collectsList = collects.collect; // Obter a lista de apiários
+    final CollectProvider collectProvider = Provider.of(context);
+    final colletsScreen = collectProvider.collectsScreen;
+
     return Scaffold(
       body: GridView(
         padding: const EdgeInsets.all(25),
@@ -31,17 +34,18 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: expensesList.map((api) {
-          return ExpenseItem(api);
+        children: colletsScreen.map((api) {
+          return CollectItem(api);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple, // Cor do botão
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.EXPENSE_FORM);
+          Navigator.of(context).pushNamed(AppRoutes.HIVES_INDEX);
         },
       ),
+      drawer: AppDrawer(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

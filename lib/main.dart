@@ -32,13 +32,15 @@ import 'screens/specie/specieFormScreen.dart';
 import 'screens/inspection/inspectionFormScreen.dart';
 import 'screens/inspection/inspectionsScreen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm2Screen.dart';
-import 'package:app_bee/screens/inspection/inspectionForm3Screen.dart';
 import 'package:app_bee/screens/typesExpenses/typesExpensesScreen.dart';
 import 'screens/inspection/inspectionDetailsScreen.dart';
 import 'package:app_bee/screens/typesExpenses/typeExpenseFormScreen.dart';
 import 'package:app_bee/screens/expense/expensesScreen.dart';
 import 'package:app_bee/screens/expense/expenseFormScreen.dart';
+import 'package:app_bee/screens/collect/collectScreen.dart';
+import 'package:app_bee/screens/collect/collectFormScreen.dart';
 import 'package:app_bee/providers/apiaryProvider.dart';
+import 'package:app_bee/providers/collectProvider.dart';
 import 'routes/appRoute.dart';
 
 void main() => runApp(BeeApp());
@@ -78,6 +80,9 @@ class BeeApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => TypeExpenseProvider()..loadTypeExpenses(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => CollectProvider()..loadCollects(),
+        ),
       ],
       child: MaterialApp(
         title: 'App Bee',
@@ -116,11 +121,12 @@ class BeeApp extends StatelessWidget {
           AppRoutes.INSPECTIONS_INDEX: (ctx) => InspectionsScreen(),
           AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
           AppRoutes.INSPECTION_FORM2: (ctx) => InspectionForm2Screen(),
-          AppRoutes.INSPECTION_FORM3: (ctx) => InspectionForm3Screen(),
           AppRoutes.TYPE_EXPENSE_FORM: (ctx) => TypeExpenseFormScreen(),
           AppRoutes.TYPES_EXPENSES_INDEX: (ctx) => TypesExpensesScreen(),
           AppRoutes.EXPENSES_INDEX: (ctx) => ExpensesScreen(),
           AppRoutes.EXPENSE_FORM: (ctx) => ExpenseFormScreen(),
+          AppRoutes.COLLECTS_INDEX: (ctx) => CollectsScreen(),
+          AppRoutes.COLLECT_FORM: (ctx) => CollectFormScreen(),
 
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
@@ -140,26 +146,9 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Map<String, dynamic>> _screens = [
     {'title': 'Apiários', 'screen': ApiariesScreen()},
+    {'title': 'Coletas', 'screen': CollectsScreen()},
     {'title': 'Despesas', 'screen': ExpensesScreen()},
     {'title': 'Relatórios', 'screen': ReportsScreen()},
-    {'title': 'Formulário Espécie', 'screen': SpecieFormScreen()},
-    {'title': 'Espécies', 'screen': SpeciesScreen()},
-    {'title': 'Lista de Categorias', 'screen': ApiariesScreen()},
-    {'title': 'Tipos de Colméias', 'screen': TypesHivesScreen()},
-    {'title': 'Recursos Florais', 'screen': ApiariesScreen()},
-    {'title': 'Fomulários Recursos Florais', 'screen': TypesHivesScreen()},
-    {'title': 'Caixas de Abelhas', 'screen': HoneyBoxesScreen()},
-    {'title': 'Cadastrar Caixa de Abelha', 'screen': HoneyBoxFormScreen()},
-    {'title': 'Colmeias', 'screen': HivesScreen()},
-    {'title': 'Cadastrar Colmeia', 'screen': HiveFormScreen()},
-    {'title': 'Detalhes Colmeia', 'screen': HiveDetailsScreen()},
-    {'title': 'Tipos de Inspeções', 'screen': TypesInspectionsScreen()},
-    {'title': 'Cadastrar Despesa', 'screen': ExpenseFormScreen()},
-    {
-      'title': 'Cadastrar Tipo de Inspeção',
-      'screen': TypeInspectionFormScreen()
-    },
-    {'title': 'Inspeções', 'screen': InspectionsScreen()},
   ];
 
   void _selectScreen(int index) {
@@ -180,10 +169,15 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.white70,
         selectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Apiários',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.collections),
+            label: 'Coletas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.money),

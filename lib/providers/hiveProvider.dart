@@ -31,7 +31,6 @@ class HiveProvider with ChangeNotifier {
   void addHiveFromData(Map<String, Object> data) {
     final now = DateTime.now();
     final newHive = Hive(
-      id: Random().nextInt(10000),
       honeyBoxId: data['honeyBoxId'] as int,
       specieId: data['specieId'] as int,
       apiaryId: data['apiaryId'] as int,

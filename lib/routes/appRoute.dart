@@ -15,6 +15,9 @@ class AppRoutes {
   static const HIVES_INDEX = '/hives-index';
   static const HIVE_FORM = '/hive-form';
   static const HIVE_DETAILS = '/hives-details';
+  static const COLLECTS_INDEX = '/collects-index';
+  static const COLLECT_FORM = '/collect-form';
+  static const COLLECT_DETAILS = '/collect-details';
 
   static const TYPES_INSPECTIONS_INDEX = '/types-inspections-index';
   static const TYPE_INSPECTION_FORM = '/type-inspection-form';

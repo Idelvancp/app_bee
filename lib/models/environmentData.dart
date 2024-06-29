@@ -1,5 +1,5 @@
 class EnvironmentData {
-  final int id;
+  final int? id;
   final double internalTemperature;
   final double externalTemperature;
   final int internalHumidity;
@@ -7,7 +7,7 @@ class EnvironmentData {
   final int windSpeed;
 
   const EnvironmentData({
-    required this.id,
+    this.id,
     required this.internalTemperature,
     required this.externalTemperature,
     required this.internalHumidity,

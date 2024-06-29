@@ -38,6 +38,11 @@ class InspectionDetailsScreen extends StatelessWidget {
         child: ListView(
           children: [
             ListTile(
+              title: Text("Caixa: ${inspectionData['tag']}", style: titleStyle),
+              subtitle: Text("Data: $formattedDate", style: subtitleStyle),
+            ),
+            Divider(),
+            ListTile(
               title: Text(
                   "Tipo de Inspeção: ${inspectionData['type_inspection_id']}",
                   style: titleStyle),
@@ -66,23 +71,6 @@ class InspectionDetailsScreen extends StatelessWidget {
                       style: subtitleStyle),
                   Text(
                       "Desenvolvimento de pupas: ${inspectionData['pupa_health_development']}",
-                      style: subtitleStyle),
-                ],
-              ),
-            ),
-            Divider(),
-            ListTile(
-              title: Text("Dados do Produto", style: titleStyle),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Mel: ${inspectionData['honey']} kg",
-                      style: subtitleStyle),
-                  Text("Própolis: ${inspectionData['propolis']} kg",
-                      style: subtitleStyle),
-                  Text("Cera: ${inspectionData['wax']} kg",
-                      style: subtitleStyle),
-                  Text("Geleia Real: ${inspectionData['royal_jelly']} kg",
                       style: subtitleStyle),
                 ],
               ),

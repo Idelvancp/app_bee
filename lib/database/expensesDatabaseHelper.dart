@@ -26,7 +26,7 @@ class ExpenseDatabase {
   } */
   //  'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
 
-  Future<List> getExpenses() async {
+  Future<List<Map<String, dynamic>>> getExpenses() async {
     print("Aqui2");
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
@@ -43,7 +43,7 @@ class ExpenseDatabase {
     ON expense.type_expense_id = type_expense.id
   ''');
     maps.forEach((table) {
-      print('Tagessssssssss ${table['apiary_name']} ');
+      print('Tagessssssssss ${table['id']} ');
     });
     return maps;
   }

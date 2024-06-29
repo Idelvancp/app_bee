@@ -1,42 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:app_bee/providers/inspectionProvider.dart';
+import 'package:app_bee/providers/collectProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:intl/intl.dart'; // Importe para formatação de data
 
-class InspectionForm3Screen extends StatefulWidget {
-  const InspectionForm3Screen({Key? key}) : super(key: key);
+class CollectFormScreen extends StatefulWidget {
+  const CollectFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<InspectionForm3Screen> createState() => _InspectionForm3State();
+  State<CollectFormScreen> createState() => _CollectFormState();
 }
 
-class _InspectionForm3State extends State<InspectionForm3Screen> {
+class _CollectFormState extends State<CollectFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _formData = <String, dynamic>{};
-  double? amountHoney;
-  double? amountWax;
-  double? amountPropolis;
-  double? amountRoyalJelly;
-
+  final _formData = <String, Object>{};
+  final TextEditingController _dateController =
+      TextEditingController(); // Controller para o campo de data
+  DateTime? _selectedDateTime; // Variável para armazenar a data selecionada
   void _submitForm() {
     _formKey.currentState?.save();
-    print("Form Data: $_formData");
-    Provider.of<InspectionProvider>(
+    Provider.of<CollectProvider>(
       context,
       listen: false,
-    ).addInspectionFromData(_formData);
-    Navigator.of(context).pop();
+    ).addCollectFromData(_formData);
+    Navigator.of(context).pushNamed('/hives-index');
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDateTime = pickedDate;
+        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+        _dateController.text = dateFormat.format(pickedDate);
+        _formData['date'] = pickedDate.toIso8601String();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose(); // Dispose do controller de data
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> populationEnvironment =
+    final Map<String, dynamic> hive =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _formData.addAll(populationEnvironment);
+    _formData['apiaryId'] = hive['apiary_id'];
+    _formData['hiveId'] = hive['id'];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastro de Inspeção'),
+        title: Text('Cadastrar Coleta'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -109,6 +132,7 @@ class _InspectionForm3State extends State<InspectionForm3Screen> {
                 onSaved: (value) => _formData['amountRoyalJelly'] =
                     double.tryParse(value ?? '') ?? 0.0,
               ),
+              _buildDateField(), // Adiciona o campo de data
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -124,6 +148,28 @@ class _InspectionForm3State extends State<InspectionForm3Screen> {
         ),
       ),
       drawer: AppDrawer(),
+    );
+  }
+
+  Widget _buildDateField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: TextFormField(
+        controller: _dateController,
+        decoration: InputDecoration(
+          labelText: 'Data',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.purple),
+          ),
+        ),
+        readOnly: true,
+        onTap: _selectDate,
+        onSaved: (value) => _formData['date'] = value ?? '',
+      ),
     );
   }
 }

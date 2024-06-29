@@ -5,7 +5,7 @@ enum State {
 }
 
 class PopulationData {
-  final int id;
+  final int? id;
   final int numberBees;
   final double ageQueen;
   final String spawningQueen;
@@ -15,7 +15,7 @@ class PopulationData {
   final String pupaHealthDevelopment;
 
   const PopulationData({
-    required this.id,
+    this.id,
     required this.numberBees,
     required this.ageQueen,
     required this.spawningQueen,

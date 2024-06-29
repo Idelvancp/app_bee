@@ -29,10 +29,7 @@ class InspectionItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         elevation: 5,
-        color: (inspection['larvae_health_development'] == "Doente" ||
-                inspection['larvae_health_development'] == "Morta")
-            ? Colors.grey[100]
-            : Colors.grey[200],
+        color: Colors.grey[200],
         child: Padding(
           padding: EdgeInsets.all(15),
           child: Column(
@@ -50,7 +47,14 @@ class InspectionItem extends StatelessWidget {
                     ),
                   ),
                   if (inspection['larvae_health_development'] == "Doente" ||
-                      inspection['larvae_health_development'] == "Morta")
+                      inspection['larvae_health_development'] == "Morta" ||
+                      inspection['larvae_presence_distribution'] ==
+                          "Irregular" ||
+                      inspection['larvae_presence_distribution'] == "Ausente" ||
+                      inspection['pupa_health_development'] == "Morta" ||
+                      inspection['pupa_health_development'] == "Doente" ||
+                      inspection['pupa_presence_distribution'] == "Irregular" ||
+                      inspection['pupa_presence_distribution'] == "Ausente")
                     Text(
                       'Alerta !!!',
                       style: TextStyle(
