@@ -74,4 +74,41 @@ class CollectsDatabase {
       whereArgs: [id],
     );
   }
+
+  Future<List<Map<String, dynamic>>> collectsPerApiary(int apiaryId) async {
+    print("Estou ${apiaryId}");
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      '''
+    SELECT 
+      collect.*,
+      hive.*,
+      honey_box.*,
+      specie.*
+    FROM 
+      collects collect
+    INNER JOIN 
+      apiaries apiary 
+    ON collect.apiary_id = apiary.id
+    INNER JOIN 
+      hives hive 
+    ON hive.id = collect.hive_id
+    INNER JOIN 
+      honey_boxes honey_box 
+    ON hive.honey_box_id = honey_box.id
+    INNER JOIN 
+      species specie 
+    ON hive.specie_id = specie.id
+    WHERE 
+      collect.apiary_id = ?
+  ''',
+      [apiaryId],
+    );
+    print('Tamanho ${maps.length}');
+
+    maps.forEach((table) {
+      print('Coleta ${table['tag']}');
+    });
+    return maps;
+  }
 }

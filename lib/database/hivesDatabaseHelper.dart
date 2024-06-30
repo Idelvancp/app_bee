@@ -16,7 +16,6 @@ class HiveDatabase {
   }
 
   // Recupera hives do banco de dados
-  // Recupera hives do banco de dados
   Future<List<Hive>> getHives() async {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query('hives');
