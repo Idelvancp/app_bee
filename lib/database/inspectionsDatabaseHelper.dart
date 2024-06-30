@@ -164,33 +164,4 @@ class InspectionDatabase {
     });
     return maps;
   }
-
-  Future<List> getHivesWithLatestInspection() async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''
-    SELECT 
-      h.*,
-      hb.tag AS honey_box_tag,
-      s.name AS specie_name,
-      a.name AS apiary_name,
-      i.*,  -- Todos os campos da tabela inspections
-      p.*   -- Todos os campos da tabela population_data
-    FROM 
-      hives h
-      INNER JOIN honey_boxes hb ON h.honey_box_id = hb.id
-      INNER JOIN species s ON h.specie_id = s.id
-      INNER JOIN apiaries a ON h.apiary_id = a.id
-      INNER JOIN (
-        SELECT 
-          MAX(date) AS date,
-          hive_id
-        FROM inspections
-        GROUP BY hive_id
-      ) latest_inspection ON h.id = latest_inspection.hive_id
-      INNER JOIN inspections i ON latest_inspection.date = i.date AND h.id = i.hive_id
-      INNER JOIN population_data p ON i.population_data_id = p.id
-  ''');
-
-    return maps;
-  }
 }

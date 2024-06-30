@@ -130,7 +130,7 @@ class InspectionProvider with ChangeNotifier {
     }
     return totals;
   }
-
+/*
   void loadLastInspectionsHives() async {
     final inspections =
         await InspectionDatabase().getHivesWithLatestInspection();
@@ -145,4 +145,5 @@ class InspectionProvider with ChangeNotifier {
     });*/
     notifyListeners();
   }
+  */
 }

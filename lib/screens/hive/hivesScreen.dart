@@ -18,19 +18,16 @@ class HivesScreenState extends State<HivesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HiveProvider>(context, listen: false).loadHivesDetails();
-      Provider.of<InspectionProvider>(context, listen: false)
-          .loadLastInspectionsHives();
+      Provider.of<HiveProvider>(context, listen: false).loadHives();
+      Provider.of<HiveProvider>(context, listen: false).loadIsnpectionsHives();
     });
   }
 
   Widget build(BuildContext context) {
     final HiveProvider hives = Provider.of(context);
-    final hivesList = hives.hive;
+    final hivesList = hives.hivesScreen;
     final detail = hives.hiveDetail;
-    final inspectionProvider = Provider.of<InspectionProvider>(context);
-    final List<dynamic> lastInspectionsHives =
-        inspectionProvider.lastInspectionsHives;
+    final hivesInspections = hives.isnpectionsHives;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,8 +42,15 @@ class HivesScreenState extends State<HivesScreen> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        children: lastInspectionsHives.map((api) {
-          return HiveItem(api);
+        children: hivesList.map((api) {
+          // Find matching inspections data for each hive
+          var inspectionData = hivesInspections.firstWhere(
+            (insp) => insp['hive_id'] == api['id'],
+            orElse: () =>
+                <String, dynamic>{}, // Return an empty map instead of null
+          );
+
+          return HiveItem(api, inspections: inspectionData);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(

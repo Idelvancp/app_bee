@@ -7,8 +7,9 @@ import 'package:app_bee/providers/inspectionProvider.dart';
 
 class HiveItem extends StatelessWidget {
   final Map<String, dynamic> hive;
+  final Map<String, dynamic>? inspections;
 
-  const HiveItem(this.hive);
+  const HiveItem(this.hive, {this.inspections});
 
   void _selectHive(BuildContext context) {
     Navigator.of(context).pushNamed(
@@ -21,7 +22,8 @@ class HiveItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final hives = HiveProvider().loadHives();
 
-    print('rrrrrrrrrrrrrrrrrrr      ${hive['larvae_presence_distribution']}');
+    print(
+        'rrrrrrrrrrrrrrrrrrr      ${inspections?['larvae_presence_distribution']}');
     return InkWell(
       onTap: () => _selectHive(context),
       splashColor: Theme.of(context).primaryColor,
@@ -48,14 +50,17 @@ class HiveItem extends StatelessWidget {
                       color: Colors.purple,
                     ),
                   ),
-                  if (hive['larvae_health_development'] == "Doente" ||
-                      hive['larvae_health_development'] == "Morta" ||
-                      hive['larvae_presence_distribution'] == "Irregular" ||
-                      hive['larvae_presence_distribution'] == "Ausente" ||
-                      hive['pupa_health_development'] == "Morta" ||
-                      hive['pupa_health_development'] == "Doente" ||
-                      hive['pupa_presence_distribution'] == "Irregular" ||
-                      hive['pupa_presence_distribution'] == "Ausente")
+                  if (inspections?['larvae_health_development'] == "Doente" ||
+                      inspections?['larvae_health_development'] == "Morta" ||
+                      inspections?['larvae_presence_distribution'] ==
+                          "Irregular" ||
+                      inspections?['larvae_presence_distribution'] ==
+                          "Ausente" ||
+                      inspections?['pupa_health_development'] == "Morta" ||
+                      inspections?['pupa_health_development'] == "Doente" ||
+                      inspections?['pupa_presence_distribution'] ==
+                          "Irregular" ||
+                      inspections?['pupa_presence_distribution'] == "Ausente")
                     Text(
                       'Alerta !!!',
                       style: TextStyle(

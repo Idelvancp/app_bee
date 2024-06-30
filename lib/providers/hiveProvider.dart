@@ -2,27 +2,38 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/hive.dart';
-import 'package:app_bee/database/databaseHelper.dart';
+import 'package:app_bee/database/hivesDatabaseHelper.dart';
 
 class HiveProvider with ChangeNotifier {
-  final List<Hive> _hives = [];
-  List<Hive> get hive => [..._hives];
+  final List _hivesScreen = [];
+  List get hivesScreen => [..._hivesScreen];
+
   final List _hiveDetails = [];
   List get hiveDetail => [..._hiveDetails];
 
+  final List _isnpectionsHives = [];
+  List get isnpectionsHives => [..._isnpectionsHives];
+
   int get hivesCount {
-    return _hives.length;
+    return _hivesScreen.length;
+  }
+
+  void loadIsnpectionsHives() async {
+    final hives = await HiveDatabase().getHivesWithLatestInspection2();
+    _isnpectionsHives.clear();
+    _isnpectionsHives.addAll(hives);
+    notifyListeners();
   }
 
   void loadHives() async {
-    final hives = await DatabaseHelper().getHives();
-    _hives.clear();
-    _hives.addAll(hives);
+    final hives = await HiveDatabase().getHivesScreen();
+    _hivesScreen.clear();
+    _hivesScreen.addAll(hives);
     notifyListeners();
   }
 
   void loadHivesDetails() async {
-    final hivesAllData = await DatabaseHelper().getHiveDetails();
+    final hivesAllData = await HiveDatabase().getHiveDetails();
     _hiveDetails.clear();
     _hiveDetails.addAll(hivesAllData);
     notifyListeners();
@@ -41,8 +52,8 @@ class HiveProvider with ChangeNotifier {
   }
 
   Future<void> addHive(Hive hive) async {
-    _hives.add(hive);
-    await DatabaseHelper().insertHive(hive);
+    _hivesScreen.add(hive);
+    await HiveDatabase().insertHive(hive);
     notifyListeners();
   }
 }
