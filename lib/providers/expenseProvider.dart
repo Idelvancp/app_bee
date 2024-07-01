@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/expense.dart';
 import 'package:app_bee/database/expensesDatabaseHelper.dart';
-import 'package:app_bee/database/databaseHelper.dart';
 
 class ExpenseProvider with ChangeNotifier {
   final List _expenses = [];

@@ -21,7 +21,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   Widget build(BuildContext context) {
     final ExpenseProvider expenses = Provider.of(context);
-    final List expensesList = expenses.expenses; // Obter a lista de despesas
+    final List<Map<String, dynamic>> expensesList =
+        expenses.expenses; // Obter a lista de despesas
     return Scaffold(
       body: GridView(
         padding: const EdgeInsets.all(25),
