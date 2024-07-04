@@ -41,6 +41,9 @@ import 'package:app_bee/screens/collect/collectScreen.dart';
 import 'package:app_bee/screens/collect/collectFormScreen.dart';
 import 'package:app_bee/providers/apiaryProvider.dart';
 import 'package:app_bee/providers/collectProvider.dart';
+import 'components/reportsNavigator.dart';
+import 'package:app_bee/screens/reports/productsReportsScreen.dart';
+import 'package:app_bee/screens/reports/honeyReportScreen.dart';
 import 'routes/appRoute.dart';
 
 void main() => runApp(BeeApp());
@@ -127,7 +130,14 @@ class BeeApp extends StatelessWidget {
           AppRoutes.EXPENSE_FORM: (ctx) => ExpenseFormScreen(),
           AppRoutes.COLLECTS_INDEX: (ctx) => CollectsScreen(),
           AppRoutes.COLLECT_FORM: (ctx) => CollectFormScreen(),
+          AppRoutes.PRODUCT_REPORT: (ctx) => ProductsReportsScreen(),
+          AppRoutes.HONEY_REPORT: (ctx) => HoneyReportScreen(),
 
+          /* AppRoutes.HONEY_REPORT: (ctx) => HoneyReportScreen(),
+          AppRoutes.PROPOLIS_REPORT: (ctx) => PropolisReportScreen(),
+          AppRoutes.WAX_REPORT: (ctx) => WaxReportScreen(),
+          AppRoutes.ROYAL_JELLY_REPORT: (ctx) => RoyalJellyReportScreen(),
+*/
           // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
         debugShowCheckedModeBanner: false,
@@ -148,7 +158,8 @@ class _MainScreenState extends State<MainScreen> {
     {'title': 'Apiários', 'screen': ApiariesScreen()},
     {'title': 'Coletas', 'screen': CollectsScreen()},
     {'title': 'Despesas', 'screen': ExpensesScreen()},
-    {'title': 'Relatórios', 'screen': ReportsScreen()},
+    // {'title': 'Relatórios', 'screen': ReportsScreen()},
+    {'title': 'Relatórios', 'screen': ReportsNavigator()},
   ];
 
   void _selectScreen(int index) {
@@ -160,10 +171,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_screens[_selectedScreenIndex]['title']),
-        centerTitle: true,
-      ),
+      appBar: _selectedScreenIndex == 0
+          ? AppBar(
+              title: Text(_screens[_selectedScreenIndex]['title']),
+              centerTitle: true,
+            )
+          : null,
       body: _screens[_selectedScreenIndex]['screen'],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,

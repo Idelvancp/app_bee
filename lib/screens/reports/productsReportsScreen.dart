@@ -3,18 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 
-class ReportsScreen extends StatefulWidget {
+class ProductsReportsScreen extends StatefulWidget {
   @override
-  State<ReportsScreen> createState() => ReportsScreenState();
+  State<ProductsReportsScreen> createState() => ProductsReportsScreenState();
 }
 
-class ReportsScreenState extends State<ReportsScreen> {
+class ProductsReportsScreenState extends State<ProductsReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Relatórios'),
-        centerTitle: true,
+        title: Text('Relatório de Produção de Produtos'),
       ),
       body: GridView(
         padding: const EdgeInsets.all(10),
@@ -27,44 +26,30 @@ class ReportsScreenState extends State<ReportsScreen> {
         children: [
           _buildReportCard(
             context,
-            'Produtos',
+            'Mel',
             Icons.bar_chart,
-            AppRoutes.PRODUCT_REPORT,
+            AppRoutes.HONEY_REPORT,
           ),
           _buildReportCard(
             context,
-            'Saúde das Colmeias',
-            Icons.health_and_safety,
-            AppRoutes.HEALTH_REPORT,
+            'Própolis',
+            Icons.bar_chart,
+            AppRoutes.PROPOLIS_REPORT,
           ),
           _buildReportCard(
             context,
-            'Inspeções',
-            Icons.search,
-            AppRoutes.INSPECTION_REPORT,
+            'Cera',
+            Icons.bar_chart,
+            AppRoutes.WAX_REPORT,
           ),
           _buildReportCard(
             context,
-            'Recursos Florais',
-            Icons.local_florist,
-            AppRoutes.FLORAL_RESOURCES_REPORT,
-          ),
-          _buildReportCard(
-            context,
-            'Despesas',
-            Icons.money,
-            AppRoutes.EXPENSE_REPORT,
-          ),
-          _buildReportCard(
-            context,
-            'Enxames e Colmeias',
-            Icons.hive,
-            AppRoutes.HIVES_REPORT,
+            'Geleia Real',
+            Icons.bar_chart,
+            AppRoutes.ROYAL_JELLY_REPORT,
           ),
         ],
       ),
-      drawer: AppDrawer(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

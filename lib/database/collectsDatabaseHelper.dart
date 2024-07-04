@@ -111,4 +111,58 @@ class CollectsDatabase {
     });
     return maps;
   }
+
+  Future<List<Map<String, dynamic>>> collectHoneyByYear() async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT strftime('%Y', date) AS year, SUM(honey) AS totalHoney
+    FROM collects
+    GROUP BY year
+    ORDER BY year;
+  ''');
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> getHoneyByApiary() async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT 
+      apiaries.name AS apiary_name, 
+      SUM(collects.honey) AS total_honey 
+    FROM 
+      collects 
+    INNER JOIN 
+      apiaries 
+    ON 
+      collects.apiary_id = apiaries.id 
+    GROUP BY 
+      apiaries.name 
+    ORDER BY 
+      total_honey DESC;
+  ''');
+    return maps;
+  }
+
+  Future<List<Map<String, dynamic>>> getHoneyByHive() async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT 
+        SUM(c.honey) AS total_honey,
+        hb.tag AS hive_tag
+    FROM 
+        collects c
+    INNER JOIN 
+        hives h ON c.hive_id = h.id
+    INNER JOIN 
+        honey_boxes hb ON h.honey_box_id = hb.id
+    INNER JOIN 
+        types_hives th ON hb.type_hive_id = th.id
+    GROUP BY 
+        hb.tag
+    ORDER BY 
+        total_honey DESC;
+
+  ''');
+    return maps;
+  }
 }

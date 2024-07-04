@@ -31,4 +31,15 @@ class AppRoutes {
   static const EXPENSE_FORM = '/expense-form';
   static const TYPES_EXPENSES_INDEX = '/types-expenses-index';
   static const TYPE_EXPENSE_FORM = '/type-expense-form';
+
+  static const PRODUCT_REPORT = '/product-report';
+  static const HEALTH_REPORT = '/health-report';
+  static const INSPECTION_REPORT = '/inspection-report';
+  static const FLORAL_RESOURCES_REPORT = '/floral-resources-report';
+  static const EXPENSE_REPORT = '/expense-report';
+  static const HIVES_REPORT = '/hives-report';
+  static const HONEY_REPORT = '/honey-report';
+  static const PROPOLIS_REPORT = '/propolis-report';
+  static const WAX_REPORT = '/wax-report';
+  static const ROYAL_JELLY_REPORT = '/royal-jelly-report';
 }

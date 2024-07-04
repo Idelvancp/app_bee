@@ -3,19 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 
-class ReportsScreen extends StatefulWidget {
+class ExpensesReportsScreen extends StatefulWidget {
   @override
-  State<ReportsScreen> createState() => ReportsScreenState();
+  State<ExpensesReportsScreen> createState() => ExpensesReportsScreenState();
 }
 
-class ReportsScreenState extends State<ReportsScreen> {
+class ExpensesReportsScreenState extends State<ExpensesReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Relatórios'),
-        centerTitle: true,
-      ),
       body: GridView(
         padding: const EdgeInsets.all(10),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

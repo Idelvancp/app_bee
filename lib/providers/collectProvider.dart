@@ -14,14 +14,44 @@ class CollectProvider with ChangeNotifier {
   final List _collectsPerApiary = [];
   List get collectsPerApiary => [..._collectsPerApiary];
 
+  final List _collectsHoneyByApiary = [];
+  List get collectsHoneyByApiary => [..._collectsHoneyByApiary];
+
+  final List _collectsHoneyByHive = [];
+  List get collectsHoneyByHive => [..._collectsHoneyByHive];
+
   int get collectsCount {
     return _collects.length;
   }
+
+  final List _collectHoneyByYear = [];
+  List get collectHoneyByYear => [..._collectHoneyByYear];
 
   void loadCollects() async {
     final collects = await CollectsDatabase().getCollects();
     _collects.clear();
     _collects.addAll(collects);
+    notifyListeners();
+  }
+
+  void loadCollectHoneyByYear() async {
+    final collects = await CollectsDatabase().collectHoneyByYear();
+    _collectHoneyByYear.clear();
+    _collectHoneyByYear.addAll(collects);
+    notifyListeners();
+  }
+
+  void loadCollectHoneyByApiary() async {
+    final collects = await CollectsDatabase().getHoneyByApiary();
+    _collectsHoneyByApiary.clear();
+    _collectsHoneyByApiary.addAll(collects);
+    notifyListeners();
+  }
+
+  void loadCollectHoneyByHive() async {
+    final collects = await CollectsDatabase().getHoneyByHive();
+    _collectsHoneyByHive.clear();
+    _collectsHoneyByHive.addAll(collects);
     notifyListeners();
   }
 
@@ -67,7 +97,7 @@ class CollectProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Map<int, double> getTotalHoneyByYear() {
+  Map<int, double> getTotalHoneyByYearByApiary() {
     Map<int, double> totals = {};
     for (var colletct in _collectsPerApiary) {
       int year = DateTime.parse(colletct['date']).year;
@@ -76,6 +106,25 @@ class CollectProvider with ChangeNotifier {
     return totals;
   }
 
+  Map<int, double> getTotalHoneyByYear() {
+    Map<int, double> totals = {};
+    for (var colletct in _collectHoneyByYear) {
+      int year = DateTime.parse(colletct['date']).year;
+      totals[year] = (totals[year] ?? 0) + (colletct['honey'] as double);
+    }
+    return totals;
+  }
+
+/*
+  Map<int, double> getTotalHoneyByYear() {
+    Map<int, double> totals = {};
+    for (var colletct in _collectsPerApiary) {
+      int year = DateTime.parse(colletct['date']).year;
+      totals[year] = (totals[year] ?? 0) + (colletct['honey'] as double);
+    }
+    return totals;
+  }
+*/
   Map<int, double> getTotalPropolisByYear() {
     Map<int, double> totals = {};
     for (var colletct in _collectsPerApiary) {
