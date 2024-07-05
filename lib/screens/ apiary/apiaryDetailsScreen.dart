@@ -78,6 +78,25 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
                 ),
               ),
               ..._buildInspectionsAlerts(hivesInspections),
+              // Adicionar um botão para navegar para a tela HivesScreen
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      AppRoutes.HIVES_INDEX,
+                      arguments: apiaryData.id,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.purple,
+                  ),
+                  child: Text(
+                    "Ver Colmeias",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+              ),
             ],
           );
         },

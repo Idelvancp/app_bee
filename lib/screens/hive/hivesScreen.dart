@@ -8,6 +8,8 @@ import 'package:app_bee/components/appDrawer.dart';
 import 'package:app_bee/providers/inspectionProvider.dart';
 
 class HivesScreen extends StatefulWidget {
+  HivesScreen({Key? key}) : super(key: key);
+
   @override
   State<HivesScreen> createState() => HivesScreenState();
 }
@@ -22,6 +24,18 @@ class HivesScreenState extends State<HivesScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<HiveProvider>(context, listen: false).loadHives();
       Provider.of<HiveProvider>(context, listen: false).loadIsnpectionsHives();
+      // Aplicar filtro se initialApiaryId estiver presente
+
+      final int initialApiaryId =
+          ModalRoute.of(context)!.settings.arguments as int;
+      print("ID do Apppppppppppppp: ${initialApiaryId}");
+
+      if (initialApiaryId != null) {
+        setState(() {
+          _selectedApiaryId = initialApiaryId;
+          _selectedApiaryName = _getApiaryNameById(_selectedApiaryId);
+        });
+      }
     });
   }
 
@@ -43,6 +57,16 @@ class HivesScreenState extends State<HivesScreen> {
 
     // Retorne os valores únicos como uma lista
     return apiaryMap.values.toList();
+  }
+
+  String? _getApiaryNameById(int? apiaryId) {
+    final HiveProvider hives = Provider.of(context, listen: false);
+    final hivesList = hives.hivesScreen;
+    final apiary = hivesList.firstWhere(
+      (apiary) => apiary['apiary_id'] == apiaryId,
+      orElse: () => null,
+    );
+    return apiary?['apiary_name'];
   }
 
   void _showFilterDialog(
