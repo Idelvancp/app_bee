@@ -198,6 +198,7 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT,
         hive_id INTEGER REFERENCES hives(id),
+        apiary_id INTEGER REFERENCES apiaries(id),
         type_inspection_id TEXT,
         population_data_id INTEGER REFERENCES population_data(id),
         environment_data_id INTEGER REFERENCES environment_data(id),

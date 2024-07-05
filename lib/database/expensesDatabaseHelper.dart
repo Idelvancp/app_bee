@@ -47,4 +47,29 @@ class ExpenseDatabase {
     });
     return maps;
   }
+
+  Future<List<Map<String, dynamic>>> getExpensesByYear() async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT 
+        e.cost AS expense_cost,
+        e.date AS expense_date,
+        a.name AS apiary_name,
+        te.name AS expense_type
+    FROM 
+        expenses e
+    INNER JOIN 
+        apiaries a ON e.apiary_id = a.id
+    INNER JOIN 
+        types_expenses te ON e.type_expense_id = te.id
+    ORDER BY 
+        e.date ASC;
+  ''');
+
+    maps.forEach((table) {
+      print(
+          'Valor: ${table['expense_cost']} Apiário: ${table['apiary_name']} ');
+    });
+    return maps;
+  }
 }

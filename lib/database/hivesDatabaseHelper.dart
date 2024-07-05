@@ -134,6 +134,7 @@ INNER JOIN
   i.id,
   i.date,
   i.hive_id,
+  i.apiary_id,
   i.type_inspection_id,
   i.population_data_id,
   i.environment_data_id,
@@ -143,11 +144,16 @@ INNER JOIN
   p.larvae_presence_distribution,
   p.larvae_health_development,
   p.pupa_presence_distribution,
-  p.pupa_health_development
+  p.pupa_health_development,
+  honey_box.tag
 FROM 
   inspections i
 INNER JOIN 
   population_data p ON i.population_data_id = p.id
+INNER JOIN 
+  hives hive ON i.hive_id = hive.id
+INNER JOIN 
+  honey_boxes honey_box  ON  honey_box.id = hive.honey_box_id
 WHERE 
   i.date = (
     SELECT MAX(date) 
@@ -155,11 +161,42 @@ WHERE
     WHERE hive_id = i.hive_id
   )
   ''');
-
+/*
     maps.forEach((table) {
       print(
-          'Tage333333333s ${table['type_inspection_id']} ${table['number_bees']} ${table['larvae_health_development']}');
+          'Inspection in Apiary ${table['tag']} ${table['number_bees']} ${table['larvae_health_development']}');
     });
+*/
+    return maps;
+  }
+
+  // Recupera hives por apiary_id
+  Future<List<Map<String, dynamic>>> getHivesByApiaryId(int apiaryId) async {
+    print("Estou ${apiaryId}");
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      '''
+    SELECT 
+      inspection.*,
+      hive.*,
+      population.*,
+      environment.*,
+    FROM 
+      hives  hive
+    INNER JOIN 
+      hives hive 
+      ON inspection.hive_id = hive.id
+    INNER JOIN
+      population_data population
+      ON inspection.population_data_id = population.id
+    INNER JOIN
+      environment_data environment
+      ON inspection.environment_data_id = environment.id
+    WHERE 
+      hive.apiary_id = ?
+  ''',
+      [apiaryId],
+    );
 
     return maps;
   }

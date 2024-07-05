@@ -74,6 +74,7 @@ class _InspectionFormState extends State<InspectionFormScreen> {
     final Map<String, dynamic> hiveId =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     _formData['hiveId'] = hiveId['id'];
+    _formData['apiaryId'] = hiveId['apiary_id'];
 
     return Scaffold(
       appBar: AppBar(

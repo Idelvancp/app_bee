@@ -2,6 +2,7 @@ class Inspection {
   final int? id;
   final DateTime date;
   final int hiveId;
+  final int apiaryId;
   final String typeInspectionId;
   int? populationDataId;
   int? environmentDataId;
@@ -12,6 +13,7 @@ class Inspection {
     this.id,
     required this.date,
     required this.hiveId,
+    required this.apiaryId,
     required this.typeInspectionId,
     this.populationDataId,
     this.environmentDataId,
@@ -23,6 +25,7 @@ class Inspection {
       'id': id,
       'date': date.toIso8601String(),
       'hive_id': hiveId,
+      'apiary_id': apiaryId,
       'type_inspection_id': typeInspectionId,
       'population_data_id': populationDataId,
       'environment_data_id': environmentDataId,
@@ -39,6 +42,7 @@ class Inspection {
       id: map['id'],
       date: DateTime.parse(map['date']),
       hiveId: map['hive_id'],
+      apiaryId: map['apiary_id'],
       typeInspectionId: map['type_inspection_id'],
       populationDataId: map['population_data_id'],
       environmentDataId: map['environment_data_id'],

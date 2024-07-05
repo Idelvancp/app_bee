@@ -50,6 +50,7 @@ class _HoneyReportScreenState extends State<HoneyReportScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Relatório de Mel'),
+        centerTitle: true,
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

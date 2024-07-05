@@ -5,8 +5,9 @@ import 'package:app_bee/models/floralResource.dart';
 
 class ApiaryItem extends StatelessWidget {
   final Apiary apiary;
+  final Map<String, dynamic>? inspections;
 
-  const ApiaryItem(this.apiary);
+  const ApiaryItem(this.apiary, {this.inspections});
 
   void _selectApiary(BuildContext context) {
     Navigator.of(context).pushNamed(
@@ -63,13 +64,22 @@ class ApiaryItem extends StatelessWidget {
                   color: Colors.black54,
                 ),
               ),
-              Text(
-                'Última vista: 12/03/2024',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
+              if (inspections?['larvae_health_development'] == "Doente" ||
+                  inspections?['larvae_health_development'] == "Morta" ||
+                  inspections?['larvae_presence_distribution'] == "Irregular" ||
+                  inspections?['larvae_presence_distribution'] == "Ausente" ||
+                  inspections?['pupa_health_development'] == "Morta" ||
+                  inspections?['pupa_health_development'] == "Doente" ||
+                  inspections?['pupa_presence_distribution'] == "Irregular" ||
+                  inspections?['pupa_presence_distribution'] == "Ausente")
+                Text(
+                  'Alerta !!!',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 155, 18, 8),
+                  ),
                 ),
-              ),
             ],
           ),
         ),

@@ -57,6 +57,7 @@ class InspectionProvider with ChangeNotifier {
     final newInspection = Inspection(
       date: DateTime.parse(data['date'].toString()),
       hiveId: data['hiveId'] as int,
+      apiaryId: data['apiaryId'] as int,
       typeInspectionId: data['typeInspectionId'] as String,
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),

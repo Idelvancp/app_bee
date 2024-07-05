@@ -21,9 +21,6 @@ class HiveItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hives = HiveProvider().loadHives();
-
-    print(
-        'rrrrrrrrrrrrrrrrrrr      ${inspections?['larvae_presence_distribution']}');
     return InkWell(
       onTap: () => _selectHive(context),
       splashColor: Theme.of(context).primaryColor,

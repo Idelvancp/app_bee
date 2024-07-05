@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_bee/models/apiary.dart';
-import 'package:app_bee/providers/inspectionProvider.dart';
 import 'package:app_bee/providers/collectProvider.dart';
-
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/providers/hiveProvider.dart';
 
 class ApiaryDetailsScreen extends StatefulWidget {
   const ApiaryDetailsScreen({Key? key}) : super(key: key);
@@ -23,6 +22,8 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
             ModalRoute.of(context)!.settings.arguments as Apiary;
         Provider.of<CollectProvider>(context, listen: false)
             .loadCollectsForApiary(apiary.id!);
+        Provider.of<HiveProvider>(context, listen: false)
+            .loadIsnpectionsHives();
       }
     });
   }
@@ -31,15 +32,18 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
   Widget build(BuildContext context) {
     final Apiary apiaryData =
         ModalRoute.of(context)?.settings.arguments as Apiary;
+    final HiveProvider hives = Provider.of(context);
+    final hivesInspections = hives.isnpectionsHives;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Detalhes do Apiário: ${apiaryData.name}"),
+        title: Text("Apiário: ${apiaryData.name}"),
         centerTitle: true,
+        backgroundColor: Colors.purple,
       ),
       body: Consumer<CollectProvider>(
         builder: (context, provider, child) {
-          var honeyTotals = provider.getTotalHoneyByYear();
+          var honeyTotals = provider.getTotalHoneyByYearByApiary();
           var propolisTotals = provider.getTotalPropolisByYear();
           var waxTotals = provider.getTotalWaxByYear();
           var royalJellyTotals = provider.getTotalRoyalJellyByYear();
@@ -49,270 +53,140 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
           var maxRoyalJellyByYear = provider.getMaxRoyalJellyByYear();
 
           return ListView(
+            padding: const EdgeInsets.all(8.0),
             children: [
-              ListTile(
-                title: Text("Nome do Apiário"),
-                subtitle: Text(apiaryData.name),
-                leading: Icon(Icons.business),
-              ),
-              ListTile(
-                title: Text("Localização"),
-                subtitle: Text("${apiaryData.cityId}, ${apiaryData.stateId}"),
-                leading: Icon(Icons.location_on),
-              ),
-              ListTile(
-                title: Text("Recursos Florais"),
-                subtitle: Text(apiaryData.floralResources.join(', ')),
-                leading: Icon(Icons.local_florist),
-              ),
-              ListTile(
-                title: Text("Quantidade de Colmeias"),
-                subtitle: Text("${apiaryData.hives.length}"),
-                leading: Icon(Icons.home_work),
-              ),
-              ListTile(
-                title: Text("Produção de Mel por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: honeyTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Produção de Própolis por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: propolisTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Produção de Cera por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: waxTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Produção de Geleia Real por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: royalJellyTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Maior Produção de Mel por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: maxHoneyByYear.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value['honey'].toStringAsFixed(2)} kg - Caixa: ${entry.value['tag']} - Especie: ${entry.value['specie']}"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Maior Produção de Própolis por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: maxPropolisByYear.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value['propolis'].toStringAsFixed(2)} kg - Caixa: ${entry.value['tag']} - Especie: ${entry.value['specie']}"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Maior Produção de Cera por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: maxWaxByYear.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value['wax'].toStringAsFixed(2)} kg - Caixa: ${entry.value['tag']} - Especie: ${entry.value['specie']}"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Maior Produção de Geleia Real por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: maxRoyalJellyByYear.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value['royal_jelly'].toStringAsFixed(2)} kg - Caixa: ${entry.value['tag']} - Especie: ${entry.value['specie']}"))
-                      .toList(),
-                ),
-              ),
-              /*
+              _buildApiaryInfoCard(apiaryData),
+              _buildProductionCard("Produção de Mel por Ano", honeyTotals),
+              _buildProductionCard(
+                  "Produção de Própolis por Ano", propolisTotals),
+              _buildProductionCard("Produção de Cera por Ano", waxTotals),
+              _buildProductionCard(
+                  "Produção de Geleia Real por Ano", royalJellyTotals),
+              _buildMaxProductionCard(
+                  "Maior Produção de Mel por Ano", maxHoneyByYear, 'honey'),
+              _buildMaxProductionCard("Maior Produção de Própolis por Ano",
+                  maxPropolisByYear, 'propolis'),
+              _buildMaxProductionCard(
+                  "Maior Produção de Cera por Ano", maxWaxByYear, 'wax'),
+              _buildMaxProductionCard("Maior Produção de Geleia Real por Ano",
+                  maxRoyalJellyByYear, 'royal_jelly'),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Inspeções:",
+                  "Inspeções com Alerta:",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              ...provider.apiaryInspections.map((inspection) {
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                  child: ExpansionTile(
-                    leading: Icon(Icons.search),
-                    title: Text(
-                        "Inspeção em ${inspection['date']} - ${inspection['type_inspection_name']}"),
-                    children: <Widget>[
-                      ListTile(
-                        title: Text("Detalhes da População"),
-                        subtitle: Text(
-                            "Abelhas: ${inspection['number_bees']}, Idade da rainha: ${inspection['age_queen']}"),
-                      ),
-                      ListTile(
-                        title: Text("Dados Ambientais"),
-                        subtitle: Text(
-                            "Temp. Interna: ${inspection['internal_temperature']}°C, Umidade: ${inspection['internal_humidity']}%"),
-                      ),
-                      ListTile(
-                        title: Text("Produtos Coletados"),
-                        subtitle: Text(
-                            "Mel: ${inspection['honey']} kg, Cera: ${inspection['wax']} kg"),
-                      ),
-                      ListTile(
-                        title: Text("Observações"),
-                        subtitle: Text(
-                            "${inspection['notes'] ?? 'Nenhuma observação adicional.'}"),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList()*/
+              ..._buildInspectionsAlerts(hivesInspections),
             ],
           );
         },
       ),
-
-      /*
-      body: Consumer<InspectionProvider>(
-        builder: (context, provider, child) {
-          var honeyTotals = provider.getTotalHoneyByYear();
-          var propolisTotals = provider.getTotalPropolisByYear();
-          var waxTotals = provider.getTotalWaxByYear();
-          var royalJellyTotals = provider.getTotalRoyalJellyByYear();
-          return ListView(
-            children: [
-              ListTile(
-                title: Text("Nome do Apiário"),
-                subtitle: Text(apiaryData.name),
-                leading: Icon(Icons.business),
-              ),
-              ListTile(
-                title: Text("Localização"),
-                subtitle: Text("${apiaryData.cityId}, ${apiaryData.stateId}"),
-                leading: Icon(Icons.location_on),
-              ),
-              ListTile(
-                title: Text("Recursos Florais"),
-                subtitle: Text(apiaryData.floralResources.join(', ')),
-                leading: Icon(Icons.local_florist),
-              ),
-              ListTile(
-                title: Text("Quantidade de Colmeias"),
-                subtitle: Text("${apiaryData.hives.length}"),
-                leading: Icon(Icons.home_work),
-              ),
-              ListTile(
-                title: Text("Produção de Mel por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: honeyTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Produção de Própolis por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: propolisTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Produção de Cera por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: waxTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              ListTile(
-                title: Text("Produção de Geleia Real por Ano"),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: royalJellyTotals.entries
-                      .map((entry) => Text(
-                          "${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
-                      .toList(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Inspeções:",
-                ),
-              ),
-              ...provider.apiaryInspections.map((inspection) {
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                  child: ExpansionTile(
-                    leading: Icon(Icons.search),
-                    title: Text(
-                        "Inspeção em ${inspection['date']} - ${inspection['type_inspection_name']}"),
-                    children: <Widget>[
-                      ListTile(
-                        title: Text("Detalhes da População"),
-                        subtitle: Text(
-                            "Abelhas: ${inspection['number_bees']}, Idade da rainha: ${inspection['age_queen']}"),
-                      ),
-                      ListTile(
-                        title: Text("Dados Ambientais"),
-                        subtitle: Text(
-                            "Temp. Interna: ${inspection['internal_temperature']}°C, Umidade: ${inspection['internal_humidity']}%"),
-                      ),
-                      ListTile(
-                        title: Text("Produtos Coletados"),
-                        subtitle: Text(
-                            "Mel: ${inspection['honey']} kg, Cera: ${inspection['wax']} kg"),
-                      ),
-                      ListTile(
-                        title: Text("Observações"),
-                        subtitle: Text(
-                            "${inspection['notes'] ?? 'Nenhuma observação adicional.'}"),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList()
-            ],
-          );
-        },
-      ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Ação para adicionar nova inspeção
           //Navigator.of(context).pushNamed(AppRoutes.NEW_INSPECTION_FORM, arguments: apiaryData);
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.purple,
       ),
     );
+  }
+
+  Widget _buildApiaryInfoCard(Apiary apiary) {
+    return Card(
+      color: Colors.purple[50],
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.business, color: Colors.purple),
+              title: Text("Nome do Apiário"),
+              subtitle: Text(apiary.name),
+            ),
+            ListTile(
+              leading: Icon(Icons.location_on, color: Colors.purple),
+              title: Text("Localização"),
+              subtitle: Text("${apiary.cityId}, ${apiary.stateId}"),
+            ),
+            ListTile(
+              leading: Icon(Icons.local_florist, color: Colors.purple),
+              title: Text("Recursos Florais"),
+              subtitle: Text(apiary.floralResources.join(', ')),
+            ),
+            ListTile(
+              leading: Icon(Icons.home_work, color: Colors.purple),
+              title: Text("Quantidade de Colmeias"),
+              subtitle: Text("${apiary.hives.length}"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductionCard(String title, Map<int, double> data) {
+    return Card(
+      color: Colors.purple[50],
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ListTile(
+          leading: Icon(Icons.local_dining, color: Colors.purple),
+          title: Text(title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: data.entries
+                .map((entry) =>
+                    Text("${entry.key}: ${entry.value.toStringAsFixed(2)} kg"))
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMaxProductionCard(
+      String title, Map<int, dynamic> data, String key) {
+    return Card(
+      color: Colors.purple[50],
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: ListTile(
+          leading: Icon(Icons.star, color: Colors.purple),
+          title: Text(title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: data.entries
+                .map((entry) => Text(
+                    "${entry.key}: ${entry.value[key].toStringAsFixed(2)} kg - Caixa: ${entry.value['tag']} - Especie: ${entry.value['specie']}"))
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildInspectionsAlerts(List<dynamic> hivesInspections) {
+    return hivesInspections.where((table) {
+      return table?['larvae_health_development'] == "Doente" ||
+          table?['larvae_health_development'] == "Morta" ||
+          table?['larvae_presence_distribution'] == "Irregular" ||
+          table?['larvae_presence_distribution'] == "Ausente" ||
+          table?['pupa_health_development'] == "Morta" ||
+          table?['pupa_health_development'] == "Doente" ||
+          table?['pupa_presence_distribution'] == "Irregular" ||
+          table?['pupa_presence_distribution'] == "Ausente";
+    }).map((table) {
+      return Card(
+        color: Colors.red[50],
+        child: ListTile(
+          leading: Icon(Icons.warning, color: Colors.red),
+          title: Text("Inspeção em ${table['tag']}"),
+          subtitle: Text(
+              "Abelhas: ${table['number_bees']}, Larvas: ${table['larvae_health_development']}, Pupas: ${table['pupa_health_development']}"),
+        ),
+      );
+    }).toList();
   }
 }
