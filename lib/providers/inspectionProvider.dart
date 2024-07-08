@@ -12,10 +12,13 @@ class InspectionProvider with ChangeNotifier {
   final List<Inspection> _inspections = [];
   List<Inspection> get inspection => [..._inspections];
   final List _apiaryInspections = [];
+  final List _hiveInspections = [];
 
   final List _inspectionsScreen = [];
   List get inspectionsScreen => [..._inspectionsScreen];
   List get apiaryInspections => [..._apiaryInspections];
+  List get hiveInspections => [..._hiveInspections];
+
   int get inspectionsCount {
     return _inspections.length;
   }
@@ -42,10 +45,17 @@ class InspectionProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadInspectionsForHive(int hiveId) async {
+    final inspections = await InspectionDatabase().getHiveInspections(hiveId);
+    _hiveInspections.clear();
+    _hiveInspections.addAll(inspections);
+    notifyListeners();
+  }
+
   // Carregar inspeções de um apiário específico
   Future<void> loadInspectionsForApiary(int apiaryId) async {
     final apiaryInspections =
-        await InspectionDatabase().hivesInspections(apiaryId);
+        await InspectionDatabase().getApiaryInspections(apiaryId);
     print("Loaded inspections: $apiaryInspections");
     _apiaryInspections.clear();
     _apiaryInspections.addAll(apiaryInspections);

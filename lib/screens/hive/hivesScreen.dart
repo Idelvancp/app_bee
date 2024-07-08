@@ -28,7 +28,6 @@ class HivesScreenState extends State<HivesScreen> {
 
       final int initialApiaryId =
           ModalRoute.of(context)!.settings.arguments as int;
-      print("ID do Apppppppppppppp: ${initialApiaryId}");
 
       if (initialApiaryId != null) {
         setState(() {
@@ -117,7 +116,7 @@ class HivesScreenState extends State<HivesScreen> {
   Widget build(BuildContext context) {
     final HiveProvider hives = Provider.of(context);
     final hivesList = hives.hivesScreen;
-    final hivesInspections = hives.isnpectionsHives;
+    final hivesInspections = hives.inspectionsHives;
 
     // Filtrar a lista de colmeias com base no apiary_id selecionado
     final filteredHivesList = _selectedApiaryId == null

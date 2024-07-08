@@ -11,8 +11,8 @@ class HiveProvider with ChangeNotifier {
   final List _hiveDetails = [];
   List get hiveDetail => [..._hiveDetails];
 
-  final List _isnpectionsHives = [];
-  List get isnpectionsHives => [..._isnpectionsHives];
+  final List _inspectionsHives = [];
+  List get inspectionsHives => [..._inspectionsHives];
 
   int get hivesCount {
     return _hivesScreen.length;
@@ -20,8 +20,8 @@ class HiveProvider with ChangeNotifier {
 
   void loadIsnpectionsHives() async {
     final hives = await HiveDatabase().getHivesWithLatestInspection2();
-    _isnpectionsHives.clear();
-    _isnpectionsHives.addAll(hives);
+    _inspectionsHives.clear();
+    _inspectionsHives.addAll(hives);
     notifyListeners();
   }
 

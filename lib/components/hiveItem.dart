@@ -12,10 +12,10 @@ class HiveItem extends StatelessWidget {
   const HiveItem(this.hive, {this.inspections});
 
   void _selectHive(BuildContext context) {
-    Navigator.of(context).pushNamed(
-      AppRoutes.HIVE_DETAILS,
-      arguments: hive,
-    );
+    Navigator.of(context).pushNamed(AppRoutes.HIVE_DETAILS, arguments: {
+      'hive': hive,
+      'inspections': inspections,
+    });
   }
 
   @override

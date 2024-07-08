@@ -33,7 +33,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
     final Apiary apiaryData =
         ModalRoute.of(context)?.settings.arguments as Apiary;
     final HiveProvider hives = Provider.of(context);
-    final hivesInspections = hives.isnpectionsHives;
+    final hivesInspections = hives.inspectionsHives;
 
     return Scaffold(
       appBar: AppBar(

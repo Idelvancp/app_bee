@@ -145,11 +145,19 @@ INNER JOIN
   p.larvae_health_development,
   p.pupa_presence_distribution,
   p.pupa_health_development,
+  e.internal_temperature,
+  e.external_temperature,
+  e.internal_humidity,
+  e.external_humidity,
+  e.wind_speed,
+  e.cloud,
   honey_box.tag
 FROM 
   inspections i
 INNER JOIN 
   population_data p ON i.population_data_id = p.id
+INNER JOIN 
+  environment_data e ON i.environment_data_id = e.id
 INNER JOIN 
   hives hive ON i.hive_id = hive.id
 INNER JOIN 

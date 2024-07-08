@@ -28,7 +28,7 @@ class ApiariesScreenState extends State<ApiariesScreen> {
     final HiveProvider hives = Provider.of(context);
 
     final apiariesList = apiaries.apiary;
-    final hivesInspections = hives.isnpectionsHives;
+    final hivesInspections = hives.inspectionsHives;
 
     return Scaffold(
       body: GridView(
