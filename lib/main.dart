@@ -1,4 +1,5 @@
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
 import 'package:app_bee/providers/typeExpenseProvider.dart';
@@ -24,6 +25,7 @@ import 'package:app_bee/screens/hive/hiveFormScreen.dart';
 import 'package:app_bee/screens/hive/hiveDetailsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_bee/screens/login/loginScreen.dart';
 import 'screens/ apiary/apiariesScreen.dart';
 import 'screens/ apiary/apiaryForm.dart';
 import 'screens/ apiary/apiaryDetailsScreen.dart';
@@ -132,13 +134,6 @@ class BeeApp extends StatelessWidget {
           AppRoutes.COLLECT_FORM: (ctx) => CollectFormScreen(),
           AppRoutes.PRODUCT_REPORT: (ctx) => ProductsReportsScreen(),
           AppRoutes.HONEY_REPORT: (ctx) => HoneyReportScreen(),
-
-          /* AppRoutes.HONEY_REPORT: (ctx) => HoneyReportScreen(),
-          AppRoutes.PROPOLIS_REPORT: (ctx) => PropolisReportScreen(),
-          AppRoutes.WAX_REPORT: (ctx) => WaxReportScreen(),
-          AppRoutes.ROYAL_JELLY_REPORT: (ctx) => RoyalJellyReportScreen(),
-*/
-          // AppRoutes.APIARY_DETAILS: (ctx) => ApiaryDetailsScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),
@@ -152,13 +147,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isLoggedIn');
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
+
   int _selectedScreenIndex = 0;
 
   final List<Map<String, dynamic>> _screens = [
     {'title': 'Apiários', 'screen': ApiariesScreen()},
     {'title': 'Coletas', 'screen': CollectsScreen()},
     {'title': 'Despesas', 'screen': ExpensesScreen()},
-    // {'title': 'Relatórios', 'screen': ReportsScreen()},
     {'title': 'Relatórios', 'screen': ReportsNavigator()},
   ];
 
@@ -170,43 +173,65 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _selectedScreenIndex == 0
-          ? AppBar(
-              title: Text(_screens[_selectedScreenIndex]['title']),
-              centerTitle: true,
-            )
-          : null,
-      body: _screens[_selectedScreenIndex]['screen'],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.white70,
-        selectedItemColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Apiários',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.collections),
-            label: 'Coletas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.money),
-            label: 'Despesas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Relatórios',
-          ),
-        ],
-        currentIndex: _selectedScreenIndex,
-        onTap: _selectScreen,
-      ),
-      drawer: AppDrawer(
-          //onSelectItem: _selectScreen,
-          ),
+    return FutureBuilder<bool>(
+      future: _checkLoginStatus(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (!snapshot.hasData || !snapshot.data!) {
+          return LoginScreen();
+        } else {
+          return Scaffold(
+            appBar: _selectedScreenIndex == 0
+                ? AppBar(
+                    title: Text(_screens[_selectedScreenIndex]['title']),
+                    centerTitle: true,
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed: () => _logout(context),
+                      ),
+                    ],
+                  )
+                : null,
+            body: _screens[_selectedScreenIndex]['screen'],
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              unselectedItemColor: Colors.white70,
+              selectedItemColor: Colors.white,
+              type: BottomNavigationBarType.fixed,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Apiários',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.collections),
+                  label: 'Coletas',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.money),
+                  label: 'Despesas',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.business),
+                  label: 'Relatórios',
+                ),
+              ],
+              currentIndex: _selectedScreenIndex,
+              onTap: _selectScreen,
+            ),
+            drawer: AppDrawer(),
+          );
+        }
+      },
     );
+  }
+
+  Future<bool> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
   }
 }
