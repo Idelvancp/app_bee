@@ -32,8 +32,15 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
   Widget build(BuildContext context) {
     final Apiary apiaryData =
         ModalRoute.of(context)?.settings.arguments as Apiary;
+
+    print("Dados ${apiaryData.id}");
+    List floralResources = apiaryData.floralResources;
+    String floralResourcesText = floralResources.map((e) => e.name).join(', ');
     final HiveProvider hives = Provider.of(context);
     final hivesInspections = hives.inspectionsHives;
+    List<dynamic> filteredInspections = hivesInspections.where((inspection) {
+      return inspection['apiary_id'] == apiaryData.id;
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +62,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
           return ListView(
             padding: const EdgeInsets.all(8.0),
             children: [
-              _buildApiaryInfoCard(apiaryData),
+              _buildApiaryInfoCard(apiaryData, floralResourcesText),
               _buildProductionCard("Produção de Mel por Ano", honeyTotals),
               _buildProductionCard(
                   "Produção de Própolis por Ano", propolisTotals),
@@ -77,7 +84,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              ..._buildInspectionsAlerts(hivesInspections),
+              ..._buildInspectionsAlerts(filteredInspections),
               // Adicionar um botão para navegar para a tela HivesScreen
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -112,9 +119,9 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
     );
   }
 
-  Widget _buildApiaryInfoCard(Apiary apiary) {
+  Widget _buildApiaryInfoCard(Apiary apiary, String floralResources) {
     return Card(
-      color: Colors.purple[50],
+      color: Colors.grey[200],
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -132,7 +139,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
             ListTile(
               leading: Icon(Icons.local_florist, color: Colors.purple),
               title: Text("Recursos Florais"),
-              subtitle: Text(apiary.floralResources.join(', ')),
+              subtitle: Text(floralResources),
             ),
             ListTile(
               leading: Icon(Icons.home_work, color: Colors.purple),
@@ -147,7 +154,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
 
   Widget _buildProductionCard(String title, Map<int, double> data) {
     return Card(
-      color: Colors.purple[50],
+      color: Colors.grey[200],
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListTile(
@@ -186,8 +193,8 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
     );
   }
 
-  List<Widget> _buildInspectionsAlerts(List<dynamic> hivesInspections) {
-    return hivesInspections.where((table) {
+  List<Widget> _buildInspectionsAlerts(List<dynamic> filteredInspections) {
+    return filteredInspections.where((table) {
       return table?['larvae_health_development'] == "Doente" ||
           table?['larvae_health_development'] == "Morta" ||
           table?['larvae_presence_distribution'] == "Irregular" ||
