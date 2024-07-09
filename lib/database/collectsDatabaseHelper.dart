@@ -143,7 +143,7 @@ class CollectsDatabase {
     return maps;
   }
 
-  Future<List<Map<String, dynamic>>> getHoneyByHive() async {
+  Future<List<Map<String, dynamic>>> getHoneyAllHive() async {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''
     SELECT 
@@ -164,5 +164,35 @@ class CollectsDatabase {
 
   ''');
     return maps;
+  }
+
+  Future<Map<String, dynamic>> getSumProductsByHive(int hiveId) async {
+    final db = await _databaseHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      '''
+    SELECT 
+        SUM(c.honey) AS total_honey,
+        SUM(c.propolis) AS total_propolis,
+        SUM(c.wax) AS total_wax,
+        SUM(c.royal_jelly) AS total_royal_jelly
+    FROM 
+      collects c
+    WHERE 
+      c.hive_id = ?
+  ''',
+      [hiveId],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first; // Retorna o primeiro (e único) mapa
+    } else {
+      // Retorna um mapa vazio ou com valores padrão se não houver resultados
+      return {
+        'total_honey': 0.0,
+        'total_propolis': 0.0,
+        'total_wax': 0.0,
+        'total_royal_jelly': 0.0
+      };
+    }
   }
 }

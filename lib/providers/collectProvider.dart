@@ -20,6 +20,9 @@ class CollectProvider with ChangeNotifier {
   final List _collectsHoneyByHive = [];
   List get collectsHoneyByHive => [..._collectsHoneyByHive];
 
+  Map<String, dynamic> _sumProductsByHive = {};
+  Map<String, dynamic> get sumProductsByHive => _sumProductsByHive;
+
   int get collectsCount {
     return _collects.length;
   }
@@ -49,9 +52,16 @@ class CollectProvider with ChangeNotifier {
   }
 
   void loadCollectHoneyByHive() async {
-    final collects = await CollectsDatabase().getHoneyByHive();
+    final collects = await CollectsDatabase().getHoneyAllHive();
     _collectsHoneyByHive.clear();
     _collectsHoneyByHive.addAll(collects);
+    notifyListeners();
+  }
+
+  void loadSumProductsByHive(int hiveId) async {
+    final collects = await CollectsDatabase().getSumProductsByHive(hiveId);
+    _sumProductsByHive.clear();
+    _sumProductsByHive.addAll(collects);
     notifyListeners();
   }
 

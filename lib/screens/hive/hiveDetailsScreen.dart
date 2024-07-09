@@ -1,23 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:provider/provider.dart';
+import 'package:app_bee/providers/collectProvider.dart';
 
-class HiveDetailsScreen extends StatelessWidget {
+class HiveDetailsScreen extends StatefulWidget {
   const HiveDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final Map<String, dynamic> hive = arguments['hive'] as Map<String, dynamic>;
-    final Map<String, dynamic>? inspections =
-        arguments['inspections'] as Map<String, dynamic>?;
+  _HiveDetailsScreenState createState() => _HiveDetailsScreenState();
+}
 
-    print("Hive: ${hive}");
-    print("Inspections: ${inspections}");
+class _HiveDetailsScreenState extends State<HiveDetailsScreen> {
+  Map<String, dynamic>? hive;
+  Map<String, dynamic>? inspections;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (hive == null) {
+      final Map<String, dynamic> arguments =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      hive = arguments['hive'] as Map<String, dynamic>;
+      inspections = arguments['inspections'] as Map<String, dynamic>?;
+
+      Provider.of<CollectProvider>(context, listen: false)
+          .loadSumProductsByHive(hive!['id']);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final CollectProvider collect = Provider.of(context);
+    final productsHive = collect.sumProductsByHive;
+    print(productsHive);
     final dateFormat = DateFormat('dd-MM-yyyy');
-    String formattedDate =
-        dateFormat.format(DateTime.parse(inspections?['date']));
+    String formattedDate = dateFormat.format(
+        DateTime.parse(inspections?['date'] ?? DateTime.now().toString()));
 
     void _toInspection(BuildContext context) {
       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -62,7 +81,7 @@ class HiveDetailsScreen extends StatelessWidget {
             Divider(),
             ListTile(
               title: Text(
-                  "Tipo de Inspeção: ${inspections?['type_inspection_id']}",
+                  "Útima Inspeção: ${inspections?['type_inspection_id']}",
                   style: titleStyle),
               subtitle: Text("Data: $formattedDate", style: subtitleStyle),
             ),
@@ -116,6 +135,22 @@ class HiveDetailsScreen extends StatelessWidget {
               ),
             ),
             Divider(),
+            ListTile(
+              title: Text("Total de Produtos da Colmeia", style: titleStyle),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Mel:  ${productsHive['total_honey']}kg",
+                      style: subtitleStyle),
+                  Text("Mel:  ${productsHive['total_propolis']}kg",
+                      style: subtitleStyle),
+                  Text("Mel:  ${productsHive['total_wax']}kg",
+                      style: subtitleStyle),
+                  Text("Mel:  ${productsHive['total_royal_jelly']}kg",
+                      style: subtitleStyle),
+                ],
+              ),
+            ),
             Divider(),
             ElevatedButton(
               onPressed: () => _toInspection(context),
@@ -129,52 +164,5 @@ class HiveDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-
-/*
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Detalhe Colmeia"),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('Apiário: ${hive['apiary_name']}', style: titleStyle),
-            ),
-            ListTile(
-              title: Text('Created At: ${hive['created_at']}',
-                  style: subtitleStyle),
-            ),
-            ListTile(
-              title: Text('Updated At: ${hive['updated_at']}',
-                  style: subtitleStyle),
-            ),
-            ListTile(
-              title: Text('Espécie: ${hive['specie_name']}', style: titleStyle),
-            ),
-            Divider(),
-            ElevatedButton(
-              onPressed: () => _toInspection(context),
-              child: Text('Adicionar Inspeção'),
-            ),
-            ElevatedButton(
-              onPressed: () => _toCollect(context),
-              child: Text('Adicionar Coleta'),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple,
-        child: Icon(Icons.add, color: Colors.white),
-        onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.APIARY_FORM);
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
-    */
   }
 }
