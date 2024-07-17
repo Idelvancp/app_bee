@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/floralResource.dart';
-import 'package:app_bee/database/databaseHelper.dart';
+import 'package:app_bee/database/floralResourcesDatabaseHelper.dart';
 
 class FloralResourceProvider with ChangeNotifier {
   final List<FloralResource> _floralResources = [];
@@ -13,7 +13,8 @@ class FloralResourceProvider with ChangeNotifier {
   }
 
   void loadFloralResources() async {
-    final floralResources = await DatabaseHelper().getFloralResources();
+    final floralResources =
+        await FloralResourcesDatabase().getFloralResources();
     _floralResources.clear();
     _floralResources.addAll(floralResources);
     notifyListeners();
@@ -31,7 +32,7 @@ class FloralResourceProvider with ChangeNotifier {
 
   Future<void> addFloralResource(FloralResource floralResource) async {
     _floralResources.add(floralResource);
-    await DatabaseHelper().insertFloralResource(floralResource);
+    await FloralResourcesDatabase().insertFloralResource(floralResource);
     notifyListeners();
   }
 }

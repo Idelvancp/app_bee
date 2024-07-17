@@ -245,15 +245,28 @@ class DatabaseHelper {
   Future<void> _insertInitialSpecies(Database db) async {
     const initialSpecies = [
       {
-        'name': 'Apis mellifera',
+        'name': 'Abelha Africanizada',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {'name': 'Tiúba', 'created_at': '2023-06-28', 'updated_at': '2023-06-28'},
+      {
+        'name': 'Jandaíra',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {'name': 'Uruçu', 'created_at': '2023-06-28', 'updated_at': '2023-06-28'},
+      {
+        'name': 'Canudo',
         'created_at': '2023-06-28',
         'updated_at': '2023-06-28'
       },
       {
-        'name': 'Apis cerana',
+        'name': 'Moça Branca',
         'created_at': '2023-06-28',
         'updated_at': '2023-06-28'
       },
+
       // Mais espécies aqui...
     ];
     for (var species in initialSpecies) {
@@ -289,7 +302,17 @@ class DatabaseHelper {
         'updated_at': '2023-06-28'
       },
       {
-        'name': 'Coleta',
+        'name': 'Presença da Rainha',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Divisão de Colmeias',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Divisão de Colmeias',
         'created_at': '2023-06-28',
         'updated_at': '2023-06-28'
       },
@@ -332,12 +355,27 @@ class DatabaseHelper {
   Future<void> _insertInitialTypesExpenses(Database db) async {
     const initialTypesExpenses = [
       {
-        'name': 'Food Supplies',
+        'name': 'Combustível',
         'created_at': '2023-06-28',
         'updated_at': '2023-06-28'
       },
       {
-        'name': 'Veterinary Services',
+        'name': 'Alimentação',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Medicamentos e Tratamentos',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Manutenção e Reparos',
+        'created_at': '2023-06-28',
+        'updated_at': '2023-06-28'
+      },
+      {
+        'name': 'Aquisição de Colméias',
         'created_at': '2023-06-28',
         'updated_at': '2023-06-28'
       },
@@ -359,7 +397,7 @@ class DatabaseHelper {
       int numberFrames = random.nextInt(5) + 4; // Valores aleatórios de 4 a 8
       int busyFrames =
           random.nextInt(numberFrames + 1); // Menor ou igual a numberFrames
-      int typeHiveId = random.nextInt(3) + 1; // Random number 1, 2, or 3
+      int typeHiveId = 1; // Random number 1, 2, or 3
 
       honeyBoxes.add({
         'tag': tag,
@@ -394,26 +432,6 @@ class DatabaseHelper {
 
     return List.generate(maps.length, (i) {
       return TypeHive.fromMap(maps[i]);
-    });
-  }
-
-  // Insere um novo Floral Resource no banco de dados
-  Future<void> insertFloralResource(FloralResource floralResource) async {
-    final db = await database;
-    await db.insert(
-      'floral_resources',
-      floralResource.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  // Recupera Floral Resources do banco de dados
-  Future<List<FloralResource>> getFloralResources() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('floral_resources');
-
-    return List.generate(maps.length, (i) {
-      return FloralResource.fromMap(maps[i]);
     });
   }
 

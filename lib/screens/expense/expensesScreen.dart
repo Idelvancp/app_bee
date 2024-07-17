@@ -24,6 +24,10 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final List<Map<String, dynamic>> expensesList =
         expenses.expenses; // Obter a lista de despesas
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Despesas'),
+        centerTitle: true,
+      ),
       body: GridView(
         padding: const EdgeInsets.all(25),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

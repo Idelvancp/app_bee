@@ -1,6 +1,7 @@
 import 'package:app_bee/providers/specieProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_bee/models/specie.dart';
 
 class SpecieFormScreen extends StatefulWidget {
   const SpecieFormScreen({Key? key}) : super(key: key);
@@ -12,13 +13,37 @@ class SpecieFormScreen extends StatefulWidget {
 class _SpecieFormState extends State<SpecieFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
+  bool _isEditing = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final Specie? specie =
+        ModalRoute.of(context)?.settings.arguments as Specie?;
+    if (specie != null && !_isEditing) {
+      _formData['id'] = specie.id!;
+      _formData['name'] = specie.name;
+      _isEditing = true;
+    }
+  }
 
   void _submitForm() {
     _formKey.currentState?.save();
-    Provider.of<SpecieProvider>(
+    final specieProvider = Provider.of<SpecieProvider>(
       context,
       listen: false,
-    ).addSpecieFromData(_formData);
+    );
+    if (_isEditing) {
+      final updatedSpecie = Specie(
+        id: _formData['id'] as int,
+        name: _formData['name'] as String,
+        createdAt: DateTime.now(), // Você pode ajustar isso conforme necessário
+        updatedAt: DateTime.now(),
+      );
+      specieProvider.updateSpecie(updatedSpecie);
+    } else {
+      specieProvider.addSpecieFromData(_formData);
+    }
     Navigator.of(context).pop();
   }
 
@@ -26,7 +51,7 @@ class _SpecieFormState extends State<SpecieFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastrar Espécie'),
+        title: Text(_isEditing ? 'Editar Espécie' : 'Cadastrar Espécie'),
         centerTitle: true,
         backgroundColor: Colors.purple,
         actions: [
@@ -48,6 +73,7 @@ class _SpecieFormState extends State<SpecieFormScreen> {
               _buildSectionTitle('Informações da Espécie'),
               _buildTextFormField(
                 label: 'Nome',
+                initialValue: _formData['name'] as String?,
                 onSaved: (value) => _formData['name'] = value ?? '',
               ),
               SizedBox(height: 20),
@@ -89,10 +115,12 @@ class _SpecieFormState extends State<SpecieFormScreen> {
   Widget _buildTextFormField({
     required String label,
     required void Function(String?) onSaved,
+    String? initialValue,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
+        initialValue: initialValue,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(

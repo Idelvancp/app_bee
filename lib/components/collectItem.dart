@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/collect.dart';
 import '../providers/collectProvider.dart';
-import '../routes/appRoute.dart';
+import 'package:app_bee/ultils/formatDate.dart';
 
 class CollectItem extends StatelessWidget {
   final Map<String, dynamic> collect;
@@ -61,7 +61,7 @@ class CollectItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Data: ${collect['date']}',
+                'Data: ${formatDate(collect['date'])}',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black87,

@@ -36,4 +36,15 @@ class SpecieDatabase {
       whereArgs: [id],
     );
   }
+
+  // Atualiza uma specie no banco de dados
+  Future<void> updateSpecie(Specie specie) async {
+    final db = await _databaseHelper.database;
+    await db.update(
+      'species',
+      specie.toMap(),
+      where: 'id = ?',
+      whereArgs: [specie.id],
+    );
+  }
 }

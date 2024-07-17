@@ -49,7 +49,7 @@ class _HoneyReportScreenState extends State<HoneyReportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Relatório de Mel'),
+        title: Text('Produção de Mel'),
         centerTitle: true,
       ),
       body: LayoutBuilder(
@@ -67,96 +67,130 @@ class _HoneyReportScreenState extends State<HoneyReportScreen> {
                   borderRadius: BorderRadius.circular(
                       borderRadius), // Cantos arredondados
                 ),
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: data.isEmpty
-                        ? 0
-                        : data
-                                .map((e) => e.amount)
-                                .reduce((a, b) => a > b ? a : b) *
-                            1.2,
-                    barGroups: data
-                        .map(
-                          (HoneyProductionByYear item) => BarChartGroupData(
-                            x: item.year,
-                            barRods: [
-                              BarChartRodData(
-                                toY: item.amount,
-                                color: Colors.amber,
-                                width: 20,
-                              ),
-                            ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Produção de Mel por Ano',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: BarChart(
+                        BarChartData(
+                          alignment: BarChartAlignment.spaceAround,
+                          maxY: data.isEmpty
+                              ? 0
+                              : data
+                                      .map((e) => e.amount)
+                                      .reduce((a, b) => a > b ? a : b) *
+                                  1.2,
+                          barGroups: data
+                              .map(
+                                (HoneyProductionByYear item) =>
+                                    BarChartGroupData(
+                                  x: item.year,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: item.amount,
+                                      color: Colors.amber,
+                                      width: 20,
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                          borderData: FlBorderData(
+                            show: false,
                           ),
-                        )
-                        .toList(),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    barTouchData: BarTouchData(
-                      enabled: true,
-                    ),
-                    titlesData: FlTitlesData(
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      topTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (double value, TitleMeta meta) {
-                            return SideTitleWidget(
-                              axisSide: meta.axisSide,
-                              space: 5.0,
-                              child: Text(
-                                value.toInt().toString().substring(2),
-                                style: TextStyle(color: Colors.black),
+                          barTouchData: BarTouchData(
+                            enabled: true,
+                          ),
+                          titlesData: FlTitlesData(
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            topTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget:
+                                    (double value, TitleMeta meta) {
+                                  return SideTitleWidget(
+                                    axisSide: meta.axisSide,
+                                    space: 5.0,
+                                    child: Text(
+                                      value.toInt().toString().substring(2),
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               Container(
-                height: 100, // Altura da Row com os cards
+                height: 150, // Altura da Row com os cards
                 padding: const EdgeInsets.symmetric(horizontal: paddingSize),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: honeyByApiary.map((apiary) {
-                      return Card(
-                        child: Container(
-                          width: 150,
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                apiary['apiary_name'],
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total de Mel Produzido por Apiário',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: honeyByApiary.map((apiary) {
+                            return Card(
+                              child: Container(
+                                width: 150,
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      apiary['apiary_name'],
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      '${apiary['total_honey'].toStringAsFixed(2)} kg',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(height: 8),
-                              Text(
-                                '${apiary['total_honey'].toStringAsFixed(2)} kg',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
+                            );
+                          }).toList(),
                         ),
-                      );
-                    }).toList(),
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 8), // Pequeno espaço entre a Row e a ListView
@@ -169,29 +203,47 @@ class _HoneyReportScreenState extends State<HoneyReportScreen> {
                     borderRadius: BorderRadius.circular(
                         borderRadius), // Cantos arredondados
                   ),
-                  child: ListView.builder(
-                    itemCount: honeyByHive.length, // Número de itens na lista
-                    itemBuilder: (ctx, index) {
-                      final hive = honeyByHive[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          tileColor:
-                              Colors.white, // Cor do fundo do item da lista
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          leading: CircleAvatar(
-                            child: Text('${index + 1}'),
-                          ),
-                          title: Text(hive['hive_tag']),
-                          subtitle: Text(
-                            'Total Mel: ${hive['total_honey'].toStringAsFixed(2)} kg',
-                          ),
-                          trailing: Text('Detalhes'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Total de Mel Produzido por Colmeia',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple,
                         ),
-                      );
-                    },
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount:
+                              honeyByHive.length, // Número de itens na lista
+                          itemBuilder: (ctx, index) {
+                            final hive = honeyByHive[index];
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: ListTile(
+                                tileColor: Colors
+                                    .white, // Cor do fundo do item da lista
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                leading: CircleAvatar(
+                                  child: Text('${index + 1}'),
+                                ),
+                                title: Text(hive['hive_tag']),
+                                subtitle: Text(
+                                  'Total Mel: ${hive['total_honey'].toStringAsFixed(2)} kg',
+                                ),
+                                trailing: Text('Detalhes'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

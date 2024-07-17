@@ -36,7 +36,7 @@ class TypesHivesScreenState extends State<TypesHivesScreen> {
         padding: const EdgeInsets.all(25),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          childAspectRatio: 5 / 2,
+          childAspectRatio: 8 / 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),

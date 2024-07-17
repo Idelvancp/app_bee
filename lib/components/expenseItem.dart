@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_bee/providers/expenseProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
+import 'package:app_bee/ultils/formatDate.dart';
 
 class ExpenseItem extends StatelessWidget {
   final Map<String, dynamic> expense;
@@ -48,14 +49,14 @@ class ExpenseItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'Apiário: ${expense['cost']}',
+                "Valor: ${expense['cost']}0 R\$",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,
                 ),
               ),
               Text(
-                'Data: ${expense['date']}',
+                'Data: ${formatDate(expense['date'])}',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.purple,

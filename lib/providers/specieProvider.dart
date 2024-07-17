@@ -40,4 +40,13 @@ class SpecieProvider with ChangeNotifier {
     await SpecieDatabase().deleteSpecie(specie.id!);
     notifyListeners();
   }
+
+  Future<void> updateSpecie(Specie specie) async {
+    final index = _species.indexWhere((s) => s.id == specie.id);
+    if (index >= 0) {
+      _species[index] = specie;
+      await SpecieDatabase().updateSpecie(specie);
+      notifyListeners();
+    }
+  }
 }

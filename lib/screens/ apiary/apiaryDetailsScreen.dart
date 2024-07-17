@@ -63,6 +63,14 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
             padding: const EdgeInsets.all(8.0),
             children: [
               _buildApiaryInfoCard(apiaryData, floralResourcesText),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Colméias com Alerta:",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ..._buildInspectionsAlerts(filteredInspections),
               _buildProductionCard("Produção de Mel por Ano", honeyTotals),
               _buildProductionCard(
                   "Produção de Própolis por Ano", propolisTotals),
@@ -77,14 +85,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
                   "Maior Produção de Cera por Ano", maxWaxByYear, 'wax'),
               _buildMaxProductionCard("Maior Produção de Geleia Real por Ano",
                   maxRoyalJellyByYear, 'royal_jelly'),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Inspeções com Alerta:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              ..._buildInspectionsAlerts(filteredInspections),
+
               // Adicionar um botão para navegar para a tela HivesScreen
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -99,7 +100,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
                     foregroundColor: Colors.purple,
                   ),
                   child: Text(
-                    "Ver Colmeias",
+                    "Visualizar Colmeias",
                     style: TextStyle(color: Colors.black54),
                   ),
                 ),
@@ -134,7 +135,8 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
             ListTile(
               leading: Icon(Icons.location_on, color: Colors.purple),
               title: Text("Localização"),
-              subtitle: Text("${apiary.cityId}, ${apiary.stateId}"),
+              subtitle: Text("Francinópolis-Piauí"),
+              //subtitle: Text("${apiary.cityId}, ${apiary.stateId}"),
             ),
             ListTile(
               leading: Icon(Icons.local_florist, color: Colors.purple),
@@ -158,7 +160,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListTile(
-          leading: Icon(Icons.local_dining, color: Colors.purple),
+          //leading: Icon(Icons.local_dining, color: Colors.purple),
           title: Text(title),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,11 +177,11 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
   Widget _buildMaxProductionCard(
       String title, Map<int, dynamic> data, String key) {
     return Card(
-      color: Colors.purple[50],
+      color: Colors.grey[200],
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListTile(
-          leading: Icon(Icons.star, color: Colors.purple),
+          //leading: Icon(Icons.star, color: Colors.purple),
           title: Text(title),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +207,7 @@ class _ApiaryDetailsScreenState extends State<ApiaryDetailsScreen> {
           table?['pupa_presence_distribution'] == "Ausente";
     }).map((table) {
       return Card(
-        color: Colors.red[50],
+        color: Colors.yellow[50],
         child: ListTile(
           leading: Icon(Icons.warning, color: Colors.red),
           title: Text("Inspeção em ${table['tag']}"),

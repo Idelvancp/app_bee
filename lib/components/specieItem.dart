@@ -52,12 +52,16 @@ class SpecieItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment
               .spaceBetween, // Alinha os elementos nas extremidades da linha
           children: [
-            Text(
-              specie.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.purple,
+            Padding(
+              padding:
+                  EdgeInsets.only(left: 10), // Adiciona espaçamento à esquerda
+              child: Text(
+                specie.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.purple,
+                ),
               ),
             ),
             // Container para os ícones de ações, alinhados à direita

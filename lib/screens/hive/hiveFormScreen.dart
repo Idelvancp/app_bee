@@ -31,7 +31,9 @@ class _HiveFormState extends State<HiveFormScreen> {
       context,
       listen: false,
     ).addHiveFromData(_formData);
-    Navigator.of(context).pop();
+
+    // Navegar para uma página específica após o envio do formulário
+    Navigator.of(context).pushReplacementNamed('/hives-index');
   }
 
   @override
@@ -158,6 +160,7 @@ class _HiveFormState extends State<HiveFormScreen> {
   Widget _buildDropdownApiary() {
     return Consumer<ApiaryProvider>(
       builder: (ctx, apiaryProvider, _) {
+        apiaryProvider.loadApiaries();
         final allApiaries = apiaryProvider.apiary;
         return DropdownSearch<Apiary>(
           items: allApiaries,

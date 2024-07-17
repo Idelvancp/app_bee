@@ -76,7 +76,6 @@ class _HiveDetailsScreenState extends State<HiveDetailsScreen> {
           children: [
             ListTile(
               title: Text("Caixa: ${inspections?['tag']}", style: titleStyle),
-              subtitle: Text("Data: $formattedDate", style: subtitleStyle),
             ),
             Divider(),
             ListTile(
@@ -142,11 +141,11 @@ class _HiveDetailsScreenState extends State<HiveDetailsScreen> {
                 children: [
                   Text("Mel:  ${productsHive['total_honey']}kg",
                       style: subtitleStyle),
-                  Text("Mel:  ${productsHive['total_propolis']}kg",
+                  Text("Própolis:  ${productsHive['total_propolis']}kg",
                       style: subtitleStyle),
-                  Text("Mel:  ${productsHive['total_wax']}kg",
+                  Text("Cera:  ${productsHive['total_wax']}kg",
                       style: subtitleStyle),
-                  Text("Mel:  ${productsHive['total_royal_jelly']}kg",
+                  Text("Geléia Real:  ${productsHive['total_royal_jelly']}kg",
                       style: subtitleStyle),
                 ],
               ),

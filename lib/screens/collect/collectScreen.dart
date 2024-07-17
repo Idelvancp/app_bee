@@ -26,6 +26,10 @@ class CollectsScreenState extends State<CollectsScreen> {
     final colletsScreen = collectProvider.collectsScreen;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Coletas'),
+        centerTitle: true,
+      ),
       body: GridView(
         padding: const EdgeInsets.all(25),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
