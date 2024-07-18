@@ -19,14 +19,21 @@ class SpecieProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addSpecieFromData(Map<String, Object> data) {
+  void saveSpecie(Map<String, Object> data) {
+    bool hasId = data['id'] != null;
     final now = DateTime.now();
-    final newSpecie = Specie(
+    final specie = Specie(
+      id: hasId ? data['id'] as int : null,
       name: data['name'].toString(),
       createdAt: DateTime.parse(now.toString()),
       updatedAt: DateTime.parse(now.toString()),
     );
-    addSpecie(newSpecie);
+
+    if (hasId) {
+      updateSpecie(specie);
+    } else {
+      addSpecie(specie);
+    }
   }
 
   Future<void> addSpecie(Specie specie) async {

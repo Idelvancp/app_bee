@@ -42,7 +42,7 @@ class _SpecieFormState extends State<SpecieFormScreen> {
       );
       specieProvider.updateSpecie(updatedSpecie);
     } else {
-      specieProvider.addSpecieFromData(_formData);
+      specieProvider.saveSpecie(_formData);
     }
     Navigator.of(context).pop();
   }
