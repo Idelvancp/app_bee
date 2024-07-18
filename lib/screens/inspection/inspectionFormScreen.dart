@@ -60,12 +60,24 @@ class _InspectionFormState extends State<InspectionFormScreen> {
     );
 
     if (pickedDate != null) {
-      setState(() {
-        _selectedDateTime = pickedDate;
-        DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-        _dateController.text = dateFormat.format(pickedDate);
-        _formData['date'] = pickedDate.toIso8601String();
-      });
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          _selectedDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          DateFormat dateFormat = DateFormat('dd-MM-yyyy HH:mm');
+          _dateController.text = dateFormat.format(_selectedDateTime!);
+        });
+      }
     }
   }
 

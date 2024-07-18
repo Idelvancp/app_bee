@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bee/models/inspection.dart';
 import 'package:app_bee/models/environmentData.dart';
-import 'package:app_bee/models/collect.dart';
+import 'package:intl/intl.dart';
 import 'package:app_bee/database/inspectionsDatabaseHelper.dart';
 
 class InspectionProvider with ChangeNotifier {
@@ -63,9 +63,13 @@ class InspectionProvider with ChangeNotifier {
   }
 
   void addInspectionFromData(Map<String, dynamic> data) {
+    print("Netradas ${data.entries}");
+
     final now = DateTime.now();
+    final DateFormat dateFormat = DateFormat('dd-MM-yyyy HH:mm');
+    final DateTime parsedDate = dateFormat.parse(data['date'].toString());
     final newInspection = Inspection(
-      date: DateTime.parse(data['date'].toString()),
+      date: parsedDate,
       hiveId: data['hiveId'] as int,
       apiaryId: data['apiaryId'] as int,
       typeInspectionId: data['typeInspectionId'] as String,

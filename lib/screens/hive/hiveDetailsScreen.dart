@@ -34,9 +34,12 @@ class _HiveDetailsScreenState extends State<HiveDetailsScreen> {
     final CollectProvider collect = Provider.of(context);
     final productsHive = collect.sumProductsByHive;
     print(productsHive);
-    final dateFormat = DateFormat('dd-MM-yyyy');
-    String formattedDate = dateFormat.format(
-        DateTime.parse(inspections?['date'] ?? DateTime.now().toString()));
+
+    // Formatar a data no formato "dia-mês-ano-hora-minuto"
+    final dateFormat = DateFormat('dd-MM-yyyy HH:mm');
+    String formattedDate = inspections != null && inspections!['date'] != null
+        ? dateFormat.format(DateTime.parse(inspections!['date']))
+        : dateFormat.format(DateTime.now());
 
     void _toInspection(BuildContext context) {
       Navigator.of(context).pushNamedAndRemoveUntil(
