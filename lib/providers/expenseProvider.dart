@@ -44,7 +44,13 @@ class ExpenseProvider with ChangeNotifier {
 
   Future<void> addExpense(Expense expense) async {
     _expenses.add(expense);
+    notifyListeners();
     await ExpenseDatabase().insertExpense(expense);
+  }
+
+  Future<void> deleteExpense(int id) async {
+    _expenses.removeWhere((expense) => expense['id'] == id);
+    await ExpenseDatabase().deleteExpense(id);
     notifyListeners();
   }
 

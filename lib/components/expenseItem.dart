@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:app_bee/providers/expenseProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/ultils/formatDate.dart';
@@ -15,9 +16,39 @@ class ExpenseItem extends StatelessWidget {
     );
   }
 
+  void _showDeleteConfirmationDialog(
+      BuildContext context, Map<String, dynamic> expense) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Confirmar Exclusão'),
+        content: Text('Você realmente deseja deletar esta despesa?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Não'),
+            onPressed: () {
+              Navigator.of(ctx).pop(); // Fecha o diálogo sem fazer nada
+            },
+          ),
+          TextButton(
+            child: Text('Sim'),
+            onPressed: () {
+              Navigator.of(ctx).pop(); // Fecha o diálogo
+              _deleteExpense(context, expense); // Chama a função de deleção
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteExpense(BuildContext context, Map<String, dynamic> expense) {
+    Provider.of<ExpenseProvider>(context, listen: false)
+        .deleteExpense(expense['id']);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final expenses = ExpenseProvider().loadExpenses();
     return InkWell(
       onTap: () => _selectExpense(context),
       splashColor: Theme.of(context).primaryColor,
@@ -33,13 +64,37 @@ class ExpenseItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Despesa: ${expense['type_expense_name'].toString()}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.purple,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${expense['type_expense_name'].toString()}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.purple,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Colors.orange),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                            AppRoutes.EXPENSE_FORM,
+                            arguments: expense,
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _showDeleteConfirmationDialog(context, expense);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
               Text(
                 'Apiário: ${expense['apiary_name']}',

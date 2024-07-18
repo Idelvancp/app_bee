@@ -15,33 +15,32 @@ class ExpenseDatabase {
     );
   }
 
-  // Recupera expenses do banco de dados
-  /*Future<List<Expense>> getExpenses() async {
+  // Deleta uma despesa do banco de dados pelo ID
+  Future<void> deleteExpense(int id) async {
     final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query('expenses');
+    await db.delete(
+      'expenses',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 
-    return List.generate(maps.length, (i) {
-      return Expense.fromMap(maps[i]);
-    });
-  } */
-  //  'SELECT hb. *, th.name FROM honey_boxes hb  INNER JOIN types_hives th WHERE hb.type_hive_id = th.id;');
-
+  // Recupera expenses do banco de dados
   Future<List<Map<String, dynamic>>> getExpenses() async {
     print("Aqui2");
     final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''SELECT 
-    expense. *,
-    apiary.name AS apiary_name,
-    type_expense.name As type_expense_name          
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT 
+      expense.*,
+      apiary.name AS apiary_name,
+      type_expense.name AS type_expense_name
     FROM 
-    expenses expense  
+      expenses expense
     INNER JOIN 
-    apiaries apiary 
-    ON expense.apiary_id = apiary.id
+      apiaries apiary ON expense.apiary_id = apiary.id
     INNER JOIN 
-    types_expenses type_expense 
-    ON expense.type_expense_id = type_expense.id
-  ''');
+      types_expenses type_expense ON expense.type_expense_id = type_expense.id
+    ''');
     maps.forEach((table) {
       print('Tagessssssssss ${table['id']} ');
     });
@@ -52,19 +51,19 @@ class ExpenseDatabase {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('''
     SELECT 
-        e.cost AS expense_cost,
-        e.date AS expense_date,
-        a.name AS apiary_name,
-        te.name AS expense_type
+      e.cost AS expense_cost,
+      e.date AS expense_date,
+      a.name AS apiary_name,
+      te.name AS expense_type
     FROM 
-        expenses e
+      expenses e
     INNER JOIN 
-        apiaries a ON e.apiary_id = a.id
+      apiaries a ON e.apiary_id = a.id
     INNER JOIN 
-        types_expenses te ON e.type_expense_id = te.id
+      types_expenses te ON e.type_expense_id = te.id
     ORDER BY 
-        e.date ASC;
-  ''');
+      e.date ASC
+    ''');
 
     maps.forEach((table) {
       print(

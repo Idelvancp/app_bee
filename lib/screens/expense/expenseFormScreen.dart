@@ -7,6 +7,7 @@ import 'package:app_bee/models/typeExpense.dart';
 import 'package:app_bee/providers/apiaryProvider.dart';
 import 'package:app_bee/providers/expenseProvider.dart';
 import 'package:app_bee/providers/typeExpenseProvider.dart';
+import 'package:app_bee/routes/appRoute.dart';
 
 class ExpenseFormScreen extends StatefulWidget {
   const ExpenseFormScreen({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class _ExpenseFormState extends State<ExpenseFormScreen> {
       context,
       listen: false,
     ).addExpenseFromData(_formData);
-    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacementNamed(AppRoutes.EXPENSES_INDEX);
   }
 
   @override

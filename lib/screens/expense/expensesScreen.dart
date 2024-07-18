@@ -19,29 +19,37 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
-    final ExpenseProvider expenses = Provider.of(context);
-    final List<Map<String, dynamic>> expensesList =
-        expenses.expenses; // Obter a lista de despesas
+    final ExpenseProvider expenses = Provider.of<ExpenseProvider>(context);
+    final List<Map<String, dynamic>> expensesList = expenses.expenses;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Despesas'),
         centerTitle: true,
       ),
-      body: GridView(
-        padding: const EdgeInsets.all(25),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 5 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        children: expensesList.map((api) {
-          return ExpenseItem(api);
-        }).toList(),
-      ),
+      body: expensesList.isEmpty
+          ? Center(
+              child: Text(
+                'Nenhuma despesa cadastrada',
+                style: TextStyle(fontSize: 20),
+              ),
+            )
+          : GridView(
+              padding: const EdgeInsets.all(25),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                childAspectRatio: 4 / 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              children: expensesList.map((expense) {
+                return ExpenseItem(expense);
+              }).toList(),
+            ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple, // Cor do botão
+        backgroundColor: Colors.purple,
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
           Navigator.of(context).pushNamed(AppRoutes.EXPENSE_FORM);
