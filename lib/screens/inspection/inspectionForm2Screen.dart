@@ -17,6 +17,7 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
   final TextEditingController _numberBeesController = TextEditingController();
   final TextEditingController _ageQueenController = TextEditingController();
 
+  String? sizePopulation;
   String? spawningQueen;
   String? larvaePresenceDistribution;
   String? larvaeHealthDevelopment;
@@ -80,17 +81,15 @@ class _InspectionFormState extends State<InspectionForm2Screen> {
           key: _formKey,
           child: ListView(
             children: [
-              _buildSectionTitle('Informações Gerais'),
-              _buildTextFormField(
-                label: 'Tamanho da População',
-                controller: _numberBeesController,
-                onSaved: (value) {
-                  _formData['numberBees'] = int.tryParse(value ?? '') ?? 0;
-                },
+              _buildSectionTitle('Tamanho da População (Score)'),
+              _buildRadioGroup(
+                options: ['Alto', 'Médio', 'Baixo'],
+                groupValue: sizePopulation,
+                onChanged: (value) => setState(() => sizePopulation = value),
               ),
               _buildSectionTitle('Estado da Rainha'),
               _buildTextFormField(
-                label: 'Idade da Rainha',
+                label: 'Idade da Rainha (Meses)',
                 controller: _ageQueenController,
                 onSaved: (value) {
                   _formData['ageQueen'] = double.tryParse(value ?? '') ?? 0.0;
