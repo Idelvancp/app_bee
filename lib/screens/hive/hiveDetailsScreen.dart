@@ -43,7 +43,7 @@ class _HiveDetailsScreenState extends State<HiveDetailsScreen> {
 
     void _toInspection(BuildContext context) {
       Navigator.of(context).pushNamedAndRemoveUntil(
-        AppRoutes.INSPECTION_FORM,
+        AppRoutes.INSPECTIONS_SCREEN,
         (Route<dynamic> route) => false,
         arguments: hive,
       );

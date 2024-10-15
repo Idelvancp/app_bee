@@ -105,7 +105,7 @@ class InspectionDetailsScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(
-                  AppRoutes.INSPECTION_FORM,
+                  AppRoutes.INSPECTIONS_SCREEN,
                   arguments: inspectionData,
                 );
               },

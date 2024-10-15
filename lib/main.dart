@@ -1,4 +1,7 @@
 import 'package:app_bee/components/appDrawer.dart';
+import 'package:app_bee/screens/inspection/inspectionRoutineFormScreen.dart';
+import 'package:app_bee/screens/inspection/inspectionSplitHiveFormScreen.dart';
+import 'package:app_bee/screens/inspection/inspectionUnionHiveFormScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_bee/models/apiary.dart';
 import 'package:app_bee/providers/floralResourceProvider.dart';
@@ -31,9 +34,10 @@ import 'screens/ apiary/apiaryForm.dart';
 import 'screens/ apiary/apiaryDetailsScreen.dart';
 import 'screens/specie/speciesScreen.dart';
 import 'screens/specie/specieFormScreen.dart';
-import 'screens/inspection/inspectionFormScreen.dart';
 import 'screens/inspection/inspectionsScreen.dart';
+import 'screens/inspection/inspectionsListScreen.dart';
 import 'package:app_bee/screens/inspection/inspectionForm2Screen.dart';
+import 'package:app_bee/screens/inspection/inspectionsAudioScreen.dart';
 import 'package:app_bee/screens/typesExpenses/typesExpensesScreen.dart';
 import 'screens/inspection/inspectionDetailsScreen.dart';
 import 'package:app_bee/screens/typesExpenses/typeExpenseFormScreen.dart';
@@ -123,8 +127,14 @@ class BeeApp extends StatelessWidget {
           AppRoutes.TYPES_INSPECTIONS_INDEX: (ctx) => TypesInspectionsScreen(),
           AppRoutes.TYPE_INSPECTION_FORM: (ctx) => TypeInspectionFormScreen(),
           AppRoutes.INSPECTIONS_DETAILS: (ctx) => InspectionDetailsScreen(),
-          AppRoutes.INSPECTIONS_INDEX: (ctx) => InspectionsScreen(),
-          AppRoutes.INSPECTION_FORM: (ctx) => InspectionFormScreen(),
+          AppRoutes.INSPECTIONS_INDEX: (ctx) => InspectionsListScreen(),
+          AppRoutes.INSPECTIONS_SCREEN: (ctx) => InspectionsScreen(),
+          AppRoutes.INSPECTION_UNION_HIVE_FORM: (ctx) =>
+              InspectionUnionHiveFormScreen(),
+          AppRoutes.INSPECTION_SPLIT_HIVE_FORM: (ctx) =>
+              InspectionSplitHiveFormScreen(),
+          AppRoutes.INSPECTION_AUDIO: (ctx) => InspectionAudioScreen(),
+          AppRoutes.INSPECTION_ROUTINE_FORM1: (ctx) => InspectionFormScreen(),
           AppRoutes.INSPECTION_FORM2: (ctx) => InspectionForm2Screen(),
           AppRoutes.TYPE_EXPENSE_FORM: (ctx) => TypeExpenseFormScreen(),
           AppRoutes.TYPES_EXPENSES_INDEX: (ctx) => TypesExpensesScreen(),

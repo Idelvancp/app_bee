@@ -8,14 +8,14 @@ import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 import 'package:intl/intl.dart'; // Importe para formatação de data
 
-class InspectionsScreen extends StatefulWidget {
-  const InspectionsScreen({Key? key}) : super(key: key);
+class InspectionSplitHiveFormScreen extends StatefulWidget {
+  const InspectionSplitHiveFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<InspectionsScreen> createState() => _InspectionFormState();
+  State<InspectionSplitHiveFormScreen> createState() => _InspectionFormState();
 }
 
-class _InspectionFormState extends State<InspectionsScreen> {
+class _InspectionFormState extends State<InspectionSplitHiveFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
@@ -85,7 +85,7 @@ class _InspectionFormState extends State<InspectionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Escolha uma Inspeção'),
+        title: Text('Tipos de Inspeção'),
         centerTitle: true,
       ),
       body: GridView(
@@ -101,11 +101,11 @@ class _InspectionFormState extends State<InspectionsScreen> {
             context,
             'União de Colméias',
             Icons.add_circle,
-            AppRoutes.INSPECTION_UNION_HIVE_FORM,
+            AppRoutes.PRODUCT_REPORT,
           ),
           _buildReportCard(
             context,
-            'Divisão de Colmeia',
+            'Divisão de Colmeias',
             Icons.remove_circle,
             AppRoutes.HEALTH_REPORT,
           ),
@@ -113,7 +113,7 @@ class _InspectionFormState extends State<InspectionsScreen> {
             context,
             'Rotina',
             Icons.search,
-            AppRoutes.INSPECTION_ROUTINE_FORM1,
+            AppRoutes.INSPECTION_REPORT,
           ),
           _buildReportCard(
             context,
@@ -127,12 +127,6 @@ class _InspectionFormState extends State<InspectionsScreen> {
             Icons.money,
             AppRoutes.EXPENSE_REPORT,
           ),
-          _buildReportCard(
-            context,
-            'Inspeção Sonora',
-            Icons.graphic_eq,
-            AppRoutes.INSPECTION_AUDIO,
-          ),
         ],
       ),
       drawer: AppDrawer(),
@@ -142,18 +136,9 @@ class _InspectionFormState extends State<InspectionsScreen> {
 
   Widget _buildReportCard(
       BuildContext context, String title, IconData icon, String route) {
-    final Map<String, dynamic> hiveId =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _formData['hiveId'] = hiveId['id'];
-    _formData['apiaryId'] = hiveId['apiary_id'];
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          route,
-          (Route<dynamic> route) => false,
-          arguments: hiveId,
-        );
-        //Navigator.of(context).pushNamed(route);
+        Navigator.of(context).pushNamed(route);
       },
       child: Card(
         elevation: 5,

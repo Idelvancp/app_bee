@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:app_bee/models/typeInspection.dart';
 import 'package:app_bee/providers/typeInspectionProvider.dart';
-import 'package:app_bee/providers/inspectionProvider.dart';
+import 'package:app_bee/providers/hiveProvider.dart';
 import 'package:app_bee/routes/appRoute.dart';
 import 'package:app_bee/components/appDrawer.dart';
 import 'package:intl/intl.dart'; // Importe para formatação de data
 
-class InspectionsScreen extends StatefulWidget {
-  const InspectionsScreen({Key? key}) : super(key: key);
+class InspectionUnionHiveFormScreen extends StatefulWidget {
+  const InspectionUnionHiveFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<InspectionsScreen> createState() => _InspectionFormState();
+  State<InspectionUnionHiveFormScreen> createState() => _InspectionFormState();
 }
 
-class _InspectionFormState extends State<InspectionsScreen> {
+class _InspectionFormState extends State<InspectionUnionHiveFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
 
@@ -85,7 +84,7 @@ class _InspectionFormState extends State<InspectionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Escolha uma Inspeção'),
+        title: Text('União de Colmeias'),
         centerTitle: true,
       ),
       body: GridView(
@@ -100,38 +99,14 @@ class _InspectionFormState extends State<InspectionsScreen> {
           _buildReportCard(
             context,
             'União de Colméias',
-            Icons.add_circle,
-            AppRoutes.INSPECTION_UNION_HIVE_FORM,
+            Icons.hive,
+            AppRoutes.PRODUCT_REPORT,
           ),
           _buildReportCard(
             context,
-            'Divisão de Colmeia',
-            Icons.remove_circle,
+            'Divisão de Colmeias',
+            Icons.hive,
             AppRoutes.HEALTH_REPORT,
-          ),
-          _buildReportCard(
-            context,
-            'Rotina',
-            Icons.search,
-            AppRoutes.INSPECTION_ROUTINE_FORM1,
-          ),
-          _buildReportCard(
-            context,
-            'Médicação',
-            Icons.vaccines,
-            AppRoutes.FLORAL_RESOURCES_REPORT,
-          ),
-          _buildReportCard(
-            context,
-            'Adição de Melgueira',
-            Icons.money,
-            AppRoutes.EXPENSE_REPORT,
-          ),
-          _buildReportCard(
-            context,
-            'Inspeção Sonora',
-            Icons.graphic_eq,
-            AppRoutes.INSPECTION_AUDIO,
           ),
         ],
       ),
@@ -142,18 +117,9 @@ class _InspectionFormState extends State<InspectionsScreen> {
 
   Widget _buildReportCard(
       BuildContext context, String title, IconData icon, String route) {
-    final Map<String, dynamic> hiveId =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _formData['hiveId'] = hiveId['id'];
-    _formData['apiaryId'] = hiveId['apiary_id'];
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          route,
-          (Route<dynamic> route) => false,
-          arguments: hiveId,
-        );
-        //Navigator.of(context).pushNamed(route);
+        Navigator.of(context).pushNamed(route);
       },
       child: Card(
         elevation: 5,

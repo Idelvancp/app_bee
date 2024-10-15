@@ -22,10 +22,14 @@ class AppRoutes {
   static const TYPES_INSPECTIONS_INDEX = '/types-inspections-index';
   static const TYPE_INSPECTION_FORM = '/type-inspection-form';
   static const INSPECTIONS_INDEX = '/inspections-index';
-  static const INSPECTION_FORM = '/inspection-form';
+  static const INSPECTIONS_SCREEN = '/inspection-screen';
+  static const INSPECTION_SPLIT_HIVE_FORM = '/inspection-split-hive-form';
+  static const INSPECTION_UNION_HIVE_FORM = '/inspection-union-hive-form';
+  static const INSPECTION_ROUTINE_FORM1 = '/inspection-routine-form1';
   static const INSPECTION_FORM2 = '/inspection-form2';
   static const INSPECTION_FORM3 = '/inspection-form3';
   static const INSPECTIONS_DETAILS = '/inspections-details';
+  static const INSPECTION_AUDIO = '/inspection-audio';
 
   static const EXPENSES_INDEX = '/expenses-index';
   static const EXPENSE_FORM = '/expense-form';
