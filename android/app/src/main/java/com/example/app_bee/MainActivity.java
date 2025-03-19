@@ -26,13 +26,13 @@ public class MainActivity extends FlutterActivity {
                         (call, result) -> {
                             System.out.println("Deintrooooooooooooooooooooooooo");
                             if (call.method.equals("extractMFCCs")) {
-                                //String audioFilePath = call.argument("path");
-                                String audioFilePath = "/storage/emulated/0/Android/data/com.example.app_bee/files/rl.wav";
+                                String audioFilePath = call.argument("path");
+                                //String audioFilePath = "/storage/emulated/0/Android/data/com.example.app_bee/files/rl.wav";
 
 
                                 try {
                                     JLibrosa jLibrosa = new JLibrosa();
-                                    File sourceFile = new File("/storage/emulated/0/Android/data/com.example.app_bee/files/rq.wav");
+                                    File sourceFile = new File(audioFilePath);
                                     WavFile wavFile = WavFile.openWavFile(sourceFile);
                                     int sampleRate = (int) wavFile.getSampleRate();
                                     int numFrames = (int) wavFile.getNumFrames();

@@ -11,8 +11,8 @@ import 'package:intl/intl.dart'; // Importe para formatação de data
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:another_audio_recorder/another_audio_recorder.dart';
+import 'package:ffmpeg_kit_flutter_audio/ffmpeg_kit.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 
@@ -29,7 +29,7 @@ class InspectionAudioScreen extends StatefulWidget {
 class _InspectionFormState extends State<InspectionAudioScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, Object>{};
-  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+  // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   String _filterStatus = 'Idle';
   String _filteredAudioPath = '';
 
@@ -210,7 +210,7 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
         // .mp4 .m4a .aac <---> AudioFormat.AAC
         // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
         _recorder = AnotherAudioRecorder(customPath,
-            audioFormat: AudioFormat.WAV, sampleRate: 16000);
+            audioFormat: AudioFormat.WAV, sampleRate: 48000);
 
         await _recorder?.initialized;
         // after initialization
@@ -285,23 +285,29 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
       String outputPath = filePath.replaceAll('.wav', '_filtered.wav');
 
       // Comando FFmpeg para aplicar o filtro passa-banda (600 Hz a 1000 Hz)
-      String ffmpegCommand =
-          '-y -i $filePath -af "bandpass=f=600:w=400" $outputPath';
+      //String ffmpegCommand =
+      //    '-y -i $filePath -af "bandpass=f=600:w=400" $outputPath';
 
       // Executar o comando FFmpeg
-      int rc = await _flutterFFmpeg.execute(ffmpegCommand);
+      // int rc = await _flutterFFmpeg.execute(ffmpegCommand);
+      String command =
+          "-i $filePath -acodec pcm_s16le -ar 16000 -ac 1 $outputPath";
 
-      if (rc == 0) {
-        setState(() {
-          _filterStatus = 'Filtro aplicado com sucesso!';
-          _filteredAudioPath =
-              outputPath; // Armazena o caminho do arquivo filtrado
-        });
-      } else {
-        setState(() {
-          _filterStatus = 'Erro ao aplicar o filtro!';
-        });
-      }
+      FFmpegKit.execute(command).then((session) async {
+        final returnCode = await session.getReturnCode();
+
+        if (returnCode?.getValue() == 0) {
+          setState(() {
+            _filterStatus = 'Filtro aplicado com sucesso!';
+            _filteredAudioPath =
+                outputPath; // Armazena o caminho do arquivo filtrado
+          });
+        } else {
+          setState(() {
+            _filterStatus = 'Erro ao aplicar o filtro!';
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         _filterStatus = "Falha ao aplicar o filtro: '${e.toString()}'";

@@ -23,9 +23,9 @@ dependencies:
   another_audio_recorder: ^1.2.1
   audioplayers: ^6.1.0
   path_provider: ^2.1.4
-  flutter_ffmpeg: ^0.4.2
   file: ^7.0.0
-
+  ffmpeg_kit_flutter_audio: ^6.0.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
