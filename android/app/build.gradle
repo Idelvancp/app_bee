@@ -59,4 +59,5 @@ flutter {
 }
 dependencies {
     implementation files('libs/jlibrosa-1.1.8-SNAPSHOT-jar-with-dependencies.jar')
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:latest.release'
 }

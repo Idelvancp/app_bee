@@ -165,20 +165,27 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
                             : Colors.redAccent,
                   ),
                 ),
-                SizedBox(height: 20), // Espaço entre o texto e o botão
+                SizedBox(height: 10), // Espaço entre o texto e o botão
                 new Text(
                     "Audio recording duration : ${_current?.duration.toString()}"),
 
                 // Adicionando o novo botão para extrair MFCCs
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _filteredAudioPath.isNotEmpty
                       ? _getMfccs // Chama o método _getMfccs se o caminho do áudio filtrado não estiver vazio
                       : null, // Desabilita o botão se não houver áudio filtrado
                   child: Text("Extrair MFCCs"),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(_filterStatus),
+                SizedBox(height: 10,),
+                ElevatedButton(
+                  onPressed: _filteredAudioPath.isNotEmpty
+                      ? _getMfccs // Chama o método _getMfccs se o caminho do áudio filtrado não estiver vazio
+                      : null, // Desabilita o botão se não houver áudio filtrado
+                  child: Text("Classificar Áudio"),
+                ),
               ],
             ),
           ),
@@ -329,6 +336,14 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
       }
     } on PlatformException catch (e) {
       print('Falha ao extrair MFCCs: ${e.message}');
+    }
+  }
+
+  Future<void> _runClassifier() async {
+    try {
+
+    }on PlatformException catch (e) {
+      print('Falha ao Classificar MFCCs: ${e.message}');
     }
   }
 
