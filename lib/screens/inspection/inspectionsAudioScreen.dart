@@ -32,6 +32,7 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
   // final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
   String _filterStatus = 'Idle';
   String _filteredAudioPath = '';
+  String _mfccFilePath = '';
 
   final TextEditingController _dateController =
       TextEditingController(); // Controller para o campo de data
@@ -181,8 +182,8 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
                 Text(_filterStatus),
                 SizedBox(height: 10,),
                 ElevatedButton(
-                  onPressed: _filteredAudioPath.isNotEmpty
-                      ? _getMfccs // Chama o método _getMfccs se o caminho do áudio filtrado não estiver vazio
+                  onPressed: _mfccFilePath.isNotEmpty
+                      ? _runClassifier // Chama o método _getMfccs se o caminho do áudio filtrado não estiver vazio
                       : null, // Desabilita o botão se não houver áudio filtrado
                   child: Text("Classificar Áudio"),
                 ),
@@ -330,6 +331,9 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
           'extractMFCCs',
           {'path': _filteredAudioPath},
         );
+        setState(() {
+          _mfccFilePath = result ?? '';
+        });
         print('MFCCs salvos no CSV com sucesso: $result');
       } else {
         print('Erro: O caminho do arquivo de áudio filtrado está vazio.');
@@ -341,7 +345,12 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
 
   Future<void> _runClassifier() async {
     try {
-
+      if(_mfccFilePath.isNotEmpty) {
+        final result = await platform.invokeMethod<String>(
+          'runClassifier',
+          {'path': _mfccFilePath},
+        );
+      }
     }on PlatformException catch (e) {
       print('Falha ao Classificar MFCCs: ${e.message}');
     }

@@ -102,8 +102,9 @@
                                         }
                                         String directoryPath = sourceFile.getParent();
                                         saveMFCCToCSV(transposedMatrix, directoryPath, "mfcc_segment.csv");
-
-                                        result.success("MFCCs saved to CSV successfully!");
+                                        // Retorna o caminho completo do arquivo salvo
+                                        String filePath = directoryPath + "/mfcc_segment.csv";
+                                        result.success(filePath);
 
                                     } catch (IOException | WavFileException | FileFormatNotSupportedException e) {
                                         e.printStackTrace();
@@ -115,18 +116,20 @@
                                //     result.notImplemented();
                                // }
                                         break;
-                                    case "mlpClassifier":
+                                    case "runClassifier":
+                                        System.out.println("Executando Classificador");
                                         try {
                                             // Configurar o ambiente ONNX
                                             OrtEnvironment ortEnvironment = OrtEnvironment.getEnvironment();
-                                            InputStream modelStream = getResources().openRawResource(R.raw.mpl_model);
+                                            InputStream modelStream = getResources().openRawResource(R.raw.rf_model);
                                             byte[] modelBytes = new byte[modelStream.available()];
                                             modelStream.read(modelBytes);
                                             modelStream.close();
+
+                                            // Criar sessão apenas uma vez
                                             OrtSession ortSession = ortEnvironment.createSession(modelBytes);
 
                                             // Ler os dados do arquivo CSV
-                                            // Caminho do arquivo salvo na pasta de arquivos do app
                                             String csvFilePath = getExternalFilesDir(null) + "/mfcc_segment.csv";
                                             File csvFile = new File(csvFilePath);
                                             if (!csvFile.exists()) {
@@ -136,24 +139,21 @@
                                             InputStream csvStream = new FileInputStream(csvFile);
                                             BufferedReader reader = new BufferedReader(new InputStreamReader(csvStream));
                                             List<float[]> inputDataList = new ArrayList<>();
-                                            List<Integer> trueLabels = new ArrayList<>();
 
                                             String line;
                                             while ((line = reader.readLine()) != null) {
                                                 String[] values = line.split(",");
-                                                float[] sample = new float[values.length - 1];
-                                                for (int i = 0; i < values.length - 1; i++) {
+                                                float[] sample = new float[values.length];
+                                                for (int i = 0; i < values.length; i++) {
                                                     sample[i] = Float.parseFloat(values[i]);
                                                 }
                                                 inputDataList.add(sample);
-                                                trueLabels.add(Integer.parseInt(values[values.length - 1]));
                                             }
                                             reader.close();
 
-                                            // Preparar os dados para o modelo com processamento em batches
                                             int numSamples = inputDataList.size();
                                             int numFeatures = inputDataList.get(0).length;
-                                            int batchSize = 64; // Tamanho do batch
+                                            int batchSize = 32;
 
                                             List<Long> predictionsList = new ArrayList<>();
                                             for (int start = 0; start < numSamples; start += batchSize) {
@@ -171,7 +171,7 @@
 
                                                 OnnxTensor tensor = OnnxTensor.createTensor(ortEnvironment, inputBuffer, new long[]{currentBatchSize, numFeatures});
 
-                                                // Fazer a predição para o batch atual
+                                                // Pegando o nome da entrada da rede ONNX
                                                 String inputName = ortSession.getInputNames().iterator().next();
                                                 Result output = ortSession.run(Map.of(inputName, tensor));
 
@@ -182,60 +182,21 @@
 
                                                 tensor.close();
                                                 output.close();
-
-                                                // Extração dos valores previstos
-                                                long[] predictions = predictionsList.stream().mapToLong(Long::longValue).toArray();
-                                                System.out.println("Predições: " + java.util.Arrays.toString(predictions));
-
-                                                // Calcular métricas de avaliação
-                                                int tp = 0, fp = 0, fn = 0, tn = 0;
-                                                for (int i = 0; i < predictions.length; i++) {
-                                                    int actual = trueLabels.get(i);
-                                                    int predicted = (int) predictions[i];
-
-                                                    if (predicted == 1 && actual == 1) tp++;
-                                                    else if (predicted == 1 && actual == 0) fp++;
-                                                    else if (predicted == 0 && actual == 1) fn++;
-                                                    else if (predicted == 0 && actual == 0) tn++;
-                                                }
-
-                                                double precision = tp / (double) (tp + fp);
-                                                double recall = tp / (double) (tp + fn);
-                                                double f1Score = 2 * (precision * recall) / (precision + recall);
-                                                double accuracy = (tp + tn) / (double) (tp + fp + fn + tn);
-
-                                                System.out.println("Acurácia: " + accuracy);
-                                                System.out.println("Precisão: " + precision);
-                                                System.out.println("Recall: " + recall);
-                                                System.out.println("F1-Score: " + f1Score);
-
-                                                // Imprimir o número de amostras classificadas
-                                                System.out.println("Quantidade de amostras classificadas: " + numSamples);
-
-                                                // Liberar os recursos do tensor, sessão e ambiente
-                                                ortSession.close();
-                                                ortEnvironment.close();
-
-                                                // Retornar o resultado
-                                                result.success("Amostras classificadas: " + numSamples
-                                                        + ", Acurácia: " + accuracy
-                                                        + ", Precisão: " + precision
-                                                        + ", Recall: " + recall
-                                                        + ", F1-Score: " + f1Score
-                                                        + ", TP: " + tp
-                                                        + ", FP: " + fp
-                                                        + ", FN: " + fn
-                                                        + ", TN: " + tn);
-                                                break;
-
                                             }
+
+                                            // Fechar a sessão e o ambiente apenas no final
+                                            ortSession.close();
+                                            ortEnvironment.close();
+
+                                            System.out.println("Quantidade de amostras classificadas: " + numSamples);
+                                            System.out.println("Predições: " + predictionsList);
+
+                                            result.success("Amostras classificadas: " + numSamples);
                                         } catch (Exception e) {
                                             Log.e("MainActivity", "Erro ao executar tarefa", e);
                                             result.error("TASK_ERROR", "Erro ao executar tarefa", e.getMessage());
                                         }
-                                    default:
-                                        result.notImplemented();
-                                        break;
+
                                 }
                             }
                     );
