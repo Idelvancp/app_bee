@@ -40,6 +40,8 @@
     import java.util.ArrayList;
     import java.util.List;
     import java.util.Map;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.ExecutorService;
 
     import ai.onnxruntime.OnnxTensor;
     import ai.onnxruntime.OrtEnvironment;
@@ -48,6 +50,7 @@
     
     public class MainActivity extends FlutterActivity {
         private static final String CHANNEL = "com.example.audio/audio_processor";
+        private final ExecutorService executorService = Executors.newSingleThreadExecutor(); // Cria uma thread separada para processamento
 
         @Override
         public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -60,64 +63,69 @@
                                 switch (call.method) {
                                     case "extractMFCCs":
 
-                                //if (call.method.equals("extractMFCCs")) {
-                                    String audioFilePath = call.argument("path");
-                                    //String audioFilePath = "/storage/emulated/0/Android/data/com.example.app_bee/files/rl.wav";
+                                        //if (call.method.equals("extractMFCCs")) {
+                                        String audioFilePath = call.argument("path");
+                                        //String audioFilePath = "/storage/emulated/0/Android/data/com.example.app_bee/files/rl.wav";
+
+                                        // Executa a extração em uma thread separada
+                                        executorService.execute(() -> {
+                                            try {
+                                                JLibrosa jLibrosa = new JLibrosa();
+                                                File sourceFile = new File(audioFilePath);
+                                                WavFile wavFile = WavFile.openWavFile(sourceFile);
+                                                int sampleRate = (int) wavFile.getSampleRate();
+                                                int numFrames = (int) wavFile.getNumFrames();
+                                                int numChannels = wavFile.getNumChannels();
+                                                wavFile.close();
+
+                                                float audioFeatureValues[] = jLibrosa.loadAndRead(audioFilePath, sampleRate, 20);
+
+                                                // Definir parâmetros de frame e sobreposição
+                                                int nMFCC = 13; // Número de coeficientes MFCC, conforme desejado
+                                                int n_fft = (int) Math.ceil(sampleRate * 0.025);
+                                                int hop_length = (int) Math.ceil(sampleRate * 0.0125);
+                                                float[][] mfccValues = jLibrosa.generateMFCCFeatures(audioFeatureValues, sampleRate, nMFCC, 400, 40, 200);
+
+                                                // Transpor a matriz para que as linhas representem os frames e as colunas os coeficientes
+                                                float[][] transposedMatrix = new float[mfccValues[0].length][mfccValues.length];
+
+                                                for (int i = 0; i < mfccValues.length; i++) {
+                                                    for (int j = 0; j < mfccValues[i].length; j++) {
+                                                        transposedMatrix[j][i] = mfccValues[i][j];
+                                                    }
+                                                }
 
 
-                                    try {
-                                        JLibrosa jLibrosa = new JLibrosa();
-                                        File sourceFile = new File(audioFilePath);
-                                        WavFile wavFile = WavFile.openWavFile(sourceFile);
-                                        int sampleRate = (int) wavFile.getSampleRate();
-                                        int numFrames = (int) wavFile.getNumFrames();
-                                        int numChannels = wavFile.getNumChannels();
-                                        wavFile.close();
+                                                System.out.println(".......");
+                                                System.out.println("Size of MFCC Feature Values: (" + mfccValues.length + " , " + mfccValues[0].length + " )");
 
-                                        float audioFeatureValues [] = jLibrosa.loadAndRead(audioFilePath, sampleRate, 20);
+                                                for (int i = 0; i < 1; i++) {
+                                                    for (int j = 0; j < 12; j++) {
+                                                        System.out.printf("%.6f%n", transposedMatrix[i][j]);
+                                                    }
+                                                }
+                                                String directoryPath = sourceFile.getParent();
+                                                saveMFCCToCSV(transposedMatrix, directoryPath, "mfcc_segment.csv");
+                                                // Retorna o caminho completo do arquivo salvo
+                                                String filePath = directoryPath + "/mfcc_segment.csv";
+                                                result.success(filePath);
 
-                                        // Definir parâmetros de frame e sobreposição
-                                        int nMFCC = 13; // Número de coeficientes MFCC, conforme desejado
-                                        int n_fft = (int) Math.ceil(sampleRate * 0.025);
-                                        int hop_length = (int) Math.ceil(sampleRate * 0.0125);
-                                        float[][] mfccValues = jLibrosa.generateMFCCFeatures(audioFeatureValues, sampleRate, nMFCC, 400, 40, 200);
-
-                                        // Transpor a matriz para que as linhas representem os frames e as colunas os coeficientes
-                                        float[][] transposedMatrix = new float[mfccValues[0].length][mfccValues.length];
-
-                                        for (int i = 0; i < mfccValues.length; i++) {
-                                            for (int j = 0; j < mfccValues[i].length; j++) {
-                                                transposedMatrix[j][i] = mfccValues[i][j];
+                                            } catch (IOException | WavFileException |
+                                                     FileFormatNotSupportedException e) {
+                                                e.printStackTrace();
+                                                result.error("IOException", "Erro ao processar o arquivo WAV", e.getMessage());
                                             }
-                                        }
+                                        });
 
 
-                                        System.out.println(".......");
-                                        System.out.println("Size of MFCC Feature Values: (" + mfccValues.length + " , " + mfccValues[0].length + " )");
-
-                                        for(int i=0;i<1;i++) {
-                                            for(int j=0;j<12;j++) {
-                                                System.out.printf("%.6f%n", transposedMatrix[i][j]);
-                                            }
-                                        }
-                                        String directoryPath = sourceFile.getParent();
-                                        saveMFCCToCSV(transposedMatrix, directoryPath, "mfcc_segment.csv");
-                                        // Retorna o caminho completo do arquivo salvo
-                                        String filePath = directoryPath + "/mfcc_segment.csv";
-                                        result.success(filePath);
-
-                                    } catch (IOException | WavFileException | FileFormatNotSupportedException e) {
-                                        e.printStackTrace();
-                                        result.error("IOException", "Erro ao processar o arquivo WAV", e.getMessage());
-                                    }
-
-
-                               // } else {
-                               //     result.notImplemented();
-                               // }
+                                        // } else {
+                                        //     result.notImplemented();
+                                        // }
                                         break;
                                     case "runClassifier":
                                         System.out.println("Executando Classificador");
+                                        // Executa a extração em uma thread separada
+                                        executorService.execute(() -> {
                                         try {
                                             // Configurar o ambiente ONNX
                                             OrtEnvironment ortEnvironment = OrtEnvironment.getEnvironment();
@@ -196,6 +204,7 @@
                                             Log.e("MainActivity", "Erro ao executar tarefa", e);
                                             result.error("TASK_ERROR", "Erro ao executar tarefa", e.getMessage());
                                         }
+                                });
 
                                 }
                             }
