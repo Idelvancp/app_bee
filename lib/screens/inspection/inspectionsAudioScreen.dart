@@ -33,6 +33,7 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
   String _filterStatus = 'Idle';
   String _filteredAudioPath = '';
   String _mfccFilePath = '';
+  List<String> _resultClassifier = [];
 
   final TextEditingController _dateController =
       TextEditingController(); // Controller para o campo de data
@@ -179,7 +180,14 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
                   child: Text("Extrair MFCCs"),
                 ),
                 SizedBox(height: 10),
-                Text(_filterStatus),
+                ..._resultClassifier.map((line) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Text(
+                line,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                )),
                 SizedBox(height: 10,),
                 ElevatedButton(
                   onPressed: _mfccFilePath.isNotEmpty
@@ -218,7 +226,7 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
         // .mp4 .m4a .aac <---> AudioFormat.AAC
         // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
         _recorder = AnotherAudioRecorder(customPath,
-            audioFormat: AudioFormat.WAV, sampleRate: 48000);
+            audioFormat: AudioFormat.WAV, sampleRate: 16000);
 
         await _recorder?.initialized;
         // after initialization
@@ -327,14 +335,18 @@ class _InspectionFormState extends State<InspectionAudioScreen> {
     try {
       if (_filteredAudioPath.isNotEmpty) {
         // Passa o caminho do arquivo filtrado como argumento
-        final result = await platform.invokeMethod<String>(
+        final String result = await platform.invokeMethod(
           'extractMFCCs',
           {'path': _filteredAudioPath},
         );
-        setState(() {
-          _mfccFilePath = result ?? '';
-        });
-        print('MFCCs salvos no CSV com sucesso: $result');
+        if (result != null) {
+          // Divide o resultado em linhas com base em vírgulas
+          List<String> resultLines = result.split(',').map((line) => line.trim()).toList();
+
+          setState(() {
+            _resultClassifier = resultLines;
+          });
+        }
       } else {
         print('Erro: O caminho do arquivo de áudio filtrado está vazio.');
       }

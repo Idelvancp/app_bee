@@ -59,13 +59,13 @@
             new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                     .setMethodCallHandler(
                             (call, result) -> {
-                                System.out.println("Deintrooooooooooooooooooooooooo");
                                 switch (call.method) {
                                     case "extractMFCCs":
-
                                         //if (call.method.equals("extractMFCCs")) {
-                                        String audioFilePath = call.argument("path");
-                                        //String audioFilePath = "/storage/emulated/0/Android/data/com.example.app_bee/files/rl.wav";
+                                        //String audioFilePath = call.argument("path");
+                                        String audioFilePath = "/storage/emulated/0/Android/data/com.example.app_bee/files/qrr  -hive-06.wav";
+                                        System.out.println("Caminhooooooooooooooooooooooooooooooooooooooo");
+                                        System.out.println(audioFilePath);
 
                                         // Executa a extração em uma thread separada
                                         executorService.execute(() -> {
@@ -78,13 +78,13 @@
                                                 int numChannels = wavFile.getNumChannels();
                                                 wavFile.close();
 
-                                                float audioFeatureValues[] = jLibrosa.loadAndRead(audioFilePath, sampleRate, 20);
+                                                float audioFeatureValues[] = jLibrosa.loadAndRead(audioFilePath, -1 , 40);
 
                                                 // Definir parâmetros de frame e sobreposição
                                                 int nMFCC = 13; // Número de coeficientes MFCC, conforme desejado
                                                 int n_fft = (int) Math.ceil(sampleRate * 0.025);
                                                 int hop_length = (int) Math.ceil(sampleRate * 0.0125);
-                                                float[][] mfccValues = jLibrosa.generateMFCCFeatures(audioFeatureValues, sampleRate, nMFCC, 400, 40, 200);
+                                                float[][] mfccValues = jLibrosa.generateMFCCFeatures(audioFeatureValues, sampleRate, nMFCC, 512, 40, 256);
 
                                                 // Transpor a matriz para que as linhas representem os frames e as colunas os coeficientes
                                                 float[][] transposedMatrix = new float[mfccValues[0].length][mfccValues.length];
@@ -95,20 +95,106 @@
                                                     }
                                                 }
 
+                                                String directoryPath = sourceFile.getParent();
+                                                saveMFCCToCSV(transposedMatrix, directoryPath, "mfcc_segment.csv");
 
-                                                System.out.println(".......");
                                                 System.out.println("Size of MFCC Feature Values: (" + mfccValues.length + " , " + mfccValues[0].length + " )");
+                                                // Normalizar os MFCCs
+                                                float[][] normalizedMFCCs = StandardScaler.normalizeMFCC(transposedMatrix);
+                                                List<float[]> inputDataList = new ArrayList<>();
 
+                                                for (float[] row : normalizedMFCCs) {
+                                                    inputDataList.add(row);
+                                                }
+
+                                                int numSamples = inputDataList.size();
+                                                int numFeatures = inputDataList.get(0).length;
+                                                int batchSize = 32;
+                                                try {
+                                                // Configurar o ambiente ONNX
+                                                OrtEnvironment ortEnvironment = OrtEnvironment.getEnvironment();
+                                                InputStream modelStream = getResources().openRawResource(R.raw.mlp_model);
+                                                byte[] modelBytes = new byte[modelStream.available()];
+                                                modelStream.read(modelBytes);
+                                                modelStream.close();
+
+                                                // Criar sessão apenas uma vez
+                                                OrtSession ortSession = ortEnvironment.createSession(modelBytes);
+
+                                                    List<Long> predictionsList = new ArrayList<>();
+                                                    for (int start = 0; start < numSamples; start += batchSize) {
+                                                        int end = Math.min(start + batchSize, numSamples);
+                                                        int currentBatchSize = end - start;
+
+                                                        float[] batchData = new float[currentBatchSize * numFeatures];
+                                                        for (int i = 0; i < currentBatchSize; i++) {
+                                                            System.arraycopy(inputDataList.get(start + i), 0, batchData, i * numFeatures, numFeatures);
+                                                        }
+
+                                                        FloatBuffer inputBuffer = FloatBuffer.allocate(batchData.length);
+                                                        inputBuffer.put(batchData);
+                                                        inputBuffer.rewind();
+
+                                                        OnnxTensor tensor = OnnxTensor.createTensor(ortEnvironment, inputBuffer, new long[]{currentBatchSize, numFeatures});
+
+                                                        // Pegando o nome da entrada da rede ONNX
+                                                        String inputName = ortSession.getInputNames().iterator().next();
+                                                        Result output = ortSession.run(Map.of(inputName, tensor));
+
+                                                        long[] batchPredictions = (long[]) output.get(0).getValue();
+                                                        for (long pred : batchPredictions) {
+                                                            predictionsList.add(pred);
+                                                        }
+
+                                                        tensor.close();
+                                                        output.close();
+                                                    }
+
+                                                    // Fechar a sessão e o ambiente apenas no final
+                                                    ortSession.close();
+                                                    ortEnvironment.close();
+
+                                                    System.out.println("Quantidade de amostras classificadas: " + numSamples);
+                                                    ///System.out.println("Predições: " + predictionsList);
+
+                                                    // Contando quantos 0s e 1s existem
+                                                    long countZero = predictionsList.stream().filter(p -> p == 0).count();
+                                                    long countOne = predictionsList.stream().filter(p -> p == 1).count();
+
+                                                    // Calculando a porcentagem
+                                                    double total = predictionsList.size();
+                                                    double percentZero = (countZero / total) * 100;
+                                                    double percentOne = (countOne / total) * 100;
+
+                                                    System.out.println("Quantidade de 0s: " + countZero);
+                                                    System.out.println("Quantidade de 1s: " + countOne);
+
+                                                    System.out.println("Porcentagem de 0s: " + percentZero + "%");
+                                                    System.out.println("Porcentagem de 1s: " + percentOne + "%");
+
+                                                    // Definindo a classe com base na maior quantidade
+                                                    int predictedClass = (countZero > countOne) ? 0 : 1;
+
+
+                                                /*
                                                 for (int i = 0; i < 1; i++) {
                                                     for (int j = 0; j < 12; j++) {
                                                         System.out.printf("%.6f%n", transposedMatrix[i][j]);
                                                     }
                                                 }
+
                                                 String directoryPath = sourceFile.getParent();
                                                 saveMFCCToCSV(transposedMatrix, directoryPath, "mfcc_segment.csv");
                                                 // Retorna o caminho completo do arquivo salvo
                                                 String filePath = directoryPath + "/mfcc_segment.csv";
-                                                result.success(filePath);
+                                                */
+                                                result.success("Porcentagem de 0: " + percentZero
+                                                        + ", Porcentagem de 1: " + percentOne
+                                                        + ", Classe Predita: " + predictedClass);
+                                                } catch (Exception e) {
+                                                    Log.e("MainActivity", "Erro ao executar tarefa", e);
+                                                    result.error("TASK_ERROR", "Erro ao executar tarefa", e.getMessage());
+                                                }
 
                                             } catch (IOException | WavFileException |
                                                      FileFormatNotSupportedException e) {
@@ -129,7 +215,7 @@
                                         try {
                                             // Configurar o ambiente ONNX
                                             OrtEnvironment ortEnvironment = OrtEnvironment.getEnvironment();
-                                            InputStream modelStream = getResources().openRawResource(R.raw.rf_model);
+                                            InputStream modelStream = getResources().openRawResource(R.raw.mlp_model);
                                             byte[] modelBytes = new byte[modelStream.available()];
                                             modelStream.read(modelBytes);
                                             modelStream.close();
@@ -249,9 +335,11 @@
 
         // Função para salvar MFCCs em CSV
         private void saveMFCCToCSV(float[][] mfccMatrix, String directoryPath, String fileName) {
+
+            float[][] normalizedMFCCs = StandardScaler.normalizeMFCC(mfccMatrix);
             File csvFile = new File(directoryPath, fileName);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
-                for (float[] mfccs : mfccMatrix) {
+                for (float[] mfccs : normalizedMFCCs) {
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < mfccs.length; i++) {
                         sb.append(mfccs[i]);
